@@ -45,3 +45,4 @@ aux (Mapa l (((Rio v),[]):t2)) x = True
 aux (Mapa l (((Rio v),(h1:t1)):t2)) x
    | x == 5 = False
    | h1 == Tronco = aux (Mapa l (((Rio v),(t1)):t2)) (x+1)-}
+ aaaaaaaaaaaaaaa
