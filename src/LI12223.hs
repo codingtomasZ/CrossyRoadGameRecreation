@@ -28,7 +28,7 @@ As linhas do tipo 'Rio' ou 'Estrada' têm a propriedade 'Velocidade' que indicam
 data Terreno
   = Rio Velocidade
   | Estrada Velocidade
-  | Relva
+  | Relva 
   deriving (Show, Read, Eq)
 
 -- | Um Obstáculo numa linha de um 'Mapa'.
