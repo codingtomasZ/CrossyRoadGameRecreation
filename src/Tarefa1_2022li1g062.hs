@@ -32,41 +32,43 @@ mapaValido1 (Mapa l (((Estrada v),(h1:t1)):t2))
 
 --Exercício 2(Concluído)
 mapaValido2 :: Mapa -> Bool
+mapaValido2 (Mapa l []) = True
 mapaValido2 (Mapa l (((Rio v),o):[])) = True
 mapaValido2 (Mapa l (((Rio v),o):((Rio v'),o'):t2))
    | v > 0 && v' > 0 = False
    | v < 0 && v' < 0 = False
    |otherwise = mapaValido (Mapa l (((Rio v'),o'):t2))
-mapaValido (Mapa l (((Estrada v),o):((Rio v'),o'):t2)) = True
-mapaValido (Mapa l (((Relva),o):((Rio v'),o'):t2)) = True
-mapaValido (Mapa l (((Rio v),o):((Estrada v'),o'):t2)) = True
-mapaValido (Mapa l (((Rio v),o):((Relva),o'):t2)) = True
-
-mapaValido (Mapa l (((Estrada v),(h1:t1)):t2))
-  |(elem Arvore (h1:t1) || elem Tronco (h1:t1)) = False
-  |otherwise = mapaValido (Mapa l t2)
+mapaValido2 (Mapa l (((Estrada v),o):((Rio v'),o'):t2)) = True
+mapaValido2 (Mapa l (((Relva),o):((Rio v'),o'):t2)) = True
+mapaValido2 (Mapa l (((Rio v),o):((Estrada v'),o'):t2)) = True
+mapaValido2 (Mapa l (((Rio v),o):((Relva),o'):t2)) = True
 
 
-
-{-mapaValido3 :: Mapa -> Bool
+--Exercício 3 (Imcompleto)
+mapaValido3 :: Mapa -> Bool
 mapaValido3 m = aux m 0
 
-aux :: Eq a => Mapa -> x -> Bool
+aux :: Ord a => Mapa -> a -> Bool
 aux (Mapa l (((Rio v),[]):t2)) x = True 
 aux (Mapa l (((Rio v),(h1:t1)):t2)) x
    | x > 5 = False
-   | h1 == Tronco = aux (Mapa l (((Rio v),(t1)):t2)) (x+1)-}
+   | h1 == Tronco = aux (Mapa l (((Rio v),(t1)):t2)) (x+1)
+
+--Exercício 4 (Imcompleto)
+
+--Exercício 5 (Imcompleto)
 mapaValido5 (Mapa l []) = True
 mapaValido5 (Mapa l (((Rio v),(h1:t1)):t2))
          | (elem Carro (h1:t1) || elem Tronco (h1:t1) || elem Arvore (h1:t1)) = False 
          | otherwise = mapaValido (Mapa l t2) 
-mapaValido5' (Mapa l (((Relva),(h1:t1)):t2))
+mapaValido5 (Mapa l (((Relva),(h1:t1)):t2))
          | (elem Carro (h1:t1) || elem Tronco (h1:t1) || elem Arvore (h1:t1)) = False 
-         | otherwise = mapaValido5' (Mapa l t2) 
-mapaValido5'' (Mapa l (((Estrada v),(h1:t1)):t2))
+         | otherwise = mapaValido5 (Mapa l t2) 
+mapaValido5 (Mapa l (((Estrada v),(h1:t1)):t2))
          | (elem Carro (h1:t1) || elem Tronco (h1:t1) || elem Arvore (h1:t1)) = False 
-         | otherwise = mapaValido5'' (Mapa l t2)  
+         | otherwise = mapaValido5 (Mapa l t2)  
 
+--Exercício 6 (Imcompleto)
 mapaValido6 (Mapa l []) = True
 mapaValido6 (Mapa l (((Estrada v),(h1:t1)):t2))
           | l == length (h1:t1) = True 
