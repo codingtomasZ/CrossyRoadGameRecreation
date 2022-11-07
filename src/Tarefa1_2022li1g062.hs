@@ -72,12 +72,5 @@ mapaValido2 (Mapa l (((Rio v),o):((Relva),o'):t2)) = True
 
 
 
---Exercício 3 (Imcompleto)
-mapaValido3 :: Mapa -> Bool
-mapaValido3 m = aux m 0
 
-aux :: Ord a => Mapa -> a -> Bool
-aux (Mapa l (((Rio v),[]):t2)) x = True 
-aux (Mapa l (((Rio v),(h1:t1)):t2)) x
-   | x > 5 = False
-   | h1 == Tronco = aux (Mapa l (((Rio v),(t1)):t2)) (x+1)
+
