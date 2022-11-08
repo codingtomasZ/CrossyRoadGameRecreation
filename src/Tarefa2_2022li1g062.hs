@@ -10,11 +10,17 @@ module Tarefa2_2022li1g062 where
 
 import LI12223
 
-estendeMapa :: Mapa -> Int -> Mapa
+{- estendeMapa :: Mapa -> Int -> Mapa
 estendeMapa = undefined
 
 proximosTerrenosValidos :: Mapa -> [Terreno]
 proximosTerrenosValidos = undefined
 
 proximosObstaculosValidos :: Int -> (Terreno, [Obstaculo]) -> [Obstaculo]
-proximosObstaculosValidos = undefined
+proximosObstaculosValidos = undefined -}
+
+{- Funcao proximosTerrenosValidos -}
+
+proximosTerrenosValidos :: Mapa -> [Terreno] 
+proximosTerrenosValidos (Mapa l []) = [Relva,Rio 0,Estrada 0]
+proximosTerrenosValidos (Mapa l [(Rio v,a),(Rio)]) 
