@@ -11,92 +11,81 @@ module Tarefa1_2022li1g062 where
 
 import LI12223
 
-{- Tarefa 1 -}
+-- Tarefa 1
 
 mapaValido :: Mapa -> Bool 
 mapaValido (Mapa l []) = True 
-mapaValido (Mapa l ((p,(x:xs)):t)) = mapaValido1 (Mapa l ((p,(x:xs)):t)) && mapaValido2 (Mapa l ((p,(x:xs)):t)) && mapaValido34 (Mapa l ((p,(x:xs)):t)) && mapaValido5 (Mapa l ((p,(x:xs)):t)) && mapaValido6 (Mapa l ((p,(x:xs)):t)) && mapaValido7 (Mapa l ((p,(x:xs)):t))
+mapaValido m = if mapaValido1 m == True && mapaValido2 m == True && mapaValido34 m == True && mapaValido5 m == True && mapaValido6 m == True && mapaValido7 == True 
+               then True 
+               else False
 
-{- Exercicio 1 -}
+-- Exercicio 1 
 
 mapaValido1 :: Mapa -> Bool 
 mapaValido1 (Mapa l []) = True 
-mapaValido1 (Mapa l ((Relva,(x:xs)):t))
- | (elem Tronco (x:xs) || elem Carro (x:xs)) = False 
+mapaValido1 (Mapa l ((Relva, o):t))
+ | (elem Tronco o || elem Carro o) = False 
  | otherwise = mapaValido1 (Mapa l t)
-mapaValido1 (Mapa l ((Rio v,(x:xs)):t))
- | (elem Arvore (x:xs) || elem Carro (x:xs)) = False 
+mapaValido1 (Mapa l ((Rio v, o):t))
+ | (elem Arvore o || elem Carro o) = False 
  | otherwise = mapaValido1 (Mapa l t)
-mapaValido1 (Mapa l ((Estrada v,(x:xs)):t))
- | (elem Tronco (x:xs) || elem Arvore (x:xs)) = False 
+mapaValido1 (Mapa l ((Estrada v, o):t))
+ | (elem Tronco o || elem Arvore o) = False 
  | otherwise = mapaValido1 (Mapa l t)
 
-{- Exercicio 2 -}
+-- Exercicio 2
 
 mapaValido2 :: Mapa -> Bool 
 mapaValido2 (Mapa l []) = True 
-mapaValido2 (Mapa l ((Estrada v,(x:xs)):t)) = mapaValido2 (Mapa l t)
-mapaValido2 (Mapa l ((Relva,(x:xs)):t)) = mapaValido2 (Mapa l t)
-mapaValido2 (Mapa l ((Rio v,(x:xs)):(Relva,(x1:xs1)):t)) = mapaValido2 (Mapa l t)
-mapaValido2 (Mapa l ((Rio v,(x:xs)):(Estrada v1,(x1:xs1)):t)) = mapaValido2 (Mapa l t)
-mapaValido2 (Mapa l ((Rio v,(x:xs)):[])) = True 
-mapaValido2 (Mapa l ((Rio v,(x:xs)):(Rio v1,(x1:xs1)):t))
- | (v>0 && v1>0) || (v<0) && (v1<0) = False 
- | otherwise = mapaValido2 (Mapa l ((Rio v1,(x1:xs1)):t))
+mapaValido2 (Mapa l ((Estrada v, o):t)) = mapaValido2 (Mapa l t)
+mapaValido2 (Mapa l ((Relva, o):t)) = mapaValido2 (Mapa l t)
+mapaValido2 (Mapa l ((Rio v, o):(Relva, o'):t)) = mapaValido2 (Mapa l t)
+mapaValido2 (Mapa l ((Rio v,o):(Estrada v',o'):t)) = mapaValido2 (Mapa l t)
+mapaValido2 (Mapa l ((Rio v,o):[])) = True 
+mapaValido2 (Mapa l ((Rio v, o):(Rio v', o'):t))
+ | (v>0 && v'>0) || (v<0) && (v'<0) = False 
+ | otherwise = mapaValido2 (Mapa l ((Rio v', o'):t))
 
-{- Auxiliares -}
+{-
 
-mapaValido34 :: Mapa -> Bool 
-mapaValido34 (Mapa l []) = True 
-mapaValido34 (Mapa l ((Relva,(x:xs)):t)) = mapaValido34 (Mapa l t)
-mapaValido34 (Mapa l ((Rio v,(x:xs)):t))
- | mapaValido3 (Mapa l ((Rio v,(x:xs)):t)) == True = mapaValido (Mapa l t)
- | otherwise = False 
-mapaValido34 (Mapa l ((Estrada v,(x:xs)):t))
- | mapaValido4 (Mapa l ((Estrada v,(x:xs)):t)) == True = mapaValido (Mapa l t)
- | otherwise = False 
+--Exercício 3 (Imcompleto) e 4
 
-{- Exercicio 3 -}
+mapaValido3 :: Mapa -> Bool
+mapaValido3 (Mapa l []) = True 
+mapaValido3 m = aux m 0
 
-mapaValido3 :: Mapa -> Bool 
-mapaValido3 (Mapa l ((Rio v,[]):t)) = True 
-mapaValido3 (Mapa l ((Rio v,(x:xs)):t))
- | length (x:xs) <= 5 = True 
- | x == Tronco && head xs == Tronco && head (tail xs) == Tronco && head (tail(tail xs)) == Tronco && head (tail(tail(tail xs))) == Tronco && head (tail(tail(tail(tail xs)))) ==Tronco = False
- | otherwise = mapaValido3 (Mapa l ((Rio v,xs):t))
+aux :: Mapa -> Int -> Bool
+aux (Mapa l (((Rio v),[]):t2)) x = True 
+aux (Mapa l (((Rio v),(h1:t1)):t2)) x 
+  | h1 == Tronco = aux (Mapa l (((Rio v),t1):t2)) (x+1)
+  | x > 5 = False
+  | otherwise = aux (Mapa l (((Rio v),t1):t2)) x
 
-{- Exercicio 4 -}
+-}
 
-mapaValido4 :: Mapa -> Bool 
-mapaValido4 (Mapa l ((Estrada v,[]):t)) = True 
-mapaValido4 (Mapa l ((Estrada v,(x:xs)):t))
- | length (x:xs) <= 3 = True 
- | x == Carro && head xs == Carro && head(tail xs) == Carro && head(tail(tail xs)) == Carro = False 
- | otherwise = mapaValido4 (Mapa l ((Estrada v,xs):t))
-
-{- Exercicio 5 -}
+-- Exercicio 5
 
 mapaValido5 :: Mapa -> Bool 
 mapaValido5 (Mapa l []) = True 
-mapaValido5 (Mapa l ((p,(x:xs)):t))
- | elem Nenhum (x:xs) == False = False 
- | otherwise = mapaValido5 (Mapa l t)
+mapaValido5 (Mapa l ((t,o):t2))
+ | (elem (Nenhum o) == False) = False 
+ | otherwise = mapaValido5 (Mapa l t2)
 
-{- Exercicio 6 -}
+-- Exercicio 6 
 
 mapaValido6 :: Mapa -> Bool 
 mapaValido6 (Mapa l []) = True 
-mapaValido6 (Mapa l ((p,(x:xs)):t))
- | length (x:xs) /= l = False 
- | otherwise = mapaValido6 (Mapa l t)
+mapaValido6 (Mapa l ((p,(h1:t1)):t2))
+ | length (h1:t1) /= l = False 
+ | otherwise = mapaValido6 (Mapa l t2)
 
-{- Exercicio 7 -}
+-- Exercicio 7
 
 mapaValido7 :: Mapa -> Bool 
 mapaValido7 (Mapa l []) = True 
-mapaValido7 (Mapa l ((Rio v,(x:xs)):(Rio v1,(x1:xs1)):(Rio v2,(x2:xs2)):(Rio v3,(x3:xs3)):(Rio v4,(x4:xs4)):t)) = False
-mapaValido7 (Mapa l ((Estrada v,(x:y)):(Estrada v1,(x1:xs1)):(Estrada v2,(x2:xs2)):(Estrada v3,(x3:xs3)):(Estrada v4,(x4:xs4)):(Estrada v5,(x5:xs5)):t)) = False
-mapaValido7 (Mapa l ((Relva,(x:xs)):(Relva,(x1:xs1)):(Relva,(x2:xs2)):(Relva,(x3:xs3)):(Relva,(x4:xs4)):(Relva,(x5:xs5)):t)) = False
-mapaValido7 (Mapa l ((p,(x:xs)):t)) = mapaValido7 (Mapa l t)
+mapaValido7 (Mapa l ((Rio v,(h1:t1)):(Rio v1,(h2:t2)):(Rio v2,(h3:t3)):(Rio v3,(h4:t4)):(Rio v4,(h5:t5)):t6)) = False
+mapaValido7 (Mapa l ((Estrada v,(h1:t1)):(Estrada v1,(h2:t2)):(Estrada v2,(h3:t3)):(Estrada v3,(h4:t4)):(Estrada v4,(h5:t5)):(Estrada v5,(h6:t6)):t7)) = False
+mapaValido7 (Mapa l ((Relva,(h1:t1)):(Relva,(h2:t2)):(Relva,(h3:t3)):(Relva,(h4:t4)):(Relva,(h5:t5)):(Relva,(h6:t6)):t7)) = False
+mapaValido7 (Mapa l ((t,(h1:t1)):t2)) = mapaValido7 (Mapa l t2)
 
 
