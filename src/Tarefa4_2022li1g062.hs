@@ -57,12 +57,12 @@ jogoTerminou1 (Mapa l [(t, o)]) (Jogador (x,y)) = if x < 0 || y < 0 || x > l
 
 --Afogado
 jogoTerminou2 :: Mapa -> Jogador-> Bool
-jogoTerminou2 (Mapa l (Rio v,o):t2) (Jogador (x,y))
-  | x !! o == Nenhum = True
+jogoTerminou2 (Mapa l ((Rio v,o):t2)) (Jogador (x,y))
+  |(!!) o x == Nenhum = True
   | otherwise = False
 
 --Atropelado
-jogoTerminou2 :: Mapa -> Jogador-> Bool
-jogoTerminou2 (Mapa l (Estrada v,o):t2) (Jogador (x,y))
-  | x !! o == Carro = True 
+jogoTerminou3 :: Mapa -> Jogador-> Bool
+jogoTerminou3 (Mapa l (((Estrada v), (o)):t2)) (Jogador (x,y))
+  |(!!) o x == Carro = True 
   | otherwise = False
