@@ -27,15 +27,14 @@ aux3_1 ((Rio v, o):t)
 
 
 --Exercício 2
-{-
-animaJogo2 :: Jogo -> Jogada -> Jogo
-animaJogo2 (Jogo (x,y) m) Parado = Jogo (x,y) m 
-animaJogo2 (Jogo (x,y) m) (Move d) 
-   |d == Cima == (Jogo (x,yC) m) 
-   |d == Baixo == (Jogo (x,yB) m)
 
-where yC = y+1 && yB = y-1
--}
+animaJogo2 :: Jogo -> Jogada -> Jogo
+animaJogo2 (Jogo (Jogador (x,y)) m) Parado = Jogo (Jogador (x,y)) m 
+animaJogo2 (Jogo (Jogador (x,y)) m) (Move d) 
+   |d == Cima == (Jogo (Jogador (x,y+1)) m) 
+   |d == Baixo == (Jogo (Jogador (x,y-1)) m)
+
+
 
 --Exercício 3
 {-

@@ -31,7 +31,7 @@ mapa, perde.
 O jogador pode mover-se nas quatro direc ̧c ̃oes poss ́ıveis sem, contudo,
 sair do mapa. Com efeito, as  ́unicas situa ̧c ̃oes em que o jogador pode escapar
 do mapa s ̃ao:
-1. Quando o mapa desliza e o jogador fica para tr ́as.
+1. Quando o mapa desliza e o jogador fica para trás.
 2. Quando o tronco em que o jogador se encontra eventualmente desapa-
 rece do mapa.
 Em ambas as situa ̧c ̃oes, o jogador perde e o jogo termina imediatemente.
@@ -42,18 +42,27 @@ os limites do mapa fossem wormholes.
 -}
 
 
-
+{-
 jogoTerminou :: Jogo -> Bool
-jogoTerminou = if foradomapa == True && agua == True && undercarro == True 
+jogoTerminou = if jogoTerminou == True && agua == True && undercarro == True 
                then True 
                else False 
 
-foradoMapa :: Mapa -> Jogador -> Bool 
-foradoMapa (Mapa n [(ter,l)]) (Jogador (a,b)) = if b < 0 || a < 0 || a>n 
-                                                then False
-                                                else True
+-}
 
+jogoTerminou1 :: Mapa -> Jogador -> Bool 
+jogoTerminou1 (Mapa l [(t, o)]) (Jogador (x,y)) = if x < 0 || y < 0 || x > l 
+                                                then True
+                                                else False
 
-agua :: 
+--Afogado
+jogoTerminou2 :: Mapa -> Jogador-> Bool
+jogoTerminou2 (Mapa l (Rio v,o):t2) (Jogador (x,y))
+  | x !! o == Nenhum = True
+  | otherwise = False
 
-undercarro :: 
+--Atropelado
+jogoTerminou2 :: Mapa -> Jogador-> Bool
+jogoTerminou2 (Mapa l (Estrada v,o):t2) (Jogador (x,y))
+  | x !! o == Carro = True 
+  | otherwise = False
