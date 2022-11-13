@@ -51,7 +51,7 @@ jogoTerminou = if jogoTerminou == True && agua == True && undercarro == True
 -}
 
 jogoTerminou1 :: Mapa -> Jogador -> Bool 
-jogoTerminou1 (Mapa l [(t, o)]) (Jogador (x,y)) = if x < 0 || y < 0 || x > l 
+jogoTerminou1 (Mapa l [(t, o)]) (Jogador (x,y)) = if x < 0 || y < 0 || x > l || y > length ([(t,o)]) 
                                                 then True
                                                 else False
 
