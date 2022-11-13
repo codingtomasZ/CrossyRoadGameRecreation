@@ -49,74 +49,74 @@ proximosTerrenosValidos (Mapa l (x:[(Relva ,a),(Relva, aa),(Relva , aaa),(Relva 
 proximosTerrenosValidos (Mapa l t) = [Relva,Rio 0 ,Estrada 0]
 
 
-{- | A função ’proximosObstaculosValidosauxiliar’ calcula os obstaculos que podem ser gerados para continuar uma dada linha do mapa. O valor inteiro corresponde a largura do mapa. Se o comprimento da lista de obstaculos atinge a largura do mapa entao mais nenhum obstaculo e possivel adicionar. Os obstaculos escolhidos devem ainda estar de acordo com o seu respetivo terreno.
-Clicando em /Terreno/ e /Obstaculo/ é possivel obter mais informaçoes relativamente a estas funcoes.
- 
+{- | A função ’proximosObauxiliar’ calcula os obstaculos que podem ser gerados para continuar uma dada linha do mapa. O valor inteiro corresponde a largura do mapa. Se o comprimento da lista de obstaculos atinge a largura do mapa entao mais nenhum obstaculo e possivel adicionar. Os obstaculos escolhidos devem ainda estar de acordo com o seu respetivo terreno.
+Clicando em /Terreno/ e /Obstaculo/ é possivel obter mais informaçoes relativamente a estas funcoes. 
+
 == Exemplos de utilização:
- 
+
 @
->>> proximosObstaculosValidosauxiliar 10 (Estrada 3 , [Carro,Carro,Carro,Carro])
+>>> proximosObauxiliar 10 (Estrada 3 , [Carro,Carro,Carro,Carro])
 [Nenhum]
 @
- 
+
 @
->>>  proximosObstaculosValidosauxiliar 3 (Estrada 3 , [Carro,Carro,Carro,Nenhum])
+>>>  proximosObauxiliar 3 (Estrada 3 , [Carro,Carro,Carro,Nenhum])
+[Nenhum] 
+@
+
+@
+>>>  proximosObauxiliar 6 (Estrada 3 , [Carro,Carro,Carro,Carro])
 [Nenhum]
 @
- 
+
 @
->>>  proximosObstaculosValidosauxiliar 6 (Estrada 3 , [Carro,Carro,Carro,Carro])
-[Nenhum]
-@
- 
-@
->>> proximosObstaculosValidosauxiliar 6 (Estrada 3 , [])
+>>>  proximosObauxiliar 6 (Estrada 3 , [])
 [Nenhum,Carro]
 @
- 
+
 @
->>>  proximosObstaculosValidosauxiliar 2 (Estrada 3 , [Carro,Carro,Carro,Carro])
+>>>  proximosObauxiliar 2 (Estrada 3 , [Carro,Carro,Carro,Carro])
 [Nenhum]
 @
- 
+
 -}
- 
+
 {- Funçao proximosObstaculosValidos -}
- 
+
 proximosObstaculosValidos :: Int -> Int -> (Terreno, [Obstaculo]) -> [Obstaculo]
-proximosObstaculosValidos m n (ter,t)                                                                                                                                                                                                                                                                                                                                                                                                                        
-|length t ==(m-1) && elem Nenhum t == False = t ++[Nenhum]
-|length t == m = t
-|otherwise = proximosObstaculosValidos m n (ter,[((proximosObstaculosValidosauxiliar m (ter,t)) !! mod n (length (proximosObstaculosValidosauxiliar m (ter,t))))] ++ t)
- 
- 
-proximosObstaculosValidosauxiliar :: Int -> (Terreno,[Obstaculo]) -> [Obstaculo]
-proximosObstaculosValidosauxiliar n (Relva, [])=[Nenhum,Arvore]
-proximosObstaculosValidosauxiliar n (Estrada f,[])=[Nenhum,Carro]
-proximosObstaculosValidosauxiliar n (Rio f, [])=[Nenhum, Tronco]
-proximosObstaculosValidosauxiliar n (Rio f,(Tronco:Tronco:Tronco:Tronco:Tronco:t))=[Nenhum]
-proximosObstaculosValidosauxiliar n (Rio f,lar)=[Nenhum,Tronco]
-proximosObstaculosValidosauxiliar n (Relva,lar)=[Nenhum,Arvore]
-proximosObstaculosValidosauxiliar n (Estrada f,lar)=[Nenhum,Carro]
-proximosObstaculosValidosauxiliar n (Estrada f,(Carro:Carro:Carro:t))=[Nenhum]
- 
+proximosObstaculosValidos m n (ter,o)                                                                                                                                                                                                                                                                                                                                                                                                                         
+ |length o ==(m-1) && elem Nenhum o == False = t ++ [Nenhum]
+ |length o == m = o
+ |otherwise = proximosObstaculosValidos m n (ter,[((proximosObauxiliar m (ter,o)) !! mod n (length (proximosObauxiliar m (ter,o))))] ++ o)
+
+
+proximosObauxiliar :: Int -> (Terreno,[Obstaculo]) -> [Obstaculo]
+proximosObauxiliar n (Relva, [])=[Nenhum,Arvore]
+proximosObauxiliar n (Estrada f,[])=[Nenhum,Carro]
+proximosObauxiliar n (Rio f, [])=[Nenhum, Tronco
+proximosObauxiliar n (Rio f,(Tronco:Tronco:Tronco:Tronco:Tronco:t))=[Nenhum]
+proximosObauxiliar n (Rio f,lar)=[Nenhum,Tronco]
+proximosObauxiliar n (Relva,lar)=[Nenhum,Arvore]
+proximosObauxiliar n (Estrada f,lar)=[Nenhum,Carro]
+proximosObauxiliar n (Estrada f,(Carro:Carro:Carro:t))=[Nenhum]
+
 {- | A funcao ’estendeMapa’ tem como finalidade gerar e adicionar uma nova linha valida ao topo de um dado mapa. O valor inteiro deve estar entre [0,100] usado para acrescentar alguma pseudo-aleatoriedade a geracao a proxima nova linha.
-Acima encontram-se mais informaçoes sobre as funçoes /Mapa/.
- 
+Acima encontram-se mais informaçoes sobre as funçoes /Mapa/. 
+
 == Exemplos de utilização:
- 
+
 @
 >>>  estendeMapa (Mapa 3 [(Relva , [])]) 3
 Mapa 3 [(Relva,[]),(Relva,[Arvore,Arvore,Nenhum])]
 @
- 
+
 == Sobre...
- 
-Na funçao 'estendeMapa',
- 
+
+Na funçao 'estendeMapa', usamos random com recurso a funçao mod de modo a gerar novas linhas de terreno no mapa. 
+
 -}
- 
+
 {- Funçao estendeMapa -}
- 
-estendeMapa :: Mapa -> Int -> Mapa
+
+estendeMapa :: Mapa -> Int -> Mapa 
 estendeMapa (Mapa x l) y = Mapa x ( l ++ [(proximosTerrenosValidos (Mapa x l) !! mod y (length (proximosTerrenosValidos (Mapa x l))) , proximosObstaculosValidos x y ((proximosTerrenosValidos (Mapa x l) !! mod y (length (proximosTerrenosValidos (Mapa x l))) , [])))])

@@ -17,13 +17,13 @@ testsT4 :: Test
 testsT4 = TestLabel "Teste do proximo terreno" $ test ["Teste de um terreno valido apos 5 Relva contiguas" ~: [Relva,Rio 0,Estrada 0] ~=? proximosTerrenosValidos (Mapa 2 [(Relva, [Arvore,Nenhum]), (Relva, [Arvore,Nenhum]), (Relva, [Arvore,Nenhum]), (Relva, [Arvore,Nenhum]), (Relva, [Arvore,Nenhum]), (Estrada 3, [Carro,Nenhum])])]
 
 testsT5 :: Test
-testsT5 = TestLabel "Teste dos proximos obstaculos" $ test ["Teste lista vazia em Obstaculo com Terreno Estrada" ~: [Nenhum, Carro] ~=? proximosObstaculosValidosauxiliar 10 (Estrada 5, [])]
+testsT5 = TestLabel "Teste dos proximos obstaculos" $ test ["Teste lista vazia em Obstaculo com Terreno Estrada" ~: [Nenhum, Carro] ~=? proximosObauxiliar 10 (Estrada 5, [])]
 
 testsT6 :: Test 
-testsT6 = TestLabel "Teste dos proximos obstaculos" $ test ["Teste lista vazia em Obstaculo com Terreno Rio" ~: [Nenhum,Tronco] ~=? proximosObstaculosValidosauxiliar 10 (Rio 4, [])]
+testsT6 = TestLabel "Teste dos proximos obstaculos" $ test ["Teste lista vazia em Obstaculo com Terreno Rio" ~: [Nenhum,Tronco] ~=? proximosObauxiliar 10 (Rio 4, [])]
 
 testsT7 :: Test
-testsT7 = TestLabel "Teste dos proximos obstaculos" $ test ["Teste Estrada independentemente da Velocidade" ~: [] ~=? proximosObstaculosValidosauxiliar 2 (Estrada 3, [Carro, Nenhum])]
+testsT7 = TestLabel "Teste dos proximos obstaculos" $ test ["Teste Estrada independentemente da Velocidade" ~: [] ~=? proximosObauxiliar 2 (Estrada 3, [Carro, Nenhum])]
 
 testsT8 :: Test 
 testsT8 = TestLabel "Teste da funçao estendeMapa" $ test ["Teste de gerar uma nova linha no mapa valido" ~: Mapa 3 [(Relva,[]),(Relva,[Arvore,Arvore,Nenhum])] ~=? estendeMapa (Mapa 3 [(Relva , [])]) 3 ]
