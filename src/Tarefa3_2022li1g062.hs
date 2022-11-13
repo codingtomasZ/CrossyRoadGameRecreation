@@ -11,32 +11,25 @@ module Tarefa3_2022li1g062 where
 import LI12223
 
 {-
-1. Numa estrada ou rio com velocidade v, os obst ́aculos devem mover-se
-|v| unidades na direc ̧c ̃ao determinada.
-2. As jogadas Move Cima, Move Baixo, etc. fazem com que o jogador se
-mova 1 unidade para cima, baixo, etc, respectivamente.
-3. Mesmo quando o jogador n ̃ao efectua qualquer movimento (i.e. a sua
-jogada  ́e Parado), se o personagem se encontrar em cima de um tronco,
-o jogador acompanha o movimento tronco.
-4. O jogador n ̃ao consegue escapar do mapa atrav ́es dos seus movimentos.
-Por exemplo, se o jogador se encontrar na linha de topo do mapa,
-ent ̃ao mover-se para cima n ̃ao tem qualquer efeito, uma vez que j ́a se
-encontra no limite do mapa.
-7
-5. Ao deslocar os obst ́aculos de uma linha, lembre-se que estes, assim que
-desaparecerem por um dos lados do mapa, devem reaparecer no lado
-oposto.
-6. O efeito de deslize do mapa n ̃ao  ́e para ser implementado nesta fun ̧c ̃ao.
-Por outras palavras, as dimens ̃oes do mapa n ̃ao devem sofrer altera ̧c ̃oes
-ap ́os invocar esta fun ̧c ̃ao
-
--}
-
-{-
 animaJogo :: Jogo -> Jogada -> Jogo
 animaJogo = animaJogo1 && animaJogo2 && animaJogo3 -}
 
---Exercício 1 / Exerćicio 5
+{- | A função "animaJogo1" pretende criar a movimentação dos terrenos animados, mediante a velocidade dada aos obstáculos móveis, os carros e troncos
+Clicando em /Jogo/ e /Jogada/ é possivel obter mais informações relativamente a estas funções.
+
+== Exemplos de utilização:
+
+@
+>>> animaJogo1 Jogo ( Jogador (0,0) ) (Mapa 5 [(Estrada 1, [Carro, Nenhum, Carro, Nenhum, Carro])]) )
+(Jogo (Jogador (0,0) )(Mapa 5 [(Estrada 1, [Carro, Carro, Nenhum, Carro, Nenhum])]))
+@
+
+@
+>>> animaJogo1 Jogo ( Jogador (0,0) ) (Mapa 5 [(Rio -2, [Tronco, Nenhum, Tronco, Nenhum, Tronco])]) )
+(Jogo (Jogador (0,0) )(Mapa 5 [(Rio -2, [Tronco, Nenhum, Tronco, Tronco, Nenhum])]))
+@
+
+| -}
 
 animaJogo1 :: Jogo -> Jogada -> Jogo
 animaJogo1 (Jogo j1 (Mapa l [])) j2 = []
@@ -48,14 +41,45 @@ aux3_1 ((Rio v, o):t)
    | v > 0 = aux3_1 (Rio v, ((drop v o) ++ (take v o)))++(aux3_1 t)
    | v < 0 = aux3_1 (Rio v, ((drop (-v) o) ++ (take (-v) o)))++(aux3_1 t)
 
---Exercício 2
+{- | A função "animaJogo2" pretende animar o jogador, mediante a jogada escolhida ser fazer o jogador andar para cima, para baixo, para esquerda ou para a direita.
+Clicando em /Direcao/ e /Jogador/ é possivel obter mais informações relativamente a estas funções.
+
+== Exemplos de utilização:
+
+@
+>>> animaJogo2 Move Cima ( Jogador (0,0) )
+Jogador (0,1)
+@
+
+@
+>>> animaJogo2 Move Esquerda ( Jogador (2,1) )
+Jogador (1,1)
+@
+
+| -}
+
 animaJogo2 :: Direcao -> Jogador-> Jogador 
 animaJogo2 Cima (Jogador (x,y)) = (Jogador (x,y-1))
 animaJogo2 Baixo (Jogador (x,y)) = (Jogador (x,y+1))
 animaJogo2 Esquerda (Jogador (x,y)) = (Jogador (x-1,y))
 animaJogo2 Direita (Jogador (x,y)) = (Jogador (x+1,y))
 
---Exercício 3
+{- | A função "animaJogo3" pretende animar o jogador para que, quando este estiver parado em cima de um tronco, ele se movimente de modo a manter-se sempre em cima do tronco.
+Clicando em /Jogo/ e /Jogada/ é possivel obter mais informações relativamente a estas funções.
+
+== Exemplos de utilização:
+
+@
+>>> animaJogo3 Jogo (Jogador (0,0)) (Mapa 3 (Rio 1, (Tronco, Nenhum, Nenhum))) Parado
+Jogo (Jogador (1,0) ) (Mapa 3 (Rio 1, (Nenhum, Tronco, Nenhum) ))
+@
+
+@
+>>> animaJogo3 Jogo (Jogador (2,0)) (Mapa 3 (Rio (-1), (Tronco, Nenhum, Tronco))) Parado
+Jogo (Jogador (1,0) ) (Mapa 3 (Rio 1, (Nenhum, Tronco, Tronco) ))
+@
+
+| -}
 
 animaJogo3 Jogo -> Jogada -> Jogo
 animaJogo3 (Jogo (x,y) (Mapa l []))
@@ -67,7 +91,22 @@ aux3_3 x (h:t)
   | h == Tronco = x
   | otherwise = procuraTronco (x+1) h2
 
---Exercício 4 
+{- | A função "animaJogo4" pretende limitar os coordenadas possíveis do jogador, ao limite do mapa, não permitindo que ele saia para fora deste.
+Clicando em /Jogo/ e /Jogada/ é possivel obter mais informações relativamente a estas funções.
+
+== Exemplos de utilização:
+
+@
+>>> animaJogo4  (Mapa 3 (Rio 1, (Tronco, Nenhum, Nenhum))) (Jogador (0,0)) Move Cima
+False
+@
+
+@
+>>> animaJogo4  (Mapa 3 (Rio 1, (Tronco, Nenhum, Nenhum))) (Jogador (0,0)) Move Esquerda
+False
+@
+
+| -}
 
 animaJogo4 :: Mapa -> Jogador -> Direcao -> Bool 
 animaJogo4 (Mapa l (h:t)) (Jogador (x,y)) Esquerda 
@@ -84,11 +123,6 @@ animaJogo4 (Mapa l (h:t)) (Jogador (x,y)) Baixo
  | otherwise = True 
 
 
---Exercício 6
-{-
-animaJogo6 :: Jogo -> Jogada -> Jogo
-animaJogo6 (Jogo j1 (Mapa l (Relva v, o):t)) 
--}
 
 
 
