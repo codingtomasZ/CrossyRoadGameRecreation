@@ -6,6 +6,7 @@ Copyright   : Tomas Henrique Alves Melo <a104529@alunos.uminho.pt>
 
 Módulo para a realização da Tarefa 4 do projeto de LI1 em 2022/2023.
 -}
+
 module Tarefa4_2022li1g062 where
 
 import LI12223
@@ -51,9 +52,9 @@ jogoTerminou = if jogoTerminou == True && agua == True && undercarro == True
 -}
 
 jogoTerminou1 :: Mapa -> Jogador -> Bool 
-jogoTerminou1 (Mapa l [(t, o)]) (Jogador (x,y)) = if x < 0 || y < 0 || x > l 
+jogoTerminou1 (Mapa l [(t, o)]) (Jogador (x,y)) = if x < 0 || y < 0 || x > l - 1 || y > (length ([(t,o)]) -1)
                                                 then True
-                                                else False
+                                                else False  
 
 --Afogado
 jogoTerminou2 :: Mapa -> Jogador-> Bool
@@ -84,11 +85,11 @@ Copyright   : Tomas Henrique Alves Melo <a104529@alunos.uminho.pt>
 Módulo para a realização da Tarefa 4 do projeto de LI1 em 2022/2023.
 -}
 
-module Tarefa4_2022li1g062 where
+--module Tarefa4_2022li1g062 where
 
-import LI12223
+--import LI12223
 
-import Test.HUnit 
+--import Test.HUnit 
 
 
 {-
@@ -98,7 +99,7 @@ jogoTerminou = if jogoTerminou == True && agua == True && undercarro == True
                else False 
 
 -}
-
+{-}
 jogoTerminou1 :: Mapa -> Jogador -> Bool 
 jogoTerminou1 (Mapa lar lista) (Jogador (x,y)) = if y < 0 || x < 0 || x > (length (snd (head lista)) -1) || y > ((length lista) -1 )
                                                 then True
@@ -156,4 +157,4 @@ localiza (terr,obs) x  = (obs !! x)
 
 localizapersonagem :: Mapa -> Jogador -> (Terreno, [Obstaculo])
 localizapersonagem (Mapa l (h:t)) (Jogador (x,0)) = (localiza h x)  
-localizapersonagem (Mapa l (h:t)) (Jogador (x,y)) = (localizapersonagem (Mapa l t) (Jogador (x,y-1))) -}
+localizapersonagem (Mapa l (h:t)) (Jogador (x,y)) = (localizapersonagem (Mapa l t) (Jogador (x,y-1))) -}  -}

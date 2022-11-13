@@ -32,4 +32,4 @@ testsT8 :: Test
 testsT8 = TestLabel "Teste da funçao estendeMapa" $ test ["Teste de gerar uma nova linha no mapa valido" ~: Mapa 3 [(Relva,[]),(Relva,[Arvore,Arvore,Nenhum])] ~=? estendeMapa (Mapa 3 [(Relva , [])]) 3 ]
 
 
-todos1 = runTestTT (TestList [testsT1, testsT2, testsT3, testsT4 , testsT5, testsT6 , testsT7 , testsT8 ])
+todos2 = runTestTT (TestList [testsT1, testsT2, testsT3, testsT4 , testsT5, testsT6 , testsT7 , testsT8 ])
