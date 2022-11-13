@@ -50,7 +50,7 @@ proximosTerrenosValidos (Mapa l t) = [Relva,Rio 0 ,Estrada 0]
 
 
 {- | A função ’proximosObstaculosValidosauxiliar’ calcula os obstaculos que podem ser gerados para continuar uma dada linha do mapa. O valor inteiro corresponde a largura do mapa. Se o comprimento da lista de obstaculos atinge a largura do mapa entao mais nenhum obstaculo e possivel adicionar. Os obstaculos escolhidos devem ainda estar de acordo com o seu respetivo terreno.
-Clicando em /Terreno/ e /Obstaculo/ e possivel obter mais informaçoes relativamente a estas funcoes. 
+Clicando em /Terreno/ e /Obstaculo/ é possivel obter mais informaçoes relativamente a estas funcoes. 
 
 == Exemplos de utilização:
 

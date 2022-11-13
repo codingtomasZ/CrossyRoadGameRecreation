@@ -48,7 +48,6 @@ aux3_1 ((Rio v, o):t)
    | v > 0 = aux3_1 (Rio v, ((drop v o) ++ (take v o)))++(aux3_1 t)
    | v < 0 = aux3_1 (Rio v, ((drop (-v) o) ++ (take (-v) o)))++(aux3_1 t)
 
-
 --Exercício 2
 
 {- 
@@ -57,7 +56,6 @@ animaJogo2 (Jogo (Jogador (x,y)) m) Parado = Jogo (Jogador (x,y)) m
 animaJogo2 (Jogo (Jogador (x,y)) m) (Move d) 
    |d == Cima == (Jogo (Jogador (x,y+1)) m) 
    |d == Baixo == (Jogo (Jogador (x,y-1)) m)   -}
-
 
 
 --Exercício 3
