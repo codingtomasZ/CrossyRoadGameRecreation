@@ -42,118 +42,71 @@ os limites do mapa fossem wormholes.
 -}
 
 
-{-
-jogoTerminou :: Jogo -> Bool
-jogoTerminou = if jogoTerminou == True && agua == True && undercarro == True 
+
+jogoTerminou :: Mapa -> Jogador -> Bool
+jogoTerminou = if jogoTerminou1 == True || jogoTerminou2 == True || jogoTerminou3 == True 
                then True 
                else False 
 
--}
+{- | A função "jogoTerminou1" avalia se o jogador perdeu o jogo devido a 4 casos diferentes. No primeiro é testado se o jogador perdeu porque a sua coordenada x for negativa, ou seja, estiver fora do mapa, pelo lado esquerdo. No segundo caso é testado se a posição do jogador tem a coordenada y negativa, ou seja, o jogador está a sair do mapa pela parte de baixo. O terceiro caso testa se o valor da coordenada x é superior à largura do mapa, ou seja, se o jogador está fora do mapa pelo lado direito. O quarto e último caso testa se o valor da coordenada y é superior ao comprimento (de baixo para cima) do mapa, ou seja, se o jogador sai do mapa pela parte de cima. 
+Clicando em /Mapa/ e /Jogador/ é possivel obter mais informações relativamente a estas funções.
+
+== Exemplos de utilização:
+
+@
+>>> jogoTerminou1 (Mapa 5 [(Relva, [Arvore, Nenhum, Nenhum, Nenhum, Arvore]),(Relva, [Nenhum, Arvore, Nenhum, Nenhum, Arvore]), (Estrada 1, [Carro, Nenhum, Carro, Nenhum, Carro])]) (Jogador (2,-2) ) )
+True 
+@
+
+@
+>>> jogoTerminou1 (Mapa 5 [(Relva, [Arvore, Nenhum, Nenhum, Nenhum, Arvore]),(Relva, [Nenhum, Arvore, Nenhum, Nenhum, Arvore]), (Estrada 1, [Carro, Nenhum, Carro, Nenhum, Carro])]) (Jogador (2,2) ) )
+False
+@
+
+| -}
 
 jogoTerminou1 :: Mapa -> Jogador -> Bool 
 jogoTerminou1 (Mapa l [(t, o)]) (Jogador (x,y)) = if x < 0 || y < 0 || x > l || y > length ([(t,o)]) 
                                                 then True
                                                 else False
 
---Afogado
+
+{- | A função "jogoTerminou2" testa se o jogador, quando está numa linha em que o terreno é rio, está numa coordenada "Nenhum", ou seja, está afogado e então perde o jogo.
+Clicando em /Mapa/ e /Jogador/ é possivel obter mais informações relativamente a estas funções.
+
+@
+>>> jogoTerminou2 (Mapa 5 [(Rio (-2), [Nenhum, Tronco, Tronco, Nenhum, Nenhum]),(Relva, [Arvore, Arvore, Nenhum, Nenhum, Arvore])])(Jogador (3,0))
+True
+@
+
+@
+>>> jogoTerminou2 (Mapa 5 [(Relva, [Arvore, Arvore, Nenhum, Nenhum, Arvore]),(Rio 1, [Nenhum, Tronco, Tronco, Tronco, Nenhum])])(Jogador (3,1))))
+False
+@
+|-}
+
 jogoTerminou2 :: Mapa -> Jogador-> Bool
 jogoTerminou2 (Mapa l ((Rio v,o):t2)) (Jogador (x,y))
   |(!!) o x == Nenhum = True
   | otherwise = False
 
---Atropelado
+{- | A função "jogoTerminou3" testa se o jogador, quando está numa linha em que o terreno é Estrada, está numa coordenada "Carro", ou seja, está atropelado e então perde o jogo.
+Clicando em /Mapa/ e /Jogador/ é possivel obter mais informações relativamente a estas funções.
+
+@
+>>> jogoTerminou3 (Mapa 5 [(Estrada 3, [Nenhum, Nenhum, Carro, Carro, Carro]),(Relva, [Arvore, Nenhum, Nenhum, Nenhum, Arvore])])(Jogador (3,0))
+True
+@
+
+@
+>>> jogoTerminou3 (Mapa 5 [(Estrada 3, [Nenhum, Nenhum, Carro, Carro, Carro]),(Relva, [Arvore, Nenhum, Nenhum, Nenhum, Arvore])])(Jogador (0,0))
+False
+@
+
+|-}
+
 jogoTerminou3 :: Mapa -> Jogador-> Bool
 jogoTerminou3 (Mapa l (((Estrada v), (o)):t2)) (Jogador (x,y))
   |(!!) o x == Carro = True 
   | otherwise = False
 
-
-
-
--- VERSAO ANTIGA QUE TAVA NO MEU PC 
-
-
-
-
-{- |
-Module      : Tarefa4_2022li1g062
-Description : Determinar se o jogo terminou
-Copyright   : Tomas Henrique Alves Melo <a104529@alunos.uminho.pt>
-              José Diogo Azevedo Martins <a104443@alunos.uminho.pt>
-
-Módulo para a realização da Tarefa 4 do projeto de LI1 em 2022/2023.
--}
-
-module Tarefa4_2022li1g062 where
-
-import LI12223
-
-import Test.HUnit 
-
-
-{-
-jogoTerminou :: Jogo -> Bool
-jogoTerminou = if jogoTerminou == True && agua == True && undercarro == True 
-               then True 
-               else False 
-
--}
-
-jogoTerminou1 :: Mapa -> Jogador -> Bool 
-jogoTerminou1 (Mapa lar lista) (Jogador (x,y)) = if y < 0 || x < 0 || x > (length (snd (head lista)) -1) || y > ((length lista) -1 )
-                                                then True
-                                                else False
-
-jogoTerminou :: Mapa -> Jogador -> Bool 
-jogoTerminou (Mapa lar (ter, obs):t) (Jogador (x,y)) = if y < 0 || x < 0 || 
-
---Afogado
---jogoTerminou2 :: Mapa -> Jogador-> Bool
---jogoTerminou2 (Mapa l (Rio v,o):t2) (Jogador (x,y))
---  | x !! o == Nenhum = True
---  | otherwise = False
-
---Atropelado
---jogoTerminou2 :: Mapa -> Jogador-> Bool
---jogoTerminou2 (Mapa l (Estrada (v) , o) (Jogador (x,y))
---  | x !! o == Carro = True 
---  | otherwise = False
-
---jogoTerminou2 :: Mapa -> Jogador-> Bool
---jogoTerminou2 (Mapa l (Rio v,o):t2) (Jogador (x,y))
---  | !! x o == Nenhum = True
---  | otherwise = False
-
-
---afogado :: Mapa -> Jogador -> Bool 
---afogado (Mapa n (Rio v , (h:t)):xs) (Jogador (a,b)) = if Nenhum `elem` (h:t)
---                                               then True
---                                               else False 
---jogoTerminou :: Jogo -> Bool
---jogoTerminou = if foradomapa == True
---               then True 
---               else False 
-
-{-
-foradoMapa :: Mapa -> Jogador -> Bool 
-foradoMapa (Mapa n [(ter,l)]) (Jogador (a,b)) = if b < 0 || a < 0 || a>n 
-                                                then False
-                                                else True
--}
-{-
-afogado :: Mapa -> Jogador -> Bool 
-afogado (Mapa n [(terr,(x:xs)):t]) (Jogador (a,b)) 
-  | ((x:xs):t) !! Nenhum 
-  | otherwise = True
--}
-{-
-ocalizapersonagem :: Mapa -> Jogador -> (Terreno, [Obstaculo])
-ocalizapersonagem (Mapa l (h:t)) (Jogador (x,y)) = (localiza ((h:t) !! y) x)
--}
-
-{-localiza :: (Terreno, [Obstaculo]) -> Int -> Obstaculo
-localiza (terr,obs) x  = (obs !! x)
-
-localizapersonagem :: Mapa -> Jogador -> (Terreno, [Obstaculo])
-localizapersonagem (Mapa l (h:t)) (Jogador (x,0)) = (localiza h x)  
-localizapersonagem (Mapa l (h:t)) (Jogador (x,y)) = (localizapersonagem (Mapa l t) (Jogador (x,y-1))) -}

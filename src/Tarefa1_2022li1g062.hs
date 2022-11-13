@@ -114,9 +114,9 @@ True
 mapaValido3 :: Int -> [Obstaculo] -> Bool 
 mapaValido3 n [] | (n > 5) = False
                  | otherwise = True 
-mapaValido3 n (x:t)
-   | not(x == Tronco) = mapaValido3 0 t
-   | x == Tronco = mapaValido3 (n+1) t 
+mapaValido3 n (h:t)
+   | not(h == Tronco) = mapaValido3 0 t
+   | h == Tronco = mapaValido3 (n+1) t 
    | n > 5 = False 
    | otherwise = True 
 
@@ -142,9 +142,9 @@ False
 mapaValido4 :: Int -> [Obstaculo] -> Bool 
 mapaValido4 n [] | n > 3 = False 
                  | otherwise = True
-mapaValido4 n (x:t) 
-  | not (x== Carro) = mapaValido4 0 t 
-  | x == Carro = mapaValido4 (n+1) t
+mapaValido4 n (h:t) 
+  | not (h== Carro) = mapaValido4 0 t 
+  | h == Carro = mapaValido4 (n+1) t
   | n > 3 = False 
   | otherwise = True 
 
@@ -202,10 +202,10 @@ False
 -- Exercicio 6 
 
 mapaValido6 :: Mapa -> Bool 
-mapaValido6 (Mapa lar []) = True 
-mapaValido6 (Mapa lar ((p,(h:t)):t2))
- | not (length (h:t) == lar) = False 
- | otherwise = mapaValido6 (Mapa lar t2)
+mapaValido6 (Mapa l []) = True 
+mapaValido6 (Mapa l ((p,(h:t)):t2))
+ | not (length (h:t) == l) = False 
+ | otherwise = mapaValido6 (Mapa l t2)
 
 
 {-| A funçao 'mapaValido7' analisa que nao devem existir mais do que 4 rios contiguos nem mais do que 5 estradas ou relvas contiguas.
