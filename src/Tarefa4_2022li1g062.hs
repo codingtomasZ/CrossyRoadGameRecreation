@@ -44,7 +44,7 @@ os limites do mapa fossem wormholes.
 
 
 jogoTerminou :: Mapa -> Jogador -> Bool
-jogoTerminou = if jogoTerminou1 == True || jogoTerminou2 == True || jogoTerminou3 == True 
+jogoTerminou = if (jogoTerminou1 (m) (j)) == True || (jogoTerminou2 (m) (j)) == True || (jogoTerminou3 (m) (j)) == True 
                then True 
                else False 
 
