@@ -49,14 +49,11 @@ aux3_1 ((Rio v, o):t)
    | v < 0 = aux3_1 (Rio v, ((drop (-v) o) ++ (take (-v) o)))++(aux3_1 t)
 
 --Exercício 2
-
-{- 
-animaJogo2 :: Jogo -> Jogada -> Jogo
-animaJogo2 (Jogo (Jogador (x,y)) m) Parado = Jogo (Jogador (x,y)) m 
-animaJogo2 (Jogo (Jogador (x,y)) m) (Move d) 
-   |d == Cima == (Jogo (Jogador (x,y+1)) m) 
-   |d == Baixo == (Jogo (Jogador (x,y-1)) m)   -}
-
+animaJogo2 :: Direcao -> Jogador-> Jogador 
+animaJogo2 Cima (Jogador (x,y)) = (Jogador (x,y-1))
+animaJogo2 Baixo (Jogador (x,y)) = (Jogador (x,y+1))
+animaJogo2 Esquerda (Jogador (x,y)) = (Jogador (x-1,y))
+animaJogo2 Direita (Jogador (x,y)) = (Jogador (x+1,y))
 
 --Exercício 3
 {-
@@ -64,7 +61,21 @@ animaJogo3 :: Jogo -> Jogada -> Jogobn
 animaJogo3 (Jogo (x,y) (Mapa l (Rio v, o))) Parado = Jogo (x,y) m 
 -}
 
---Exercício 4 (ñ percebo)
+--Exercício 4 
+
+animaJogo4 :: Mapa -> Jogador -> Direcao -> Bool 
+animaJogo4 (Mapa l (h:t)) (Jogador (x,y)) Esquerda 
+ | x == 0 = False 
+ | otherwise = True 
+animaJogo4 (Mapa l (h:t)) (Jogador (x,y)) Direita
+ | x == l = False 
+ | otherwise = True
+animaJogo4 (Mapa l (h:t)) (Jogador (x,y)) Cima 
+ | y == 0 = False 
+ | otherwise = True 
+animaJogo4 (Mapa l (h:t)) (Jogador (x,y)) Baixo
+ | y == length (h:t) = False
+ | otherwise = True 
 
 
 --Exercício 6
