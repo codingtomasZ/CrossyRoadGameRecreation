@@ -15,7 +15,7 @@ import LI12223
 
 --mapaValido :: Mapa -> Bool 
 --mapaValido (Mapa l []) = True 
---mapaValido m = if mapaValido1 m == True && mapaValido2 m == True && mapaValido3 n l == True && mapaValido4 n l == True && mapaValido5 m == True && mapaValido6 m == True && mapaValido7 == True 
+--mapaValido m = if mapaValido1 m == True && mapaValido2 m == True && mapaValido3 m == True && mapaValido4 m == True && mapaValido5 m == True && mapaValido6 m == True && mapaValido7 m == True 
 --               then True 
 --               else False
 
@@ -110,15 +110,25 @@ True
 
 -}
 
-
-mapaValido3 :: Int -> [Obstaculo] -> Bool 
-mapaValido3 n [] | (n > 5) = False
+mapaValido3_1 :: Int -> [Obstaculo] -> Bool 
+mapaValido3_1 n [] | (n > 5) = False
                  | otherwise = True 
+<<<<<<< HEAD
+mapaValido3_1 n (x:t)
+   | not(x == Tronco) = mapaValido3_1 0 t
+   | x == Tronco = mapaValido3_1 (n+1) t 
+=======
 mapaValido3 n (h:t)
    | not(h == Tronco) = mapaValido3 0 t
    | h == Tronco = mapaValido3 (n+1) t 
+>>>>>>> 3f70168d5897c59723cf19ad663468df79af0898
    | n > 5 = False 
    | otherwise = True 
+
+
+--mapaValido3 :: Mapa -> Bool  
+--mapaValido3 (Mapa l []) = True 
+--mapaValido3 (Mapa l ((Rio v, t):ta)) = mapaValido3_1 0 t
 
 {-| Para a funçao 'mapaValido4' foi utilizado um contador que começa pelo Int 0.
 O contador ira aumentar +1 sempre que o proximo obstaculo e Carro e caso este seja diferente de Carro entao o contador reinicia (torna a 0) e devolve o resto da lista e analisa-a.
@@ -138,17 +148,24 @@ False
 
 -}
 
-
-mapaValido4 :: Int -> [Obstaculo] -> Bool 
-mapaValido4 n [] | n > 3 = False 
+mapaValido4_1 :: Int -> [Obstaculo] -> Bool 
+mapaValido4_1 n [] | n > 3 = False 
                  | otherwise = True
+<<<<<<< HEAD
+mapaValido4_1 n (x:t) 
+  | not (x== Carro) = mapaValido4_1 0 t 
+  | x == Carro = mapaValido4_1 (n+1) t
+=======
 mapaValido4 n (h:t) 
   | not (h== Carro) = mapaValido4 0 t 
   | h == Carro = mapaValido4 (n+1) t
+>>>>>>> 3f70168d5897c59723cf19ad663468df79af0898
   | n > 3 = False 
   | otherwise = True 
 
-
+mapaValido4 :: Mapa -> Bool  
+mapaValido4 (Mapa l []) = True 
+mapaValido4 (Mapa l ((Estrada v, t):ta)) = mapaValido4_1 0 t
 
 {-
 

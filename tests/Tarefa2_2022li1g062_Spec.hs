@@ -4,8 +4,6 @@ import LI12223
 import Tarefa2_2022li1g062
 import Test.HUnit
 
-
-
 testsT1 :: Test
 testsT1 = TestLabel "Teste do proximo terreno" $ test ["Teste depois das 5 Estrada" ~: [Rio 0,Relva] ~=? proximosTerrenosValidos (Mapa 2 [(Estrada 3, [Carro, Nenhum]) , (Estrada 3, [Carro, Nenhum]), (Estrada 3, [Carro, Nenhum]), (Estrada 3, [Carro, Nenhum]), (Estrada 3, [Carro, Nenhum]), (Estrada 3, [Carro,Nenhum])])]
 
