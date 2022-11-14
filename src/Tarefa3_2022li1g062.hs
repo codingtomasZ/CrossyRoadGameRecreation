@@ -14,7 +14,23 @@ import LI12223
 animaJogo :: Jogo -> Jogada -> Jogo 
 animaJogo (Jogo (Jogador (x,y)) ((Mapa l t)):res) jog = moveJogador (Jogo (Jogador (x,y)) ((Mapa l t)):res)
 
--- Exercicio 2 
+{- | A função "moveJogador" pretende animar o jogador, mediante a jogada escolhida ser fazer o jogador andar para cima, para baixo, para esquerda ou para a direita.
+Clicando em /Direcao/ e /Jogador/ é possivel obter mais informações relativamente a estas funções.
+
+== Exemplos de utilização:
+
+@
+>>> moveJogador Move Cima ( Jogador (0,0) )
+Jogador (0,1)
+@
+
+@
+>>> moveJogador Move Esquerda ( Jogador (2,1) )
+Jogador (1,1)
+@
+
+| -}
+
 
 moveJogador :: Direcao -> Jogador-> Jogador 
 moveJogador Cima (Jogador (x,y)) = (Jogador (x,y-1))
@@ -22,7 +38,25 @@ moveJogador Baixo (Jogador (x,y)) = (Jogador (x,y+1))
 moveJogador Esquerda (Jogador (x,y)) = (Jogador (x-1,y))
 moveJogador Direita (Jogador (x,y)) = (Jogador (x+1,y))
 
--- Exercicio 4 
+
+{- | A função "validoMovimento" pretende limitar os coordenadas possíveis do jogador, ao limite do mapa, não permitindo que ele saia para fora deste.
+Clicando em /Jogo/ e /Jogada/ é possivel obter mais informações relativamente a estas funções.
+
+== Exemplos de utilização:
+
+@
+>>> validoMovimento  (Mapa 3 (Rio 1, (Tronco, Nenhum, Nenhum))) (Jogador (0,0)) Move Cima
+False
+@
+
+@
+>>> validoMovimento  (Mapa 3 (Rio 1, (Tronco, Nenhum, Nenhum))) (Jogador (0,0)) Move Esquerda
+False
+@
+
+| -}
+
+
 
 validoMovimento :: Mapa -> Jogador -> Direcao -> Bool 
 validoMovimento (Mapa l (h:t)) (Jogador (x,y)) Esquerda 
@@ -43,7 +77,6 @@ validoMovimento (Mapa l (h:t)) (Jogador (x,y)) Baixo
 validoParado :: Mapa -> Jogador -> Jogada -> Bool
 validoParado (Mapa l (h:t)) (Jogador (x,y)) (Parado) = True 
 
--- Exercicio 3 
 
 procuraTronco :: [Obstaculo] -> Bool 
 procuraTronco [] = False 
