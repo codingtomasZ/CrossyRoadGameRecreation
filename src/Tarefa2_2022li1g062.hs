@@ -93,7 +93,7 @@ proximosObstaculosValidos m n (ter,o)
 proximosObauxiliar :: Int -> (Terreno,[Obstaculo]) -> [Obstaculo]
 proximosObauxiliar n (Relva, [])=[Nenhum,Arvore]
 proximosObauxiliar n (Estrada f,[])=[Nenhum,Carro]
-proximosObauxiliar n (Rio f, [])=[Nenhum, Tronco
+proximosObauxiliar n (Rio f, [])=[Nenhum, Tronco]
 proximosObauxiliar n (Rio f,(Tronco:Tronco:Tronco:Tronco:Tronco:t))=[Nenhum]
 proximosObauxiliar n (Rio f,lar)=[Nenhum,Tronco]
 proximosObauxiliar n (Relva,lar)=[Nenhum,Arvore]
