@@ -110,25 +110,20 @@ True
 
 -}
 
+mapaValido3 :: Mapa -> Bool
+mapaValido3 (Mapa l []) = True
+mapaValido3 (Mapa l ((Rio v, o):t))
+  | (mapaValido3_1 0 o) == True = (mapaValido3 (Mapa l t))
+  | (mapaValido3_1 0 o) == False = False
+  | otherwise = True
+
 mapaValido3_1 :: Int -> [Obstaculo] -> Bool 
-mapaValido3_1 n [] | (n > 5) = False
-                 | otherwise = True 
-<<<<<<< HEAD
-mapaValido3_1 n (x:t)
-   | not(x == Tronco) = mapaValido3_1 0 t
-   | x == Tronco = mapaValido3_1 (n+1) t 
-=======
-mapaValido3 n (h:t)
-   | not(h == Tronco) = mapaValido3 0 t
-   | h == Tronco = mapaValido3 (n+1) t 
->>>>>>> 3f70168d5897c59723cf19ad663468df79af0898
-   | n > 5 = False 
-   | otherwise = True 
+mapaValido3_1 5 _ = False
+mapaValido3_1 n [] = True 
+mapaValido3_1 n (x:t) 
+  | x == Tronco = mapaValido3_1 (n+1) t 
+  | not (x == Tronco) = mapaValido3_1 0 t
 
-
---mapaValido3 :: Mapa -> Bool  
---mapaValido3 (Mapa l []) = True 
---mapaValido3 (Mapa l ((Rio v, t):ta)) = mapaValido3_1 0 t
 
 {-| Para a funçao 'mapaValido4' foi utilizado um contador que começa pelo Int 0.
 O contador ira aumentar +1 sempre que o proximo obstaculo e Carro e caso este seja diferente de Carro entao o contador reinicia (torna a 0) e devolve o resto da lista e analisa-a.
@@ -148,41 +143,21 @@ False
 
 -}
 
+mapaValido4 :: Mapa -> Bool
+mapaValido4 (Mapa l []) = True
+mapaValido4 (Mapa l ((Estrada v, o):t))
+  | (mapaValido4_1 0 o) == True = (mapaValido4 (Mapa l t))
+  | (mapaValido4_1 0 o) == False = False
+  | otherwise = True
+
 mapaValido4_1 :: Int -> [Obstaculo] -> Bool 
-mapaValido4_1 n [] | n > 3 = False 
-                 | otherwise = True
-<<<<<<< HEAD
+mapaValido4_1 3 _ = False
+mapaValido4_1 n [] = True 
 mapaValido4_1 n (x:t) 
-  | not (x== Carro) = mapaValido4_1 0 t 
-  | x == Carro = mapaValido4_1 (n+1) t
-=======
-mapaValido4 n (h:t) 
-  | not (h== Carro) = mapaValido4 0 t 
-  | h == Carro = mapaValido4 (n+1) t
->>>>>>> 3f70168d5897c59723cf19ad663468df79af0898
-  | n > 3 = False 
-  | otherwise = True 
+  | x == Carro = mapaValido4_1 (n+1) t 
+  | not (x == Carro) = mapaValido4_1 0 t
 
-mapaValido4 :: Mapa -> Bool  
-mapaValido4 (Mapa l []) = True 
-mapaValido4 (Mapa l ((Estrada v, t):ta)) = mapaValido4_1 0 t
 
-{-
-
---Exercício 3 (Imcompleto) e 4
-
-mapaValido3 :: Mapa -> Bool
-mapaValido3 (Mapa l []) = True 
-mapaValido3 m = aux m 0
-
-aux :: Mapa -> Int -> Bool
-aux (Mapa l (((Rio v),[]):t2)) x = True 
-aux (Mapa l (((Rio v),(h1:t1)):t2)) x 
-  | h1 == Tronco = aux (Mapa l (((Rio v),t1):t2)) (x+1)
-  | x > 5 = False
-  | otherwise = aux (Mapa l (((Rio v),t1):t2)) x
-
--}
 
 {-| 
 A funçao 'mapaValido5' indica quando ha pelo menos um Obstaculo Nenhum na lista de obstaculos.

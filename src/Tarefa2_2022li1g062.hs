@@ -13,6 +13,34 @@ import LI12223
 
 import Test.HUnit 
 
+
+{- | A funcao ’estendeMapa’ tem como finalidade gerar e adicionar uma nova linha valida ao topo de um dado mapa. O valor inteiro deve estar entre [0,100] usado para acrescentar alguma pseudo-aleatoriedade a geracao a proxima nova linha.
+Acima encontram-se mais informaçoes sobre as funçoes /Mapa/. 
+
+== Exemplos de utilização:
+
+@
+>>>  estendeMapa (Mapa 3 [(Relva , [])]) 3
+Mapa 3 [(Relva,[]),(Relva,[Arvore,Arvore,Nenhum])]
+@
+
+== Sobre...
+
+Na funçao 'estendeMapa', usamos random com recurso a funçao mod de modo a gerar novas linhas de terreno no mapa. 
+
+-}
+
+{- Funçao estendeMapa -}
+
+estendeMapa :: Mapa -> Int -> Mapa 
+estendeMapa (Mapa x l) y =
+    
+Mapa x ( l ++ [terreno_selecionados , proximosObstaculosValidos x y terreno_selecionados , [])
+
+where terreno_selecionados = terrenos !! mod y (length terrenos)
+
+terrenos = (proximosTerrenosValidos (Mapa x l))
+
 {- |A função ’proximosTerrenosValidos’ calcula a lista de terrenos que poderao surgir na nova linha do mapa. Para esta funçao iremos ignorar os parametros relacionados com a velocidade do /terreno Estrada/ e /terreno Rio/.
 Clicando em __Mapa__ e em __Terreno__ acima e possivel obter mais informaçoes relativamente a estas 2 funcoes.
 
@@ -85,7 +113,7 @@ Clicando em /Terreno/ e /Obstaculo/ é possivel obter mais informaçoes relativa
 
 proximosObstaculosValidos :: Int -> Int -> (Terreno, [Obstaculo]) -> [Obstaculo]
 proximosObstaculosValidos m n (ter,o)                                                                                                                                                                                                                                                                                                                                                                                                                         
- |length o ==(m-1) && elem Nenhum o == False = t ++ [Nenhum]
+ |length o ==(m-1) && elem Nenhum o == False = o ++ [Nenhum]
  |length o == m = o
  |otherwise = proximosObstaculosValidos m n (ter,[((proximosObauxiliar m (ter,o)) !! mod n (length (proximosObauxiliar m (ter,o))))] ++ o)
 
@@ -97,26 +125,7 @@ proximosObauxiliar n (Rio f, [])=[Nenhum, Tronco]
 proximosObauxiliar n (Rio f,(Tronco:Tronco:Tronco:Tronco:Tronco:t))=[Nenhum]
 proximosObauxiliar n (Rio f,lar)=[Nenhum,Tronco]
 proximosObauxiliar n (Relva,lar)=[Nenhum,Arvore]
-proximosObauxiliar n (Estrada f,lar)=[Nenhum,Carro]
 proximosObauxiliar n (Estrada f,(Carro:Carro:Carro:t))=[Nenhum]
+proximosObauxiliar n (Estrada f,lar)=[Nenhum,Carro]
 
-{- | A funcao ’estendeMapa’ tem como finalidade gerar e adicionar uma nova linha valida ao topo de um dado mapa. O valor inteiro deve estar entre [0,100] usado para acrescentar alguma pseudo-aleatoriedade a geracao a proxima nova linha.
-Acima encontram-se mais informaçoes sobre as funçoes /Mapa/. 
 
-== Exemplos de utilização:
-
-@
->>>  estendeMapa (Mapa 3 [(Relva , [])]) 3
-Mapa 3 [(Relva,[]),(Relva,[Arvore,Arvore,Nenhum])]
-@
-
-== Sobre...
-
-Na funçao 'estendeMapa', usamos random com recurso a funçao mod de modo a gerar novas linhas de terreno no mapa. 
-
--}
-
-{- Funçao estendeMapa -}
-
-estendeMapa :: Mapa -> Int -> Mapa 
-estendeMapa (Mapa x l) y = Mapa x ( l ++ [(proximosTerrenosValidos (Mapa x l) !! mod y (length (proximosTerrenosValidos (Mapa x l))) , proximosObstaculosValidos x y ((proximosTerrenosValidos (Mapa x l) !! mod y (length (proximosTerrenosValidos (Mapa x l))) , [])))])
