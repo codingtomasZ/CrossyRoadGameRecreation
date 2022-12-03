@@ -10,9 +10,8 @@ Módulo para a realização da Tarefa 2 do projeto de LI1 em 2022/2023.
 module Tarefa2_2022li1g062 where
 
 import LI12223
-
 import Test.HUnit 
-
+import System.Random
 
 {- | A funcao ’estendeMapa’ tem como finalidade gerar e adicionar uma nova linha valida ao topo de um dado mapa. O valor inteiro deve estar entre [0,100] usado para acrescentar alguma pseudo-aleatoriedade a geracao a proxima nova linha.
 Acima encontram-se mais informaçoes sobre as funçoes /Mapa/. 
@@ -32,14 +31,19 @@ Na funçao 'estendeMapa', usamos random com recurso a funçao mod de modo a gera
 
 {- Funçao estendeMapa -}
 
+
 estendeMapa :: Mapa -> Int -> Mapa 
-estendeMapa (Mapa x l) y =
-    
-Mapa x ( l ++ [terreno_selecionados , proximosObstaculosValidos x y terreno_selecionados , [])
+estendeMapa (Mapa l m) n = ( Mapa l ((terreno_selecionado, (listaObstaculos l n (terreno_selecionado, [])) ):m ))
+    where terreno_selecionado = terrenos_validos !! mod n (length terrenos_validos)
+          terrenos_validos = (proximosTerrenosValidos (Mapa l m))
 
-where terreno_selecionados = terrenos !! mod y (length terrenos)
 
-terrenos = (proximosTerrenosValidos (Mapa x l))
+listaObstaculos :: Int -> Int -> (Terreno, [Obstaculo]) -> [Obstaculo]
+listaObstaculos l n (ter,o)
+ |length o ==(l-1) && elem Nenhum o == False = o ++ [Nenhum]
+ |length o == l = o
+ |otherwise = listaObstaculos l (div ((n+1)^4) 3) (ter,[(obstaculos_validos !! mod n (length obstaculos_validos))] ++ o)
+      where obstaculos_validos = proximosObstaculosValidos l (ter, o) 
 
 {- |A função ’proximosTerrenosValidos’ calcula a lista de terrenos que poderao surgir na nova linha do mapa. Para esta funçao iremos ignorar os parametros relacionados com a velocidade do /terreno Estrada/ e /terreno Rio/.
 Clicando em __Mapa__ e em __Terreno__ acima e possivel obter mais informaçoes relativamente a estas 2 funcoes.
@@ -111,21 +115,15 @@ Clicando em /Terreno/ e /Obstaculo/ é possivel obter mais informaçoes relativa
 
 {- Funçao proximosObstaculosValidos -}
 
-proximosObstaculosValidos :: Int -> Int -> (Terreno, [Obstaculo]) -> [Obstaculo]
-proximosObstaculosValidos m n (ter,o)                                                                                                                                                                                                                                                                                                                                                                                                                         
- |length o ==(m-1) && elem Nenhum o == False = o ++ [Nenhum]
- |length o == m = o
- |otherwise = proximosObstaculosValidos m n (ter,[((proximosObauxiliar m (ter,o)) !! mod n (length (proximosObauxiliar m (ter,o))))] ++ o)
 
-
-proximosObauxiliar :: Int -> (Terreno,[Obstaculo]) -> [Obstaculo]
-proximosObauxiliar n (Relva, [])=[Nenhum,Arvore]
-proximosObauxiliar n (Estrada f,[])=[Nenhum,Carro]
-proximosObauxiliar n (Rio f, [])=[Nenhum, Tronco]
-proximosObauxiliar n (Rio f,(Tronco:Tronco:Tronco:Tronco:Tronco:t))=[Nenhum]
-proximosObauxiliar n (Rio f,lar)=[Nenhum,Tronco]
-proximosObauxiliar n (Relva,lar)=[Nenhum,Arvore]
-proximosObauxiliar n (Estrada f,(Carro:Carro:Carro:t))=[Nenhum]
-proximosObauxiliar n (Estrada f,lar)=[Nenhum,Carro]
+proximosObstaculosValidos  :: Int -> (Terreno,[Obstaculo]) -> [Obstaculo]
+proximosObstaculosValidos n (Relva, [])=[Nenhum,Arvore]
+proximosObstaculosValidos n (Estrada f,[])=[Nenhum,Carro]
+proximosObstaculosValidos n (Rio f, [])=[Nenhum, Tronco]
+proximosObstaculosValidos n (Rio f,(Tronco:Tronco:Tronco:Tronco:Tronco:t))=[Nenhum]
+proximosObstaculosValidos n (Rio f,lar)=[Nenhum,Tronco]
+proximosObstaculosValidos n (Relva,lar)=[Nenhum,Arvore]
+proximosObstaculosValidos n (Estrada f,(Carro:Carro:Carro:t))=[Nenhum]
+proximosObstaculosValidos n (Estrada f,lar)=[Nenhum,Carro]
 
 

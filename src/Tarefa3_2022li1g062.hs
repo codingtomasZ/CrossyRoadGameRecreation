@@ -12,6 +12,13 @@ module Tarefa3_2022li1g062 where
 import LI12223
 
 animaJogo :: Jogo -> Jogada -> Jogo 
+animaJogo (Jogo (Jogador (x,y)) (Mapa l t)) jog 
+ | jog == Move Cima = validoMovimento3 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Cima)
+ | jog == Move Baixo = validoMovimento4 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Baixo)
+ | jog == Move Esquerda = validoMovimento1 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Esquerda)
+ | jog == Move Direita = validoMovimento2 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Direita)
+ | jog == Parado = validoParado (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Parado)
+animaJogo :: Jogo -> Jogada -> Jogo 
 animaJogo (Jogo (Jogador (x,y)) ((Mapa l linhas))) j = (Jogo (moveJogador j (Jogador (x,y)) ) ((Mapa l linhas)))
 
 
@@ -59,31 +66,30 @@ False
 | -}
 
 
-validoMovimento :: Jogo -> Jogada -> Jogo
-validoMovimento (Mapa l (h:t)) (Jogador (x,y)) Esquerda 
- | x == 0 = False 
- | otherwise = True 
-validoMovimento (Mapa l (h:t)) (Jogador (x,y)) Direita
- | x == l = False 
- | otherwise = True
-validoMovimento (Mapa l (h:t)) (Jogador (x,y)) Cima 
- | y == 0 = False 
- | otherwise = True 
-validoMovimento (Mapa l (h:t)) (Jogador (x,y)) Baixo
- | y == length (h:t) = False
- | otherwise = True 
+validoMovimento1 :: Jogo -> Jogada -> Jogo 
+validoMovimento1 (Jogo (Jogador (x,y)) (Mapa l (h:t))) (Move Esquerda) 
+   | (x == 0 && (y <= length (h:t))) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+   | otherwise = (Jogo (Jogador (x-1,y)) (Mapa l (h:t)))
+validoMovimento2 :: Jogo -> Jogada -> Jogo 
+validoMovimento2 (Jogo (Jogador (x,y)) (Mapa l (h:t))) (Move Direita)
+   | (x == (l -1) && y <= length (h:t)) =  (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+   | otherwise = (Jogo (Jogador (x+1,y)) (Mapa l (h:t)))
+validoMovimento3 :: Jogo -> Jogada -> Jogo 
+validoMovimento3 (Jogo (Jogador (x,y)) (Mapa l (h:t))) (Move Cima)
+  | ((y == 0) && (x <= l - 1) && (x>=0) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+  | otherwise = (Jogo (Jogador (x,y-1)) (Mapa l (h:t)))
+validoMovimento4 :: Jogo -> Jogada -> Jogo 
+validoMovimento4 (Jogo (Jogador (x,y)) (Mapa l (h:t))) (Move Baixo)
+  | (y == (length (h:t) -1 )  && (x <= l-1) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+  | otherwise= (Jogo (Jogador (x,y+1)) (Mapa l (h:t)))
+
+
 
 -- Parado 
 
-validoParado :: Jogo -> Jogada -> Mapa 
-validoParado ((Jogador (x,y)) (Mapa l (h:t)))  (Parado) 
- 
+validoParado :: Jogo -> Jogada -> Jogo 
+validoParado (Jogo (Jogador (x,y)) (Mapa l t)) (Parado) = (Jogo (Jogador (x,y)) (Mapa l (moveObs t))) 
 
-procuraTronco :: [Obstaculo] -> Bool 
-procuraTronco [] = False 
-procuraTronco (h1:h2)
-   | h1 == Tronco = True 
-   | otherwise = procuraTronco h2 
 
 
 moveObs :: [(Terreno,[Obstaculo])] -> [(Terreno,[Obstaculo])]
@@ -93,8 +99,10 @@ moveObs ((Rio v , (h:t)):res ) | v > 0 = moveObs ((Rio (v-1), last t : init (h:t
                                | v < 0 = moveObs ((Rio (v+1), t ++ [h]): res)
                                | v == 0 = (Rio 0 , (h:t)) : moveObs res 
 moveObs ((Estrada v , (h:t)): res ) | v == 0 = moveObs (( Estrada (v-1), last t : init (h:t)):res)
-                                           | v > 0 = moveObs ((Estrada (v-1), last t : init (h:t)) : res )
+                                           | v > 0 = moveObs ((Estrada (v-1), last t : init (h:t)) : res) 
                                            | v < 0 = moveObs ((Estrada (v+1), t ++ [h]): res)
+
+
 
 
 
