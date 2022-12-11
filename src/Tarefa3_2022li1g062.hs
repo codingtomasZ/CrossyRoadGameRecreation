@@ -25,11 +25,11 @@ animaJogo (Jogo (Jogador (x,y)) ((Mapa l linhas))) j = (Jogo (moveJogador j (Jog
 
 animaJogo :: Jogo -> Jogada -> Jogo 
 animaJogo (Jogo (Jogador (x,y)) (Mapa l t)) jog 
- | jog == Move Cima = validoMovimento3 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Cima)
- | jog == Move Baixo = validoMovimento4 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Baixo)
- | jog == Move Esquerda = validoMovimento1 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Esquerda)
- | jog == Move Direita = validoMovimento2 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Direita)
- | jog == Parado = validoParado (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Parado)
+ | jog == Move Cima =  ( atrop ( movitron   (validoMovimento3 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Cima)) ) ) 
+ | jog == Move Baixo =   ( atrop (movitron ( validoMovimento4 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Baixo) ) ) ) 
+ | jog == Move Esquerda = ( atrop  (movitron (validoMovimento1 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Esquerda) ) ) ) 
+ | jog == Move Direita = (atrop (movitron (validoMovimento2 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Direita) ) ) )
+ | jog == Parado =    atrop ( validoParado (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Parado) ) 
 
 validoParado :: Jogo -> Jogada -> Jogo 
 validoParado (Jogo (Jogador (x,y)) (Mapa l t)) (Parado) = (Jogo (Jogador (x,y)) (Mapa l (moveObs t)))  
@@ -60,6 +60,25 @@ moveJogador (Move Baixo) (Jogador (x,y)) = (Jogador (x,y+1))
 moveJogador (Move Esquerda) (Jogador (x,y)) = (Jogador (x-1,y))
 moveJogador (Move Direita) (Jogador (x,y)) = (Jogador (x+1,y))
 moveJogador Parado (Jogador (x,y)) = (Jogador (x,y)) 
+
+movitron :: Jogo -> Jogada -> Jogo 
+movitron (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t) ) ) jog 
+ | ((!!) o x == Tronco) && (jog == Move Cima) = (Jogo (Jogador (x , y-1) ) (Mapa l ((Rio v ,o ):t) ) ) 
+ | ((!!) o x == Tronco) && (jog == Move Baixo) = (Jogo (Jogador (x , y+1) ) (Mapa l ((Rio v ,o ):t) ) ) 
+ | ((!!) o x == Tronco) && (jog == Move Esquerda) && v < 0 = (Jogo (Jogador (x -1 + v  , y) ) (Mapa l ((Rio v ,o ):t) ) ) 
+ | ( (!!) o x == Tronco) && (jog == Move Direita) && v> 0 = (Jogo (Jogador (x+1+ v , y) ) (Mapa l ((Rio v ,o ):t) ) ) 
+ | otherwise = (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t) ) )
+
+
+postronco :: [Obstaculo] -> Obstaculo -> Int
+postronco (x:xs) n = atmaux1 (x:xs) n 0
+
+atmaux1 :: [Obstaculo] -> Obstaculo -> Int -> Int 
+atmaux1 [] n y = y 
+atmaux1 (x:xs) n y = if x == Tronco 
+                    then y 
+                    else atmaux1 xs n (y+1) 
+
 
 
 {- | A função "validoMovimento" pretende limitar os coordenadas possíveis do jogador, ao limite do mapa, não permitindo que ele saia para fora deste.
@@ -114,8 +133,23 @@ moveObs ((Estrada v , (h:t)): res ) | v == 0 = moveObs (( Estrada (v-1), last t 
 
 {-
 atrop :: Jogo -> Jogada -> Jogo 
-atrop (Jogo (Jogador (x,y)) (Mapa l (Estrada v , t ))) jog 
- | v > 0  -}
+atrop (Jogo (Jogador (x,y)) (Mapa l ((Estrada v,o):t))) jog 
+ | ( v >= ( x - poscarro o Carro ) ) && (x - poscarro o Carro > 0 ) && (jog == (Parado) ) = (Jogo (Jogador (0,0)) (Mapa l ((Estrada v,o):t)))
+ | ( v <= ( x - poscarro o Carro ) ) && (x - poscarro o Carro < 0 ) && (jog == (Parado) ) = (Jogo (Jogador (0,0)) (Mapa l ((Estrada v,o):t)))
+ | ((x - poscarro o Carro ) == 1) && (v > 0 ) && (  jog == Parado) = (Jogo (Jogador (0,0)) (Mapa l ((Estrada v,o):t)))
+ ! ( (x - poscarro o Carro > 0) &&  v > 0 &&    ( Move Esquerda)   ) 
+ |  v == x && x < v  && jog = (Move Esquerda) = (Jogo (Jogador (0,0)) (Mapa l ((Estrada v,o):t)))
+ | otherwise = (Jogo (Jogador (x,y)) (Mapa l ((Estrada v,o):t))) -}
+
+atrop :: Jogo -> Jogada -> Jogo 
+atrop (Jogo (Jogador (x,y)) (Mapa l ((Estrada v,o):t))) jog 
+ | ( v >= ( x - poscarro o Carro ) ) && (x - poscarro o Carro > 0 ) && jog == Parado = (Jogo (Jogador (0,0)) (Mapa l ((Estrada v,o):t)))
+ | ( v <= ( x - poscarro o Carro ) ) && (x - poscarro o Carro < 0 ) && jog == Parado = (Jogo (Jogador (0,0)) (Mapa l ((Estrada v,o):t)))
+ | ( v <= ( x - poscarro o Carro ) ) && (x - poscarro o Carro < 0 ) && jog == Move Direita = (Jogo (Jogador (0,0)) (Mapa l ((Estrada v,o):t)))
+ | ( v >= ( x - poscarro o Carro ) ) && (x - poscarro o Carro > 0 ) && jog == Move Esquerda = (Jogo (Jogador (0,0)) (Mapa l ((Estrada v,o):t)))
+ | otherwise = (Jogo (Jogador (x,y)) (Mapa l ((Estrada v,o):t))) 
+ 
+
 
 poscarro :: [Obstaculo] -> Obstaculo -> Int
 poscarro (x:xs) n = atmaux (x:xs) n 0
@@ -127,14 +161,7 @@ atmaux (x:xs) n y = if x == Carro
                     then y 
                     else atmaux xs n (y+1)
 
-postronco :: [Obstaculo] -> Obstaculo -> Int
-postronco (x:xs) n = atmaux1 (x:xs) n 0
 
-atmaux1 :: [Obstaculo] -> Obstaculo -> Int -> Int 
-atmaux1 [] n y = y 
-atmaux1 (x:xs) n y = if x == Tronco 
-                    then y 
-                    else atmaux1 xs n (y+1)
 
 posarvore :: [Obstaculo] -> Obstaculo -> Int
 posarvore (x:xs) n = atmaux2 (x:xs) n 0 
@@ -144,3 +171,4 @@ atmaux2 [] n y = y
 atmaux2 (x:xs) n y = if x == Arvore  
                     then y 
                     else atmaux2 xs n (y+1)
+

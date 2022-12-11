@@ -10,7 +10,6 @@ Módulo para a realização da Tarefa 6 do projeto de LI1 em 2022/2023.
 module Tarefa6_2022li1g062 where
 
 import LI12223
-import 
 import Test.HUnit
 import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
