@@ -24,9 +24,8 @@ jogo_teste = (0, (Jogo (Jogador (0,0)) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, 
 
 -- D I S P L A Y  &  P L A Y --
 
+--FUNÇÃO PLAY NO FICHEIRO MAIN.HS
 
-main :: IO ()
-main = do play displayMode white 1 (jogo_teste) drawCharacter eventChange timeChange 
 -- play  .tela.  .cordefundo.  .fps.  .estadoinicial.  .funções.
 -- RETIRADO  
 displayMode :: Display
@@ -50,6 +49,20 @@ drawCharacter (0, (Jogo (Jogador (x,y)) map)) = chicken
 drawCharacter (1, (Jogo (Jogador (x,y)) map)) = pig
 drawCharacter (2, (Jogo (Jogador (x,y)) map)) = cow
 
+-- M A P A -- 
+
+desenha_linha :: [Picture] -> Picture
+desenha_linha (h:t) = 
+
+translacao_aux :: (Int,Int)
+
+desenha_linha_aux :: Terreno -> [Obstaculo] -> [Picture]
+desenha_linha_aux terreno [] = []
+desenha_linha_aux terreno (h:t)
+    | h == (Carro || Arvore || Tronco) = (desenha_obs h):(desenha_linha_aux terreno t)
+    | h == Nenhum = (desenha_nenhum terreno h):(desenha_linha_aux terreno t)
+
+
 
 -- T E R R E N O S--
 
@@ -71,7 +84,6 @@ relvaP =
 
 -- O B S T Á C U L O S --
 
-
 desenha_obs :: Obstaculo -> Picture 
 desenha_obs Tronco = troncoP
 desenha_obs Carro = carroP
@@ -86,28 +98,34 @@ carroP = color red (Polygon [(0,0),(40,0),(40,40),(0,40)])
 arvoreP :: Picture
 arvoreP = color green (Polygon [(0,0),(40,0),(40,40),(0,40)])
 
+desenha_nenhum :: Terreno -> Obstaculo -> Picture
+desenha_nenhum (Rio v) Nenhum = color blue (Polygon [(0,0),(40,0),(40,40),(0,40)])
+desenha_nenhum Relva Nenhum = color green (Polygon [(0,0),(40,0),(40,40),(0,40)])
+desenha_nenhum (Estrada v) Nenhum = color (greyN 0.3) (Polygon [(0,0),(40,0),(40,40),(0,40)])
 
 -- E V E N T O S --
 
 
             -- M O V I M E N T O S --
 
-{-
 associa_dir :: Event -> Jogada
 associa_dir (EventKey (SpecialKey KeyRight) Down _ _ ) = Move Direita
 associa_dir (EventKey (SpecialKey KeyLeft) Down _ _ ) = Move Esquerda
 associa_dir (EventKey (SpecialKey KeyUp) Down _ _ ) = Move Cima
 associa_dir (EventKey (SpecialKey KeyDown) Down _ _ ) = Move Baixo
 associa_dir _ = Parado
--}
+
+
+playChange :: Jogada -> GameState -> GameState
+playChange (Move Direita) (n, (Jogo (Jogador (x,y)) map)) = (n, (Jogo (Jogador (x+1,y)) map))
+playChange (Move Esquerda) (n, (Jogo (Jogador (x,y)) map)) = (n, (Jogo (Jogador (x-1,y)) map))
+playChange (Move Cima) (n, (Jogo (Jogador (x,y)) map)) = (n, (Jogo (Jogador (x,y+1)) map))
+playChange (Move Baixo) (n, (Jogo (Jogador (x,y)) map)) = (n, (Jogo (Jogador (x,y-1)) map))
+playChange  Parado s = s
 
 eventChange :: Event -> GameState -> GameState
-eventChange (EventKey (SpecialKey KeyRight) Down _ _ ) (n, (Jogo (Jogador (x,y)) map)) = (n, (Jogo (Jogador (x+1,y)) map))
-eventChange (EventKey (SpecialKey KeyLeft) Down _ _ ) (n, (Jogo (Jogador (x,y)) map)) = (n, (Jogo (Jogador (x-1,y)) map))
-eventChange (EventKey (SpecialKey KeyUp) Down _ _ ) (n, (Jogo (Jogador (x,y)) map)) = (n, (Jogo (Jogador (x,y+1)) map))
-eventChange (EventKey (SpecialKey KeyDown) Down _ _ ) (n, (Jogo (Jogador (x,y)) map)) = (n, (Jogo (Jogador (x,y-1)) map))
-eventChange  _ s = s
-
+eventChange event state =  playChange jogada state
+    where jogada = associa_dir event 
 
 timeChange :: Float -> GameState -> GameState
 timeChange f (n, (Jogo (Jogador (x,y)) map)) = (n, (Jogo (Jogador (x,y-1)) map))

@@ -71,14 +71,14 @@ Clicando em __Mapa__ e em __Terreno__ acima e possivel obter mais informaçoes r
 {- Funçao proximosTerrenosValidos -}
 
 proximosTerrenosValidos :: Mapa -> [Terreno]  -- ^  
-proximosTerrenosValidos (Mapa l []) = [Relva,Rio v',Estrada v'] 
-proximosTerrenosValidos (Mapa l [(Estrada v ,a),(Estrada vv ,aa),(Estrada vvv ,aaa),(Estrada vvvv ,aaaa),(Estrada vvvvv ,aaaaa)])=[Rio v',Relva]
-proximosTerrenosValidos (Mapa l (x:[(Estrada  v, a),(Estrada  vv, aa),(Estrada vvv, aaa),(Estrada vvvv, aaaa),(Estrada aaaaa, vvvvv)]))=[Rio v', Relva]
-proximosTerrenosValidos (Mapa l [(Rio v, a),(Rio vv, aa),(Rio vvv, aaa),(Rio vvvv, aaaa)]) = [Estrada v', Relva]
-proximosTerrenosValidos (Mapa l (x:[(Rio v, a),(Rio vv, aa),(Rio vvv, aaa),(Rio vvvv, aaaa)])) = [Estrada v', Relva]
-proximosTerrenosValidos (Mapa l [(Relva ,a),(Relva, aa),(Relva , aaa),(Relva , aaaa),(Relva , aaaaa)])=[Estrada v' , Rio v']
-proximosTerrenosValidos (Mapa l (x:[(Relva ,a),(Relva, aa),(Relva , aaa),(Relva , aaaa),(Relva , aaaaa)]))=[Estrada v' , Rio v']
-proximosTerrenosValidos (Mapa l t) = [Relva, Rio v' ,Estrada v']
+proximosTerrenosValidos (Mapa l []) = [Relva,Rio 0,Estrada 0] 
+proximosTerrenosValidos (Mapa l [(Estrada v ,a),(Estrada vv ,aa),(Estrada vvv ,aaa),(Estrada vvvv ,aaaa),(Estrada vvvvv ,aaaaa)])=[Rio 0,Relva]
+proximosTerrenosValidos (Mapa l (x:[(Estrada  v, a),(Estrada  vv, aa),(Estrada vvv, aaa),(Estrada vvvv, aaaa),(Estrada aaaaa, vvvvv)]))=[Rio 0, Relva]
+proximosTerrenosValidos (Mapa l [(Rio v, a),(Rio vv, aa),(Rio vvv, aaa),(Rio vvvv, aaaa)]) = [Estrada 0, Relva]
+proximosTerrenosValidos (Mapa l (x:[(Rio v, a),(Rio vv, aa),(Rio vvv, aaa),(Rio vvvv, aaaa)])) = [Estrada 0, Relva]
+proximosTerrenosValidos (Mapa l [(Relva ,a),(Relva, aa),(Relva , aaa),(Relva , aaaa),(Relva , aaaaa)])=[Estrada 0, Rio 0]
+proximosTerrenosValidos (Mapa l (x:[(Relva ,a),(Relva, aa),(Relva , aaa),(Relva , aaaa),(Relva , aaaaa)]))=[Estrada 0, Rio 0]
+proximosTerrenosValidos (Mapa l t) = [Relva, Rio 0 ,Estrada 0]
 
 
 {- | A função ’proximosObauxiliar’ calcula os obstaculos que podem ser gerados para continuar uma dada linha do mapa. O valor inteiro corresponde a largura do mapa. Se o comprimento da lista de obstaculos atinge a largura do mapa entao mais nenhum obstaculo e possivel adicionar. Os obstaculos escolhidos devem ainda estar de acordo com o seu respetivo terreno.
