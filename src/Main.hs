@@ -11,5 +11,6 @@ import Data.Maybe
 
 
 main :: IO ()
-main = do play displayMode white 1 (jogo_teste) drawCharacter eventChange timeChange 
+main = do play displayMode white 2 (jogo_teste) start_game eventChange timeChange
 -- play  .tela.  .cordefundo.  .fps.  .estadoinicial.  .funções.
+-- retirado  
