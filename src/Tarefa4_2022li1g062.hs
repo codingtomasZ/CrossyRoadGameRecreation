@@ -11,7 +11,6 @@ module Tarefa4_2022li1g062 where
 
 import LI12223
 
-import Test.HUnit 
 
 {- 
 O objectivo desta tarefa  ́e implementar a fun ̧c ̃ao:
@@ -44,7 +43,7 @@ os limites do mapa fossem wormholes.
 
 
 jogoTerminou :: Mapa -> Jogador -> Bool
-jogoTerminou m j = if (jogoTerminou1 (m) (j)) == True || (jogoTerminou2 (m) (j)) == True || (jogoTerminou3 (m) (j)) == True 
+jogoTerminou m j = if (jogoTerminou1 (m) (j)) == True || (jogoTerminou2 (m) (j)) == True || (jogoTerminou3 (m) (j)) == True || (jogoTerminou4 (m) (j)) == True 
                then True 
                else False 
 
@@ -65,11 +64,19 @@ False
 
 | -}
 
+{-
 jogoTerminou1 :: Mapa -> Jogador -> Bool 
 jogoTerminou1 (Mapa l [(t, o)]) (Jogador (x,y)) = if x < 0 || y < 0 || x > l || y > length ([(t,o)]) 
                                                 then True
-                                                else False  
+                                                else False  -}
 
+
+
+
+jogoTerminou1 :: Mapa -> Jogador -> Bool 
+jogoTerminou1 (Mapa l res) (Jogador (x,y)) = if x < 0 || y < 0 || x > (length (snd (head res))-1) || y > ((length res)-1)
+                                             then True
+                                             else False 
 
 {- | A função "jogoTerminou2" testa se o jogador, quando está numa linha em que o terreno é rio, está numa coordenada "Nenhum", ou seja, está afogado e então perde o jogo.
 Clicando em /Mapa/ e /Jogador/ é possivel obter mais informações relativamente a estas funções.
@@ -85,10 +92,27 @@ False
 @
 |-}
 
+
+jogoTerminou2 :: Mapa -> Jogador-> Bool
+jogoTerminou2 (Mapa l []) (Jogador (x,y)) = False 
+jogoTerminou2 (Mapa l ((Rio v,o):t2)) (Jogador (x,y))
+  | (!!) o x == Nenhum = True
+  | otherwise = jogoTerminou2 (Mapa l t2) (Jogador (x,y)) 
+
+--             auxparaJT2 ::   
+
+
+jogoTerminou4 :: Mapa -> Jogador-> Bool
+jogoTerminou4 (Mapa l []) (Jogador (x,y)) = False 
+jogoTerminou4 (Mapa l ((Relva,o):t2)) (Jogador (x,y))
+  | (!!) o x == Arvore = True  
+  | otherwise = jogoTerminou4 (Mapa l t2) (Jogador (x,y)) 
+
+{-
 jogoTerminou2 :: Mapa -> Jogador-> Bool
 jogoTerminou2 (Mapa l ((Rio v,o):t2)) (Jogador (x,y))
-  |(!!) o x == Nenhum = True
-  | otherwise = False
+  | (!!) o x == Tronco = False 
+  | otherwise = jogoTerminou2 (Mapa l t2) (Jogador (x,y)) -}
 
 {- | A função "jogoTerminou3" testa se o jogador, quando está numa linha em que o terreno é Estrada, está numa coordenada "Carro", ou seja, está atropelado e então perde o jogo.
 Clicando em /Mapa/ e /Jogador/ é possivel obter mais informações relativamente a estas funções.
@@ -106,9 +130,10 @@ False
 |-}
 
 jogoTerminou3 :: Mapa -> Jogador-> Bool
+jogoTerminou3 (Mapa l []) (Jogador (x,y)) = False 
 jogoTerminou3 (Mapa l (((Estrada v), (o)):t2)) (Jogador (x,y))
   |(!!) o x == Carro = True 
-  | otherwise = False
+  | otherwise = jogoTerminou3 (Mapa l t2) (Jogador (x,y))
 
 
 
