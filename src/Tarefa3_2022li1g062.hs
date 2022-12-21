@@ -21,7 +21,7 @@ animaJogo (Jogo (Jogador (x,y)) (Mapa l t)) jog
 animaJogo :: Jogo -> Jogada -> Jogo 
 animaJogo (Jogo (Jogador (x,y)) ((Mapa l linhas))) j = (Jogo (moveJogador j (Jogador (x,y)) ) ((Mapa l linhas))) -}
 
-
+{-
 
 animaJogo :: Jogo -> Jogada -> Jogo 
 animaJogo (Jogo (Jogador (x,y)) (Mapa l t)) jog 
@@ -78,7 +78,7 @@ atmaux1 [] n y = y
 atmaux1 (x:xs) n y = if x == Tronco 
                     then y 
                     else atmaux1 xs n (y+1) 
-
+-}
 
 
 {- | A função "validoMovimento" pretende limitar os coordenadas possíveis do jogador, ao limite do mapa, não permitindo que ele saia para fora deste.
@@ -120,7 +120,7 @@ validoMovimento4 (Jogo (Jogador (x,y)) (Mapa l (h:t))) (Move Baixo)
 
 
 
-
+{-
 moveObs :: [(Terreno,[Obstaculo])] -> [(Terreno,[Obstaculo])]
 moveObs [] = []
 moveObs ((Relva, obs):res) = (Relva,obs) : moveObs res 
@@ -130,6 +130,19 @@ moveObs ((Rio v , (h:t)):res ) | v > 0 = moveObs ((Rio (v-1), last t : init (h:t
 moveObs ((Estrada v , (h:t)): res ) | v == 0 = moveObs (( Estrada (v-1), last t : init (h:t)):res)
                                            | v > 0 = moveObs ((Estrada (v-1), last t : init (h:t)) : res) 
                                            | v < 0 = moveObs ((Estrada (v+1), t ++ [h]): res)
+-}
+
+moveObs :: Int -> [(Terreno,[Obstaculo])] -> [(Terreno,[Obstaculo])]
+moveObs _ [] =  [] 
+moveObs l ((Relva, obstaculos):t)=(Relva, obstaculos):(moveObs l t)
+moveObs l ((Rio v, obstaculos):t)
+  | v > 0 = (Rio v, ((drop (l-v) obstaculos) ++ (take (l-v) obstaculos))):(moveObs l t)
+  | v < 0 = (Rio v, ((drop (-v) obstaculos) ++ (take (-v) obstaculos))):(moveObs l t)
+  | v == 0 = (Rio v, obstaculos):(moveObs l t)
+moveObs l ((Estrada v, obstaculos):t)
+  | v > 0 = (Estrada v, ((drop (l-v) obstaculos) ++ (take (l-v) obstaculos))):(moveObs l t)
+  | v < 0 = (Estrada v, ((drop (-v) obstaculos) ++ (take (-v) obstaculos))):(moveObs l t)
+  | v == 0 = (Estrada v, obstaculos):(moveObs l t)
 
 {-
 atrop :: Jogo -> Jogada -> Jogo 

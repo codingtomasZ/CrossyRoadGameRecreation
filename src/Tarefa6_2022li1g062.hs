@@ -10,6 +10,11 @@ Módulo para a realização da Tarefa 6 do projeto de LI1 em 2022/2023.
 module Tarefa6_2022li1g062 where
 
 import LI12223
+import Tarefa1_2022li1g062
+import Tarefa2_2022li1g062
+import Tarefa3_2022li1g062
+import Tarefa4_2022li1g062
+import Tarefa5_2022li1g062
 import Test.HUnit
 import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
@@ -19,8 +24,9 @@ import Data.Maybe
 
 
 type GameState = (Integer, Jogo)
+--menu/game/end ; win/lose ; characterchoice ; Game
 
-jogo_teste = (0, (Jogo (Jogador (0,0)) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Nenhum, Nenhum, Nenhum, Carro, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco]),(Relva,[Arvore, Nenhum, Nenhum, Arvore, Arvore])])))
+jogo_teste = (0, (Jogo (Jogador (2,0)) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Nenhum, Nenhum, Nenhum, Carro, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]),(Relva,[Arvore, Nenhum, Nenhum, Arvore, Arvore])])))
 
 
 -- D I S P L A Y  &  P L A Y --
@@ -35,7 +41,7 @@ displayMode = InWindow "Game" (1000,1000) (450,0)
 
 start_game :: GameState -> Picture
 start_game (c, (Jogo (Jogador (x,y)) (Mapa l ((terreno, o):t)))) = pictures ( map_picList )
-    where map_picList = [(picture_mapa (Mapa l ((terreno, o):t)) (-250,-250)),(drawCharacter c (-50,-250))]
+    where map_picList = [(picture_mapa (Mapa l (reverse((terreno, o):t))) (-250,-250)),(drawCharacter c (-250+100*(fromIntegral x), -250+100*(fromIntegral y)))]
 
 
 -- P E R S O N A G E N S --
@@ -48,7 +54,7 @@ drawCharacter 2 (x,y) = translate x y cow
 
 
 chicken :: Picture
-chicken = color white (Polygon [(0,0),(100,0),(100,100),(0,100)])
+chicken = color black (Polygon [(0,0),(100,0),(100,100),(0,100)])
 
 pig :: Picture
 pig = color pink (Polygon [(0,0),(100,0),(100,100),(0,100)])
@@ -167,5 +173,7 @@ eventChange :: Event -> GameState -> GameState
 eventChange event state =  playChange jogada state
     where jogada = associa_dir event 
 
+            -- T E M P O --
+
 timeChange :: Float -> GameState -> GameState
-timeChange f (n, (Jogo (Jogador (x,y)) map)) = (n, (Jogo (Jogador (x,y-1)) map))
+timeChange f (n, (Jogo (Jogador (x,y)) (Mapa l linhas))) = (n, deslizaJogo ((Jogo (Jogador (x,y-1)) (Mapa l (moveObs l linhas)) )))

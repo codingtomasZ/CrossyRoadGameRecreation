@@ -14,5 +14,5 @@ import Tarefa2_2022li1g062
 import Test.HUnit 
 
 deslizaJogo :: Jogo -> Jogo
-deslizaJogo (Jogo (Jogador (x,y)) (Mapa l (h:t))) = (Jogo (Jogador (x,y+1)) mapa_novo)
-    where mapa_novo = estendeMapa (Mapa l (take (l-1) (h:t))) (x+1)
+deslizaJogo (Jogo (Jogador (x,y)) (Mapa l (h:t))) = (Jogo (Jogador (x,y)) mapa_novo)
+    where mapa_novo = estendeMapa (Mapa l (init (h:t))) (y+x)
