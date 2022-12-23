@@ -92,7 +92,7 @@ False
 False
 @
 
-| -}
+| -} {-
 
 validoMovimento :: Jogo ->Jogada -> Jogo
 validoMovimento jogo jogada
@@ -129,6 +129,7 @@ validoMovimento4 (Jogo (Jogador (x,y)) (Mapa l (h:t))) (Move Baixo)
   | otherwise= (Jogo (Jogador (x,y+1)) (Mapa l (h:t)))
 -- caso a linha antes da linha onde o jogador está seja Relva, ver se tem uma árvore atras (xjogador = xarvore)
 
+-}
 
     -- M O V E   O B S T A C U L O S -- 
 

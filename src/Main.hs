@@ -12,6 +12,6 @@ import Data.Maybe
 
 
 main :: IO ()
-main = do play displayMode white 1 (jogo_teste) start_game eventChange timeChange
+main = do play displayMode black 1 (estado_teste) menu_choice eventChange timeChange
 -- play  .tela.  .cordefundo.  .fps.  .estadoinicial.  .funções.
 -- retirado  
