@@ -11,6 +11,7 @@ module Tarefa3_2022li1g062 where
 
 import LI12223
 
+
 {-
 animaJogo :: Jogo -> Jogada -> Jogo 
 animaJogo (Jogo (Jogador (x,y)) (Mapa l t)) jog 
@@ -72,8 +73,6 @@ movitron (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t) ) ) jog
  | otherwise = (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t) ) )
 
 
-posicao_tronco :: [Obstaculo] -> [Int]
-posicao_tronco (h:t) = lista_posicoes (h:t) Tronco 0 
 
 
 
@@ -92,44 +91,125 @@ False
 False
 @
 
-| -} {-
+| -} 
+
 
 validoMovimento :: Jogo ->Jogada -> Jogo
 validoMovimento jogo jogada
   | jogada == Move Esquerda = validoMovimento1 jogo
-  | jogada == Direita = validoMovimento2 jogo jogado
--- juntar todos os casos numa só função
+  | jogada == Move Direita = validoMovimento2 jogo 
+  | jogada == Move Cima = validoMovimento3 jogo 
+  | jogada == Move Baixo = validoMovimento4 jogo 
 
-validoMovimento1 :: Jogo -> Jogo 
+
+validoMovimento1 :: Jogo -> Jogo  -- esquerda 
 validoMovimento1 (Jogo (Jogador (x,y)) (Mapa l (h:t)))
-   | (x == 0 && (y <= length (h:t))) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+   | (x-1) `elem` (posicao_arvore (snd h ) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+   | (x == 0 && (y < length (h:t)) && y>= 0 ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
    | otherwise = (Jogo (Jogador (x-1,y)) (Mapa l (h:t)))
+
+
+
+
+{-
+posicao_arvore :: [Obstaculo] -> [Int]
+posicao_arvore (h:t) = lista_posicoesarvore (h:t) Arvore 0 
+
+
+
+movercomarvore_e :: Int -> [Int] -> Jogo 
+movercomarvore_e x (h:t) 
+  | (x-1) `elem` posicao_arvore o = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+  | otherwise = (Jogo (Jogador (x-1,y)) (Mapa l (h:t)))    -}
+
+
+
 -- caso a linha onde ele está seja relva, ver se tem uma árvore à esquerda
- 
+{-
+posicao_arvore :: [Obstaculo] -> [Int]
+posicao_arvore (h:t) = lista_posicoesarvore (h:t) Arvore 0 
+
+lista_posicoesarvore :: [Obstaculo] -> Obstaculo -> Int -> [Int] 
+lista_posicoesarvore [] n y = [] 
+lista_posicoesarvore (h:t) n y 
+  | h == Arvore = y:(lista_posicoesarvore t n (y+1)) 
+  | otherwise = lista_posicoesarvore t n (y+1)
+
+
+-}
+
 -- se x-1 pertencer à lista, tem uma árvore à esquerda
 -- se (elem (x-1) posarvore) quer dixer que tem uma árvore à esquerda e que mantem a posição 
 
-validoMovimento2 :: Jogo -> Jogada -> Jogo 
-validoMovimento2 (Jogo (Jogador (x,y)) (Mapa l (h:t))) (Move Direita)
-   | (x == (l -1) && y <= length (h:t)) =  (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+validoMovimento2 :: Jogo ->  Jogo  -- direita 
+validoMovimento2 (Jogo (Jogador (x,y)) (Mapa l (h:t))) 
+   | (x+1) `elem` (posicao_arvore (snd h ) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+   | (x == (l -1) && y < length (h:t)) &&y >= 0 =  (Jogo (Jogador (x,y)) (Mapa l (h:t)))
    | otherwise = (Jogo (Jogador (x+1,y)) (Mapa l (h:t)))
+
 -- caso a linha onde ele está seja relva, ver se tem uma árvore à direita
 
 
-validoMovimento3 :: Jogo -> Jogada -> Jogo 
-validoMovimento3 (Jogo (Jogador (x,y)) (Mapa l (h:t))) (Move Cima)
+{-
+movercomarvore_d :: Int -> [Int] -> Jogada -> Jogo 
+movercomarvore_d x (h:t) jogada
+  | (x+1) `elem` posicao_arvore o && jogada == (Move Direita ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+  where l = length (h:t)
+        y = linha_jogador linhas y  -}
+
+
+validoMovimento3 :: Jogo -> Jogo  -- cima 
+validoMovimento3 (Jogo (Jogador (x,y)) (Mapa l (h:t))) 
+  | linha_jogador (h:t) y == (Relva, snd h ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
   | ((y == 0) && (x <= l - 1) && (x>=0) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
   | otherwise = (Jogo (Jogador (x,y-1)) (Mapa l (h:t)))
 -- caso a linha a seguir à linha onde o jogador está seja Relva, ver se tem uma árvore à frente (xjogador = xarvore)
 
 
-validoMovimento4 :: Jogo -> Jogada -> Jogo 
-validoMovimento4 (Jogo (Jogador (x,y)) (Mapa l (h:t))) (Move Baixo)
-  | (y == (length (h:t) -1 )  && (x <= l-1) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+{-
+validomovimentoarvore :: Jogo -> Jogo 
+validomovimentoarvore (Jogo (Jogador (x,y)) (Mapa l (h:t))) 
+  | ((y == 0) && (x <= l - 1) && (x>=0) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+  | otherwise = (Jogo (Jogador (x,y-1)) (Mapa l (h:t)))  -}
+
+
+{-
+y_da_arvore :: [(Terreno , [Obstaculo])] -> [Int]
+y_da_arvore [] = []
+y_da_arvore (h:t) = y_da_arvore_aux (h:t) 0 
+
+
+y_da_arvore_aux :: [(Terreno , [Obstaculo])] -> Int -> [Int]
+y_da_arvore_aux [] n = [n]
+y_da_arvore_aux (h:t) n = y_da_arvore_aux t (n+1) 
+
+y_da_arvore :: [(Terreno , [Obstaculo])] -> Terreno -> [Int]
+y_da_arvore [] m = []
+y_da_arvore (h:t ) m  
+  | fst h == m = 0 : y_da_arvore t m 
+  | otherwise = y_da_arvore t m -}
+
+
+
+
+
+
+
+
+-- x `elem` posicao_arvore (snd h ) && y -1 == y_da_arvore t = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+
+
+validoMovimento4 :: Jogo -> Jogo  -- baixo 
+validoMovimento4 (Jogo (Jogador (x,y)) (Mapa l (h:t))) 
+  | (linha_jogador == (Relva, snd h) ) && (x `elem` posicao_arvore (snd h) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+  | (y == (length (h:t) -1 )  && (x <= l-1) && x >= 0 ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
   | otherwise= (Jogo (Jogador (x,y+1)) (Mapa l (h:t)))
+
+
 -- caso a linha antes da linha onde o jogador está seja Relva, ver se tem uma árvore atras (xjogador = xarvore)
 
--}
+
+
 
     -- M O V E   O B S T A C U L O S -- 
 
@@ -210,24 +290,44 @@ posicao_carro_prox_d (h:t) x
   | otherwise = h
 
 
+   -- E S T R A D A  E   O B S T A C U L O S -- 
+
 posicao_carro :: [Obstaculo] -> [Int]
-posicao_carro (h:t) = lista_posicoes (h:t) Carro 0
+posicao_carro (h:t) = lista_posicoescarro (h:t) Carro 0
 
 
     -- R E L V A   E   O B S T A C U L O S -- 
 
 posicao_arvore :: [Obstaculo] -> [Int]
-posicao_arvore (h:t) = lista_posicoes (h:t) Arvore 0
+posicao_arvore (h:t) = lista_posicoesarvore (h:t) Arvore 0
 
-    -- G E R A L   C O N T A D O R   D E   O B S T A C U L O S --
+    -- R I O   E   O B S T A C U L O S -- 
 
 
-lista_posicoes :: [Obstaculo] -> Obstaculo -> Int -> [Int] 
-lista_posicoes [] n y = [] 
-lista_posicoes (h:t) n y 
-  | h == Carro = y:(lista_posicoes t n (y+1)) 
-  | otherwise = lista_posicoes t n (y+1)
+posicao_tronco :: [Obstaculo] -> [Int]
+posicao_tronco (h:t) = lista_posicoestronco (h:t) Tronco 0 
 
+
+    --  C O N T A D O R   D E   O B S T A C U L O S INDIVIDUAL --
+
+
+lista_posicoescarro :: [Obstaculo] -> Obstaculo -> Int -> [Int] 
+lista_posicoescarro [] n y = [] 
+lista_posicoescarro (h:t) n y 
+  | h == Carro = y:(lista_posicoescarro t n (y+1)) 
+  | otherwise = lista_posicoescarro t n (y+1)
+
+lista_posicoesarvore :: [Obstaculo] -> Obstaculo -> Int -> [Int] 
+lista_posicoesarvore [] n y = [] 
+lista_posicoesarvore (h:t) n y 
+  | h == Arvore = y:(lista_posicoesarvore t n (y+1)) 
+  | otherwise = lista_posicoesarvore t n (y+1)
+
+lista_posicoestronco :: [Obstaculo] -> Obstaculo -> Int -> [Int] 
+lista_posicoestronco [] n y = [] 
+lista_posicoestronco (h:t) n y 
+  | h == Tronco = y:(lista_posicoestronco t n (y+1)) 
+  | otherwise = (lista_posicoestronco t n (y+1)) 
 
 velocidade_da_linha :: (Terreno, [Obstaculo]) -> Velocidade
 velocidade_da_linha (Estrada v, o) = v
