@@ -37,6 +37,7 @@ estendeMapa (Mapa l m) n = ( Mapa l ((terreno_selecionado, (listaObstaculos l n 
     where terreno_selecionado = terrenos_validos !! mod n (length terrenos_validos)
           terrenos_validos = (proximosTerrenosValidos (Mapa l m))
 
+-- FALTA ALEATORIEDADE E VELOCIDADE  
 
 listaObstaculos :: Int -> Int -> (Terreno, [Obstaculo]) -> [Obstaculo]
 listaObstaculos l n (ter,o)

@@ -176,4 +176,4 @@ eventChange event state =  playChange jogada state
             -- T E M P O --
 
 timeChange :: Float -> GameState -> GameState
-timeChange f (n, (Jogo (Jogador (x,y)) (Mapa l linhas))) = (n, deslizaJogo ((Jogo (Jogador (x,y-1)) (Mapa l (moveObs l linhas)) )))
+timeChange f (n, (Jogo (Jogador (x,y)) (Mapa l linhas))) = (n,((Jogo (Jogador (x,y-1)) (Mapa l (moveObs l linhas)) )))
