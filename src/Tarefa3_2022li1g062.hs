@@ -8,7 +8,6 @@ Módulo para a realização da Tarefa 3 do projeto de LI1 em 2022/23.
 -}
 
 module Tarefa3_2022li1g062 where
-
 import LI12223
 
 
@@ -98,8 +97,8 @@ validoMovimento :: Jogo ->Jogada -> Jogo
 validoMovimento jogo jogada
   | jogada == Move Esquerda = validoMovimento1 jogo
   | jogada == Move Direita = validoMovimento2 jogo 
-  | jogada == Move Cima = validoMovimento3 jogo 
-  | jogada == Move Baixo = validoMovimento4 jogo 
+  | jogada == Move Baixo = validoMovimento3 jogo 
+  | jogada == Move Cima = validoMovimento4 jogo 
 
 
 validoMovimento1 :: Jogo -> Jogo  -- esquerda 
@@ -158,12 +157,18 @@ movercomarvore_d x (h:t) jogada
         y = linha_jogador linhas y  -}
 
 
-validoMovimento3 :: Jogo -> Jogo  -- cima 
+validoMovimento3 :: Jogo -> Jogo  -- baixo
 validoMovimento3 (Jogo (Jogador (x,y)) (Mapa l (h:t))) 
-  | linha_jogador (h:t) y == (Relva, snd h ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
-  | ((y == 0) && (x <= l - 1) && (x>=0) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
-  | otherwise = (Jogo (Jogador (x,y-1)) (Mapa l (h:t)))
+  | (y == 0)  && (x <= l-1) && x >= 0  = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+  | ( linha_abaixo == (Relva, obstaculos) ) && (x `elem` (posicao_arvore (snd (linha_abaixo)) ) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+  | otherwise= (Jogo (Jogador (x,y-1)) (Mapa l (h:t))) 
+        where linha_abaixo = linha_jogador (h:t) (y-1)
+              obstaculos = obstaculos_da_linha linha_abaixo 
+
 -- caso a linha a seguir à linha onde o jogador está seja Relva, ver se tem uma árvore à frente (xjogador = xarvore)
+
+--linha_depois_do_jogador :: ((Terreno, [Obstaculo])
+--linha_depois_do_jogador = linha_jogador mapa (y-1)
 
 
 {-
@@ -189,27 +194,27 @@ y_da_arvore (h:t ) m
   | fst h == m = 0 : y_da_arvore t m 
   | otherwise = y_da_arvore t m -}
 
-
-
-
-
-
-
-
 -- x `elem` posicao_arvore (snd h ) && y -1 == y_da_arvore t = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
 
 
-validoMovimento4 :: Jogo -> Jogo  -- baixo 
+
+validoMovimento4 :: Jogo -> Jogo  -- cima
 validoMovimento4 (Jogo (Jogador (x,y)) (Mapa l (h:t))) 
-  | (linha_jogador == (Relva, snd h) ) && (x `elem` posicao_arvore (snd h) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
-  | (y == (length (h:t) -1 )  && (x <= l-1) && x >= 0 ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
-  | otherwise= (Jogo (Jogador (x,y+1)) (Mapa l (h:t)))
+  | ((y == (length (h:t) ) -1 ) && (x <= l - 1) && (x>=0) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+  | (linha_acima == (Relva , obstaculos) )&& (x `elem` (posicao_arvore (snd (linha_acima)) ) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+  | otherwise = (Jogo (Jogador (x,y+1)) (Mapa l (h:t)))
+                              where linha_acima = linha_jogador (h:t) (y+1)
+                                    obstaculos = obstaculos_da_linha linha_acima 
+
+
+
 
 
 -- caso a linha antes da linha onde o jogador está seja Relva, ver se tem uma árvore atras (xjogador = xarvore)
 
 
-
+linha_jogador :: [(Terreno, [Obstaculo])] -> Int -> (Terreno, [Obstaculo])
+linha_jogador linhas y = (!!) (reverse linhas) y
 
     -- M O V E   O B S T A C U L O S -- 
 
@@ -269,8 +274,6 @@ atropelamento_aux_d (Estrada v, (h:t)) l x jogada
                distancia_d = -(x- poscarro)
 
 
-linha_jogador :: [(Terreno, [Obstaculo])] -> Int -> (Terreno, [Obstaculo])
-linha_jogador linhas y = (!!) (reverse linhas) y
 
 
 
@@ -335,5 +338,6 @@ velocidade_da_linha (Rio v, o) = v
 
 
 obstaculos_da_linha :: (Terreno, [Obstaculo]) -> [Obstaculo]
+obstaculos_da_linha (Relva , o ) =  o 
 obstaculos_da_linha (Estrada v, o) = o
 obstaculos_da_linha (Rio v, o) = o
