@@ -12,6 +12,7 @@ module Tarefa2_2022li1g062 where
 import LI12223
 import Test.HUnit 
 import System.Random
+import Data.Numbers.Primes
 
 {- | A funcao ’estendeMapa’ tem como finalidade gerar e adicionar uma nova linha valida ao topo de um dado mapa. O valor inteiro deve estar entre [0,100] usado para acrescentar alguma pseudo-aleatoriedade a geracao a proxima nova linha.
 Acima encontram-se mais informaçoes sobre as funçoes /Mapa/. 
@@ -32,19 +33,42 @@ Na funçao 'estendeMapa', usamos random com recurso a funçao mod de modo a gera
 {- Funçao estendeMapa -}
 
 
-estendeMapa :: Mapa -> Int -> Mapa 
-estendeMapa (Mapa l m) n = ( Mapa l ((terreno_selecionado, (listaObstaculos l n (terreno_selecionado, [])) ):m ))
-    where terreno_selecionado = terrenos_validos !! mod n (length terrenos_validos)
-          terrenos_validos = (proximosTerrenosValidos (Mapa l m))
 
--- FALTA ALEATORIEDADE E VELOCIDADE  
+estendeMapa :: Mapa -> Int -> Mapa 
+estendeMapa (Mapa l m) n = ( Mapa l ((terreno_selecionado, (listaObstaculos l n (terreno_selecionado, []))):m ))
+    where terreno_selecionado = terrenos_validos !! mod n (length terrenos_validos)
+          terrenos_validos = (proximosTerrenosValidos d (Mapa l m))
+          d = escolha_velocidade n
+          
+
+escolha_velocidade :: Int -> Int
+escolha_velocidade n
+      | (even (head random_num) == True) = if mod ( head random_num) (4) == 0 then 1 else 3
+      | otherwise =  if isPrime (head random_num) == True then 4 else 2
+             where random_num = randomIntsL n 1 
+
 
 listaObstaculos :: Int -> Int -> (Terreno, [Obstaculo]) -> [Obstaculo]
+listaObstaculos l n (ter,o) 
+      |length o == l = []
+      |length o == (l-1) = [Nenhum]
+      |odd (last (randomIntsL n l)) = (head obstaculos_validos):(listaObstaculos l (n+1) (ter,(head obstaculos_validos):o))
+      |otherwise = (last obstaculos_validos):(listaObstaculos l (n+1) (ter,(last obstaculos_validos):o))
+            where obstaculos_validos = proximosObstaculosValidos l (ter, o) 
+
+
+randomIntsL :: Int -> Int -> [Int]
+randomIntsL seed l = take l $ randoms (mkStdGen seed)
+
+
+{-
+listaObstaculos :: Int -> Int -> (Terreno, [Obstaculo]) -> [Obstaculo]
 listaObstaculos l n (ter,o)
- |length o ==(l-1) && elem Nenhum o == False = o ++ [Nenhum]
  |length o == l = o
+ |length o ==(l-1) && (elem Nenhum o == False) = o ++ [Nenhum]
  |otherwise = listaObstaculos l (div ((n+1)^4) 3) (ter,[(obstaculos_validos !! mod n (length obstaculos_validos))] ++ o)
       where obstaculos_validos = proximosObstaculosValidos l (ter, o) 
+-}
 
 {- |A função ’proximosTerrenosValidos’ calcula a lista de terrenos que poderao surgir na nova linha do mapa. Para esta funçao iremos ignorar os parametros relacionados com a velocidade do /terreno Estrada/ e /terreno Rio/.
 Clicando em __Mapa__ e em __Terreno__ acima e possivel obter mais informaçoes relativamente a estas 2 funcoes.
@@ -71,15 +95,16 @@ Clicando em __Mapa__ e em __Terreno__ acima e possivel obter mais informaçoes r
 
 {- Funçao proximosTerrenosValidos -}
 
-proximosTerrenosValidos :: Mapa -> [Terreno]  -- ^  
-proximosTerrenosValidos (Mapa l []) = [Relva,Rio 0,Estrada 0] 
-proximosTerrenosValidos (Mapa l [(Estrada v ,a),(Estrada vv ,aa),(Estrada vvv ,aaa),(Estrada vvvv ,aaaa),(Estrada vvvvv ,aaaaa)])=[Rio 0,Relva]
-proximosTerrenosValidos (Mapa l (x:[(Estrada  v, a),(Estrada  vv, aa),(Estrada vvv, aaa),(Estrada vvvv, aaaa),(Estrada aaaaa, vvvvv)]))=[Rio 0, Relva]
-proximosTerrenosValidos (Mapa l [(Rio v, a),(Rio vv, aa),(Rio vvv, aaa),(Rio vvvv, aaaa)]) = [Estrada 0, Relva]
-proximosTerrenosValidos (Mapa l (x:[(Rio v, a),(Rio vv, aa),(Rio vvv, aaa),(Rio vvvv, aaaa)])) = [Estrada 0, Relva]
-proximosTerrenosValidos (Mapa l [(Relva ,a),(Relva, aa),(Relva , aaa),(Relva , aaaa),(Relva , aaaaa)])=[Estrada 0, Rio 0]
-proximosTerrenosValidos (Mapa l (x:[(Relva ,a),(Relva, aa),(Relva , aaa),(Relva , aaaa),(Relva , aaaaa)]))=[Estrada 0, Rio 0]
-proximosTerrenosValidos (Mapa l t) = [Relva, Rio 0 ,Estrada 0]
+
+proximosTerrenosValidos :: Velocidade -> Mapa -> [Terreno]  
+proximosTerrenosValidos v (Mapa l []) = [Relva, Rio v, Estrada v] 
+proximosTerrenosValidos v (Mapa l [((Estrada v1) , a),(Estrada vv ,aa),(Estrada vvv ,aaa),(Estrada vvvv ,aaaa),(Estrada vvvvv ,aaaaa)])=[Rio v,Relva]
+proximosTerrenosValidos v (Mapa l (x:[((Estrada v1 ), a),(Estrada  vv, aa),(Estrada vvv, aaa),(Estrada vvvv, aaaa),(Estrada aaaaa, vvvvv)]))=[Rio v, Relva]
+proximosTerrenosValidos v (Mapa l [((Rio v1) , a),(Rio vv, aa),(Rio vvv, aaa),(Rio vvvv, aaaa)]) = [Estrada v, Relva]
+proximosTerrenosValidos v (Mapa l (x:[((Rio v1) , a),(Rio vv, aa),(Rio vvv, aaa),(Rio vvvv, aaaa)])) = [Estrada v, Relva]
+proximosTerrenosValidos v (Mapa l [(Relva ,a),(Relva, aa),(Relva , aaa),(Relva , aaaa),(Relva , aaaaa)])=[Estrada v, Rio v]
+proximosTerrenosValidos v (Mapa l (x:[(Relva ,a),(Relva, aa),(Relva , aaa),(Relva , aaaa),(Relva , aaaaa)]))=[Estrada v, Rio v]
+proximosTerrenosValidos v (Mapa l t) = [Relva, Rio v ,Estrada v]
 
 
 {- | A função ’proximosObauxiliar’ calcula os obstaculos que podem ser gerados para continuar uma dada linha do mapa. O valor inteiro corresponde a largura do mapa. Se o comprimento da lista de obstaculos atinge a largura do mapa entao mais nenhum obstaculo e possivel adicionar. Os obstaculos escolhidos devem ainda estar de acordo com o seu respetivo terreno.
@@ -118,13 +143,11 @@ Clicando em /Terreno/ e /Obstaculo/ é possivel obter mais informaçoes relativa
 
 
 proximosObstaculosValidos  :: Int -> (Terreno,[Obstaculo]) -> [Obstaculo]
-proximosObstaculosValidos n (Relva, [])=[Nenhum,Arvore]
-proximosObstaculosValidos n (Estrada f,[])=[Nenhum,Carro]
-proximosObstaculosValidos n (Rio f, [])=[Nenhum, Tronco]
-proximosObstaculosValidos n (Rio f,(Tronco:Tronco:Tronco:Tronco:Tronco:t))=[Nenhum]
-proximosObstaculosValidos n (Rio f,lar)=[Nenhum,Tronco]
-proximosObstaculosValidos n (Relva,lar)=[Nenhum,Arvore]
-proximosObstaculosValidos n (Estrada f,(Carro:Carro:Carro:t))=[Nenhum]
-proximosObstaculosValidos n (Estrada f,lar)=[Nenhum,Carro]
-
-
+proximosObstaculosValidos n (Relva, []) = [Nenhum,Arvore]
+proximosObstaculosValidos n (Estrada v, []) = [Nenhum,Carro]
+proximosObstaculosValidos n (Rio v, []) = [Nenhum, Tronco]
+proximosObstaculosValidos n (Rio v, [Tronco, Tronco, Tronco, Tronco, Tronco]) = [Nenhum]
+proximosObstaculosValidos n (Rio v, lar) = [Nenhum,Tronco]
+proximosObstaculosValidos n (Relva, lar) = [Nenhum,Arvore]
+proximosObstaculosValidos n (Estrada v, [Carro, Carro, Carro]) = [Nenhum]
+proximosObstaculosValidos n (Estrada v, lar) = [Nenhum,Carro]
