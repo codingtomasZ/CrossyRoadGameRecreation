@@ -99,15 +99,15 @@ validoMovimento jogo jogada
   | jogada == Move Direita = validoMovimento2 jogo 
   | jogada == Move Baixo = validoMovimento3 jogo 
   | jogada == Move Cima = validoMovimento4 jogo 
+  | otherwise = jogo
 
 
 validoMovimento1 :: Jogo -> Jogo  -- esquerda 
 validoMovimento1 (Jogo (Jogador (x,y)) (Mapa l (h:t)))
-   | (x-1) `elem` (posicao_arvore (snd h ) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+   | (x-1) `elem` (posicao_arvore (snd linha_actual)) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
    | (x == 0 && (y < length (h:t)) && y>= 0 ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
    | otherwise = (Jogo (Jogador (x-1,y)) (Mapa l (h:t)))
-
-
+      where linha_actual = linha_jogador (h:t) y
 
 
 {-
@@ -115,12 +115,10 @@ posicao_arvore :: [Obstaculo] -> [Int]
 posicao_arvore (h:t) = lista_posicoesarvore (h:t) Arvore 0 
 
 
-
 movercomarvore_e :: Int -> [Int] -> Jogo 
 movercomarvore_e x (h:t) 
   | (x-1) `elem` posicao_arvore o = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
   | otherwise = (Jogo (Jogador (x-1,y)) (Mapa l (h:t)))    -}
-
 
 
 -- caso a linha onde ele está seja relva, ver se tem uma árvore à esquerda
@@ -140,12 +138,13 @@ lista_posicoesarvore (h:t) n y
 -- se x-1 pertencer à lista, tem uma árvore à esquerda
 -- se (elem (x-1) posarvore) quer dixer que tem uma árvore à esquerda e que mantem a posição 
 
+
 validoMovimento2 :: Jogo ->  Jogo  -- direita 
 validoMovimento2 (Jogo (Jogador (x,y)) (Mapa l (h:t))) 
-   | (x+1) `elem` (posicao_arvore (snd h ) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+   | (x+1) `elem` (posicao_arvore (snd linha_actual)) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
    | (x == (l -1) && y < length (h:t)) &&y >= 0 =  (Jogo (Jogador (x,y)) (Mapa l (h:t)))
    | otherwise = (Jogo (Jogador (x+1,y)) (Mapa l (h:t)))
-
+      where linha_actual = linha_jogador (h:t) y
 -- caso a linha onde ele está seja relva, ver se tem uma árvore à direita
 
 

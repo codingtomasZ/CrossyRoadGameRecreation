@@ -20,6 +20,7 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
 import Data.Maybe
 
+
 -- D A D O S --
 
 
@@ -63,7 +64,7 @@ welcome :: Picture
 welcome = scale 2 1.5 (Color white (Text "WELCOME"))
 
 start :: Picture
-start = scale 0.3 0.2 (Color blue (Text "Press Enter to Start") )
+start = scale 0.3 0.2 (Color blue (Text "Press Space to Start") )
 
         --  C H A R A C T E R -- 
 
@@ -83,13 +84,22 @@ char_cow = scale 2 2 cow
         -- L O S T --
 
 menu_lost :: Picture
-menu_lost = pictures ([(translate (-650) 50 lost)] ++ [(translate (-1000) (-300) restart)])
+menu_lost = pictures ([(translate (-650) 50 lost)] ++ [(translate (-260) (-300) restart)])
 
 lost :: Picture
 lost =  scale 2 1.5 (Color red (Text "YOU LOST"))
 
 restart :: Picture
-restart = scale 0.3 0.2  (Color white (Text ("Press Enter to go to Main menu" ++ "\n" ++ "Press Backspace to choose a new character" ++ "\n" ++ "Press Space to Restart" )) )
+restart = pictures(([translate 0 0 restart3]) ++ ([translate (-200) (-50) restart2]) ++ ([translate (-100) (-100) restart1]))
+
+restart1 :: Picture
+restart1 = scale 0.3 0.2  (Color white (Text ("Press Enter to go to Main menu")) )
+
+restart2 :: Picture
+restart2 = scale 0.3 0.2  (Color white (Text ("Press Backspace to choose a new character")) )
+
+restart3 :: Picture
+restart3 = scale 0.3 0.2  (Color white (Text ("Press Space to Restart" )) )
 
 
 -- P E R S O N A G E N S --
@@ -157,7 +167,9 @@ estradaP :: Picture
 estradaP = color (greyN 0.3) (Polygon [(0,0),(100,0),(100,100),(0,100)])
 
 relvaP :: Picture
-relvaP = color green (Polygon [(0,0),(100,0),(100,100),(0,100)])
+relvaP = relva
+
+--color green (Polygon [(0,0),(100,0),(100,100),(0,100)])
 
 
         -- L I N H A  O B S T A C U L O -- 
@@ -209,7 +221,7 @@ eventChange event ( 2 , c , 1 , game) = menu_lostChange event ( 2 , c , 1 , game
             -- M O V I M E N T O S   N O   M E N U   I N I C I A L --
 
 menu_inicialChange :: Event -> GameState -> GameState
-menu_inicialChange (EventKey (SpecialKey KeyEnter) Down _ _ ) (0, 0 , 0 , game) = (1, 0 , 0 , game)
+menu_inicialChange (EventKey (SpecialKey KeySpace) Down _ _ ) (0, 0 , 0 , game) = (1, 0 , 0 , game)
 menu_inicialChange _ state = state
 
             -- M O V I M E N T O S   N O   M E N U   P E R S O N A G E M --
@@ -231,11 +243,11 @@ wl_game event (2, c , 0 , game) = if jogoTerminou game == True
 
 
 playChange :: Jogada -> GameState -> GameState
-playChange (Move Direita) (2 , c , 0 , Jogo (Jogador (x,y)) map) = (2 , c , 0 , Jogo (Jogador (x+1,y)) map)
-playChange (Move Esquerda) (2 , c , 0 , Jogo (Jogador (x,y)) map) = (2 , c , 0 , Jogo (Jogador (x-1,y)) map)
-playChange (Move Cima) (2 , c , 0 , Jogo (Jogador (x,y)) map) = (2 , c , 0 , Jogo (Jogador (x,y+1)) map)
-playChange (Move Baixo) (2 , c , 0 , Jogo (Jogador (x,y)) map) = (2 , c , 0 , Jogo (Jogador (x,y-1)) map)
-playChange  Parado s = s
+playChange (Move Direita) (2 , c , 0 , Jogo (Jogador (x,y)) map) = (2 , c , 0 , validoMovimento(Jogo (Jogador (x,y)) map) (Move Direita))
+playChange (Move Esquerda) (2 , c , 0 , Jogo (Jogador (x,y)) map) = (2 , c , 0 , validoMovimento(Jogo (Jogador (x,y)) map) (Move Esquerda))
+playChange (Move Cima) (2 , c , 0 , Jogo (Jogador (x,y)) map) = (2 , c , 0 , validoMovimento(Jogo (Jogador (x,y)) map) (Move Cima))
+playChange (Move Baixo) (2 , c , 0 , Jogo (Jogador (x,y)) map) = (2 , c , 0 , validoMovimento(Jogo (Jogador (x,y)) map) (Move Baixo))
+playChange  Parado (2 , c , 0 , Jogo (Jogador (x,y)) map) = (2 , c , 0 , validoMovimento(Jogo (Jogador (x,y)) map) (Parado))
 
 associa_dir :: Event -> Jogada
 associa_dir (EventKey (SpecialKey KeyRight) Down _ _ ) = Move Direita
@@ -255,4 +267,4 @@ menu_lostChange _ s = s
             -- T E M P O --
 
 timeChange :: Float -> GameState -> GameState
-timeChange f (m, c , wl , (Jogo (Jogador (x,y)) (Mapa l linhas))) = (m, c , wl ,( deslizaJogo (Jogo (Jogador (x,y-1)) (Mapa l (moveObs l linhas)) )))
+timeChange f (m, c , wl , (Jogo (Jogador (x,y)) (Mapa l linhas))) = (m, c , wl ,((Jogo (Jogador (x,y)) (Mapa l (moveObs l linhas)) )))
