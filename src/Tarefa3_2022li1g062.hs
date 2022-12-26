@@ -56,8 +56,8 @@ Jogador (1,1)
 
 
 moveJogador :: Jogada -> Jogador-> Jogador 
-moveJogador (Move Cima) (Jogador (x,y)) = (Jogador (x,y-1))
-moveJogador (Move Baixo) (Jogador (x,y)) = (Jogador (x,y+1))
+moveJogador (Move Cima) (Jogador (x,y)) = (Jogador (x,y+1))
+moveJogador (Move Baixo) (Jogador (x,y)) = (Jogador (x,y-1))
 moveJogador (Move Esquerda) (Jogador (x,y)) = (Jogador (x-1,y))
 moveJogador (Move Direita) (Jogador (x,y)) = (Jogador (x+1,y))
 moveJogador Parado (Jogador (x,y)) = (Jogador (x,y)) 
@@ -65,13 +65,23 @@ moveJogador Parado (Jogador (x,y)) = (Jogador (x,y))
 
 movitron :: Jogo -> Jogada -> Jogo 
 movitron (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t) ) ) jog 
- | ((!!) o x == Tronco) && (jog == Move Cima) = (Jogo (Jogador (x , y-1) ) (Mapa l ((Rio v ,o ):t) ) ) 
- | ((!!) o x == Tronco) && (jog == Move Baixo) = (Jogo (Jogador (x , y+1) ) (Mapa l ((Rio v ,o ):t) ) ) 
+ | ((!!) o x == Tronco) && (jog == Move Cima) = (Jogo (Jogador (x , y+1) ) (Mapa l ((Rio v ,o ):t) ) ) 
+ | ((!!) o x == Tronco) && (jog == Move Baixo) = (Jogo (Jogador (x , y-1) ) (Mapa l ((Rio v ,o ):t) ) ) 
  | ((!!) o x == Tronco) && (jog == Move Esquerda) && v < 0 = (Jogo (Jogador (x -1 + v  , y) ) (Mapa l ((Rio v ,o ):t) ) ) 
  | ((!!) o x == Tronco) && (jog == Move Direita) && v> 0 = (Jogo (Jogador (x+1+ v , y) ) (Mapa l ((Rio v ,o ):t) ) ) 
  | otherwise = (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t) ) )
 
 
+
+
+movernotronco :: Jogo -> Jogada -> Jogo 
+movernotronco (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t) ) ) jogada
+  | v == 0 && jogada == Parado && x `elem` posicao_tronco o = (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t) ) )
+  | v > 0 && jogada == (Move Direita) &&  ( (x+1) `elem` posicao_tronco o) = (Jogo (Jogador (x+2 , y) ) (Mapa l ((Rio v ,o ):t) ) )
+  | v > 0 && jogada == (Move Esquerda) &&  ( (x-1) `elem` posicao_tronco o) = (Jogo (Jogador (x-2 , y) ) (Mapa l ((Rio v ,o ):t) ) )
+  | v < 0 && jogada == (Move Direita) &&  ( (x+1) `elem` posicao_tronco o) = (Jogo (Jogador (x+2 , y) ) (Mapa l ((Rio v ,o ):t) ) )
+  | v < 0 && jogada == (Move Esquerda ) && ( (x-1) `elem` posicao_tronco o) = (Jogo (Jogador (x-2 , y) ) (Mapa l ((Rio v ,o ):t) ) )
+  | otherwise = (Jogo (Jogador (x , y) ) (Mapa l t ) ) 
 
 
 
@@ -164,37 +174,6 @@ validoMovimento3 (Jogo (Jogador (x,y)) (Mapa l (h:t)))
         where linha_abaixo = linha_jogador (h:t) (y-1)
               obstaculos = obstaculos_da_linha linha_abaixo 
 
--- caso a linha a seguir à linha onde o jogador está seja Relva, ver se tem uma árvore à frente (xjogador = xarvore)
-
---linha_depois_do_jogador :: ((Terreno, [Obstaculo])
---linha_depois_do_jogador = linha_jogador mapa (y-1)
-
-
-{-
-validomovimentoarvore :: Jogo -> Jogo 
-validomovimentoarvore (Jogo (Jogador (x,y)) (Mapa l (h:t))) 
-  | ((y == 0) && (x <= l - 1) && (x>=0) ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
-  | otherwise = (Jogo (Jogador (x,y-1)) (Mapa l (h:t)))  -}
-
-
-{-
-y_da_arvore :: [(Terreno , [Obstaculo])] -> [Int]
-y_da_arvore [] = []
-y_da_arvore (h:t) = y_da_arvore_aux (h:t) 0 
-
-
-y_da_arvore_aux :: [(Terreno , [Obstaculo])] -> Int -> [Int]
-y_da_arvore_aux [] n = [n]
-y_da_arvore_aux (h:t) n = y_da_arvore_aux t (n+1) 
-
-y_da_arvore :: [(Terreno , [Obstaculo])] -> Terreno -> [Int]
-y_da_arvore [] m = []
-y_da_arvore (h:t ) m  
-  | fst h == m = 0 : y_da_arvore t m 
-  | otherwise = y_da_arvore t m -}
-
--- x `elem` posicao_arvore (snd h ) && y -1 == y_da_arvore t = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
-
 
 
 validoMovimento4 :: Jogo -> Jogo  -- cima
@@ -208,8 +187,6 @@ validoMovimento4 (Jogo (Jogador (x,y)) (Mapa l (h:t)))
 
 
 
-
--- caso a linha antes da linha onde o jogador está seja Relva, ver se tem uma árvore atras (xjogador = xarvore)
 
 
 linha_jogador :: [(Terreno, [Obstaculo])] -> Int -> (Terreno, [Obstaculo])
@@ -271,8 +248,6 @@ atropelamento_aux_d (Estrada v, (h:t)) l x jogada
          where lista_pos = posicao_carro (h:t) 
                poscarro = posicao_carro_prox_d lista_pos x
                distancia_d = -(x- poscarro)
-
-
 
 
 
