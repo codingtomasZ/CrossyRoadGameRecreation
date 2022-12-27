@@ -12,7 +12,7 @@ import Data.Maybe
 
 
 main :: IO ()
-main = do play displayMode black 1 (estado_teste relva) menu_choice eventChange timeChange
+main = do play displayMode black 1 (estado_teste) menu_choice eventChange timeChange
 --        play.tela. cordefundo.fps.estadoinicial.           .funções.
 
 

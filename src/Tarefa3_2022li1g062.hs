@@ -11,31 +11,15 @@ module Tarefa3_2022li1g062 where
 import LI12223
 
 
-{-
-animaJogo :: Jogo -> Jogada -> Jogo 
-animaJogo (Jogo (Jogador (x,y)) (Mapa l t)) jog 
- | jog == Move Cima = validoMovimento3 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Cima)
- | jog == Move Baixo = validoMovimento4 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Baixo)
- | jog == Move Esquerda = validoMovimento1 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Esquerda)
- | jog == Move Direita = validoMovimento2 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Direita)
- | jog == Parado = validoParado (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Parado)
-animaJogo :: Jogo -> Jogada -> Jogo 
-animaJogo (Jogo (Jogador (x,y)) ((Mapa l linhas))) j = (Jogo (moveJogador j (Jogador (x,y)) ) ((Mapa l linhas))) 
-
-
 
 animaJogo :: Jogo -> Jogada -> Jogo 
-animaJogo (Jogo (Jogador (x,y)) (Mapa l t)) jog 
- | jog == Move Cima =  ( atrop ( movitron   (validoMovimento3 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Cima)) ) ) 
- | jog == Move Baixo =   ( atrop (movitron ( validoMovimento4 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Baixo) ) ) ) 
- | jog == Move Esquerda = ( atrop  (movitron (validoMovimento1 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Esquerda) ) ) ) 
- | jog == Move Direita = (atrop (movitron (validoMovimento2 (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Move Direita) ) ) )
- | jog == Parado =    atrop ( validoParado (Jogo (Jogador (x,y)) ((Mapa l (moveObs t)))) (Parado) ) 
+animaJogo (Jogo (Jogador (x,y)) ((Mapa l linhas))) jogada = (validoMovimento (Jogo ((Jogador (x,y)) ) (Mapa l linhas) ) jogada)
+    where linhas = moveObs l linhas_atrop   
+          linhas_atrop = (atropelamento (Jogo (Jogador (x,y)) ((Mapa l linhas))) jogada)
 
-validoParado :: Jogo -> Jogada -> Jogo 
-validoParado (Jogo (Jogador (x,y)) (Mapa l t)) (Parado) = (Jogo (Jogador (x,y)) (Mapa l (moveObs t)))
 
--}
+
+
 
 {- | A função "moveJogador" pretende animar o jogador, mediante a jogada escolhida ser fazer o jogador andar para cima, para baixo, para esquerda ou para a direita.
 Clicando em /Direcao/ e /Jogador/ é possivel obter mais informações relativamente a estas funções.
@@ -69,9 +53,7 @@ movitron (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t) ) ) jog
  | ((!!) o x == Tronco) && (jog == Move Baixo) = (Jogo (Jogador (x , y-1) ) (Mapa l ((Rio v ,o ):t) ) ) 
  | ((!!) o x == Tronco) && (jog == Move Esquerda) && v < 0 = (Jogo (Jogador (x -1 + v  , y) ) (Mapa l ((Rio v ,o ):t) ) ) 
  | ((!!) o x == Tronco) && (jog == Move Direita) && v> 0 = (Jogo (Jogador (x+1+ v , y) ) (Mapa l ((Rio v ,o ):t) ) ) 
- | otherwise = (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t) ) )
-
-
+ | otherwise = (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t)))
 
 
 movernotronco :: Jogo -> Jogada -> Jogo 
@@ -103,68 +85,36 @@ False
 | -} 
 
 
-validoMovimento :: Jogo ->Jogada -> Jogo
+validoMovimento :: Jogo -> Jogada -> Jogo
 validoMovimento jogo jogada
   | jogada == Move Esquerda = validoMovimento1 jogo
   | jogada == Move Direita = validoMovimento2 jogo 
   | jogada == Move Baixo = validoMovimento3 jogo 
   | jogada == Move Cima = validoMovimento4 jogo 
-  | otherwise = jogo
+  | otherwise = validoMovimentoP jogo
 
 
 validoMovimento1 :: Jogo -> Jogo  -- esquerda 
 validoMovimento1 (Jogo (Jogador (x,y)) (Mapa l (h:t)))
    | (x-1) `elem` (posicao_arvore (snd linha_actual)) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+   | (!!) (snd linha_actual) x == Tronco = Jogo (move_tronco_e linha_actual (Jogador (x,y))) (Mapa l (h:t))
    | (x == 0 && (y < length (h:t)) && y>= 0 ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
    | otherwise = (Jogo (Jogador (x-1,y)) (Mapa l (h:t)))
-      where linha_actual = linha_jogador (h:t) y
+      where linha_actual = linha_jogador (h:t) y 
 
-
-{-
-posicao_arvore :: [Obstaculo] -> [Int]
-posicao_arvore (h:t) = lista_posicoesarvore (h:t) Arvore 0 
-
-
-movercomarvore_e :: Int -> [Int] -> Jogo 
-movercomarvore_e x (h:t) 
-  | (x-1) `elem` posicao_arvore o = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
-  | otherwise = (Jogo (Jogador (x-1,y)) (Mapa l (h:t)))    -}
-
-
--- caso a linha onde ele está seja relva, ver se tem uma árvore à esquerda
-{-
-posicao_arvore :: [Obstaculo] -> [Int]
-posicao_arvore (h:t) = lista_posicoesarvore (h:t) Arvore 0 
-
-lista_posicoesarvore :: [Obstaculo] -> Obstaculo -> Int -> [Int] 
-lista_posicoesarvore [] n y = [] 
-lista_posicoesarvore (h:t) n y 
-  | h == Arvore = y:(lista_posicoesarvore t n (y+1)) 
-  | otherwise = lista_posicoesarvore t n (y+1)
-
-
--}
-
--- se x-1 pertencer à lista, tem uma árvore à esquerda
--- se (elem (x-1) posarvore) quer dixer que tem uma árvore à esquerda e que mantem a posição 
-
+move_tronco_e :: (Terreno, [Obstaculo]) -> Jogador -> Jogador 
+move_tronco_e (Rio v, obs) (Jogador (x,y)) = Jogador ((x-1) + v ,y)
 
 validoMovimento2 :: Jogo ->  Jogo  -- direita 
 validoMovimento2 (Jogo (Jogador (x,y)) (Mapa l (h:t))) 
    | (x+1) `elem` (posicao_arvore (snd linha_actual)) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+   | (!!) (snd linha_actual) x == Tronco = Jogo (move_tronco_d linha_actual (Jogador (x,y))) (Mapa l (h:t))
    | (x == (l -1) && y < length (h:t)) &&y >= 0 =  (Jogo (Jogador (x,y)) (Mapa l (h:t)))
    | otherwise = (Jogo (Jogador (x+1,y)) (Mapa l (h:t)))
       where linha_actual = linha_jogador (h:t) y
--- caso a linha onde ele está seja relva, ver se tem uma árvore à direita
 
-
-{-
-movercomarvore_d :: Int -> [Int] -> Jogada -> Jogo 
-movercomarvore_d x (h:t) jogada
-  | (x+1) `elem` posicao_arvore o && jogada == (Move Direita ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
-  where l = length (h:t)
-        y = linha_jogador linhas y  -}
-
+move_tronco_d :: (Terreno, [Obstaculo]) -> Jogador -> Jogador 
+move_tronco_d (Rio v, obs) (Jogador (x,y)) = Jogador ((x+1) + v, y)
 
 validoMovimento3 :: Jogo -> Jogo  -- baixo
 validoMovimento3 (Jogo (Jogador (x,y)) (Mapa l (h:t))) 
@@ -185,9 +135,14 @@ validoMovimento4 (Jogo (Jogador (x,y)) (Mapa l (h:t)))
                                     obstaculos = obstaculos_da_linha linha_acima 
 
 
+validoMovimentoP :: Jogo -> Jogo
+validoMovimentoP (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+   | (!!) (snd linha_actual) x == Tronco = Jogo (move_tronco_p linha_actual (Jogador (x,y))) (Mapa l (h:t))
+   | otherwise = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
+        where linha_actual = linha_jogador (h:t) y
 
-
-
+move_tronco_p :: (Terreno, [Obstaculo]) -> Jogador -> Jogador 
+move_tronco_p (Rio v, obs) (Jogador (x,y)) = Jogador (x+ v, y)
 
 linha_jogador :: [(Terreno, [Obstaculo])] -> Int -> (Terreno, [Obstaculo])
 linha_jogador linhas y = (!!) (reverse linhas) y
@@ -210,10 +165,10 @@ moveObs l ((Estrada v, obstaculos):t)
 
 -- FUNÇÃO ATROPELAMENTO --
 
-atropelamento :: Jogo -> Jogada -> Mapa 
+atropelamento :: Jogo -> Jogada -> [(Terreno, [Obstaculo])] 
 atropelamento (Jogo (Jogador (x,y)) (Mapa l (h:t))) jogada = if linha_jogador (h:t) y == (Estrada v, obstaculos)
-                                                           then (Mapa l (mapa_actualizado))
-                                                           else (Mapa l (h:t))
+                                                           then ((mapa_actualizado))
+                                                           else ((h:t))
     where linha_actual = linha_jogador (h:t) y 
           linha_atualizada = atropelamento_aux linha_actual l x jogada
           mapa_actualizado = (take (y-1) (h:t)) ++ [linha_atualizada] ++ (drop y (h:t))

@@ -167,9 +167,7 @@ estradaP :: Picture
 estradaP = color (greyN 0.3) (Polygon [(0,0),(100,0),(100,100),(0,100)])
 
 relvaP :: Picture
-relvaP = relva
-
---color green (Polygon [(0,0),(100,0),(100,100),(0,100)])
+relvaP = color green (Polygon [(0,0),(100,0),(100,100),(0,100)])
 
 
         -- L I N H A  O B S T A C U L O -- 
