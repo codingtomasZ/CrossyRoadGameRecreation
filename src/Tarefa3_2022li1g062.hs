@@ -10,12 +10,17 @@ Módulo para a realização da Tarefa 3 do projeto de LI1 em 2022/23.
 module Tarefa3_2022li1g062 where
 import LI12223
 
+{-|
 
+
+
+
+-}
 
 animaJogo :: Jogo -> Jogada -> Jogo 
 animaJogo (Jogo (Jogador (x,y)) ((Mapa l linhas))) jogada = (validoMovimento (Jogo ((Jogador (x,y)) ) (Mapa l linhas) ) jogada)
     where linhas = moveObs l linhas_atrop   
-          linhas_atrop = (atropelamento (Jogo (Jogador (x,y)) ((Mapa l linhas))) jogada)
+          linhas_atrop = (atropelamento (Jogo (Jogador (x,y)) ((Mapa l linhas))) )
 
 
 
@@ -36,7 +41,7 @@ Jogador (0,1)
 Jogador (1,1)
 @
 
-| -}
+-}
 
 
 moveJogador :: Jogada -> Jogador-> Jogador 
@@ -212,7 +217,7 @@ validoMovimento4 (Jogo (Jogador (x,y)) (Mapa l (h:t)))
                                     obstaculos = obstaculos_da_linha linha_acima 
 
 {- | 
-Funçao auxiliar 'validoMovimentoP' faz com que o jogador, quando parado em cima do tronco, acompanhe o mmovimento do tronco.
+Funçao auxiliar 'validoMovimentoP' faz com que o jogador, quando parado em cima do tronco, acompanhe o movimento do tronco.
 
 == Exemplos de utilizaçao:
 
@@ -269,7 +274,7 @@ linha_jogador linhas y = (!!) (reverse linhas) y
 
 {-|
 
-Funçao 'moveObs' 
+A funçao 'moveObs' vai alternar a lista de obstaculos que constituem as linhas do mapa. Esta alteraçao varia mediante o valor da velocidade e o sinal desta. Caso a velocidade seja positiva, quanto maior for a velocidade mais obstaculos serao retirados do fim da lista e adicionados ao inicio, simulando a movimentaçao dos obstaculos esquerda->direita e o efeito WormHole. Caso a velocidade seja negativa, quanto maior for o valor da velocidade maior sera o numero de obstaculos retirados do inicio da lista e adicionados ao fim, simulando o movimento direita->esquerda e o efeito WormHole.        
 
 
 == Exemplos de utilizaçao: 
@@ -285,9 +290,6 @@ Funçao 'moveObs'
 @
 -}
 
-
-
-
 moveObs :: Int -> [(Terreno,[Obstaculo])] -> [(Terreno,[Obstaculo])]
 moveObs _ [] =  [] 
 moveObs l ((Relva, obstaculos):t)=(Relva, obstaculos):(moveObs l t)
@@ -302,9 +304,6 @@ moveObs l ((Estrada v, obstaculos):t)
 
 
 -- FUNÇÃO ATROPELAMENTO --
-
-
-
 
 {-|
 Funçao 'atropelamento' 
@@ -322,16 +321,15 @@ Funçao 'atropelamento'
 @
 -}
 
-atropelamento :: Jogo -> Jogada -> [(Terreno, [Obstaculo])] 
-atropelamento (Jogo (Jogador (x,y)) (Mapa l (h:t))) jogada = if linha_jogador (h:t) y == (Estrada v, obstaculos)
+atropelamento :: Jogo ->  [(Terreno, [Obstaculo])] 
+atropelamento (Jogo (Jogador (x,y)) (Mapa l (h:t)))  = if linha_jogador (h:t) y == (Estrada v, obstaculos)
                                                            then ((mapa_atualizado))
                                                            else ((h:t))
     where linha_atual = linha_jogador (h:t) y 
-          linha_atualizada = atropelamento_aux linha_atual l x jogada
+          linha_atualizada = atropelamento_aux linha_atual l x 
           mapa_atualizado = (take (y-1) (h:t)) ++ [linha_atualizada] ++ (drop y (h:t))
           v = velocidade_da_linha linha_atual
           obstaculos = obstaculos_da_linha linha_atual
-
 
 {-|
 Funçao 'atropelamento_aux' -> Funçao auxiliar utilizada em 'atropelamento'. Caso a velocidade atribuida aos carros for positiva a funçao 'atropelamento_aux_e' sera chamada, pois os carros estarao a vir da esquerda para a direita sendo o atropelamento pela esquerda o unico possivel. Caso esta seja negativa, a funçao 'atropelamento_aux_d' sera chamada, dado que para velocidades neagtivas o atropelamento pela direita e o unico possivel. 
@@ -351,10 +349,10 @@ Funçao 'atropelamento_aux' -> Funçao auxiliar utilizada em 'atropelamento'. Ca
 -}
 
 
-atropelamento_aux :: (Terreno, [Obstaculo]) -> Int -> Int -> Jogada -> (Terreno, [Obstaculo])
-atropelamento_aux (Estrada v, (h:t)) l x jogada 
-  | v > 0 = atropelamento_aux_e (Estrada v, (h:t)) l x jogada
-  | v < 0 = atropelamento_aux_d (Estrada v, (h:t)) l x jogada
+atropelamento_aux :: (Terreno, [Obstaculo]) -> Int -> Int -> (Terreno, [Obstaculo])
+atropelamento_aux (Estrada v, (h:t)) l x 
+  | v > 0 = atropelamento_aux_e (Estrada v, (h:t)) l x 
+  | v < 0 = atropelamento_aux_d (Estrada v, (h:t)) l x 
   |otherwise = (Estrada v, (h:t))
 
 
@@ -376,11 +374,9 @@ Funçao 'atropelamento_aux_e'. De acordo com a jogada feita pelo jogador (Move E
 -}
 
 
-atropelamento_aux_e :: (Terreno, [Obstaculo]) -> Int -> Int -> Jogada -> (Terreno, [Obstaculo])
-atropelamento_aux_e (Estrada v, (h:t)) l x jogada
+atropelamento_aux_e :: (Terreno, [Obstaculo]) -> Int -> Int -> (Terreno, [Obstaculo])
+atropelamento_aux_e (Estrada v, (h:t)) l x
   | ( v >= distancia_e ) = (Estrada v, (drop ( l - distancia_e ) (h:t)) ++ (take (l - distancia_e) (h:t)) )
-  | ( distancia_e == 1 ) && jogada == Move Esquerda = (Estrada v, (h:t))
-  | ( v <= distancia_e ) && jogada == Parado = (Estrada v, (h:t))
   | otherwise = (Estrada v, (h:t))
          where lista_pos = posicao_carro (h:t)
                poscarro = posicao_carro_prox_e lista_pos x 
@@ -405,10 +401,8 @@ Funçao 'atropelamento_aux_d'. De acordo com a jogada feita pelo jogador (Move D
 
 
 
-atropelamento_aux_d :: (Terreno, [Obstaculo]) -> Int -> Int -> Jogada -> (Terreno, [Obstaculo])
-atropelamento_aux_d (Estrada v, (h:t)) l x jogada
-  | ( distancia_d == 1 ) && jogada == Move Direita = (Estrada v, (h:t))
-  | ( (-v) <= distancia_d ) && jogada == Parado = (Estrada v, (h:t))
+atropelamento_aux_d :: (Terreno, [Obstaculo]) -> Int -> Int -> (Terreno, [Obstaculo])
+atropelamento_aux_d (Estrada v, (h:t)) l x 
   | ( (-v) >= distancia_d ) = (Estrada v, (drop distancia_d (h:t)) ++ (take distancia_d (h:t)))
   | otherwise = (Estrada v, (h:t))
          where lista_pos = posicao_carro (h:t) 
