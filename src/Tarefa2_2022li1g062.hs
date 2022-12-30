@@ -32,8 +32,6 @@ Na funçao 'estendeMapa', usamos random com recurso a funçao mod de modo a gera
 
 {- Funçao estendeMapa -}
 
-
-
 estendeMapa :: Mapa -> Int -> Mapa 
 estendeMapa (Mapa l m) n = ( Mapa l ((terreno_selecionado, (listaObstaculos l n (terreno_selecionado, []))):m ))
     where terreno_selecionado = terrenos_validos !! mod n (length terrenos_validos)
@@ -41,11 +39,22 @@ estendeMapa (Mapa l m) n = ( Mapa l ((terreno_selecionado, (listaObstaculos l n 
           d = escolha_velocidade n
           
 
+{-|
+
+
+-}
+
 escolha_velocidade :: Int -> Int
 escolha_velocidade n
       | (even (head random_num) == True) = if mod ( head random_num) (4) == 0 then 1 else 3
       | otherwise =  if isPrime (head random_num) == True then 4 else 2
              where random_num = randomIntsL n 1 
+
+
+{-|
+
+
+-}
 
 
 listaObstaculos :: Int -> Int -> (Terreno, [Obstaculo]) -> [Obstaculo]
@@ -55,6 +64,12 @@ listaObstaculos l n (ter,o)
       |odd (last (randomIntsL n l)) = (head obstaculos_validos):(listaObstaculos l (n+1) (ter,(head obstaculos_validos):o))
       |otherwise = (last obstaculos_validos):(listaObstaculos l (n+1) (ter,(last obstaculos_validos):o))
             where obstaculos_validos = proximosObstaculosValidos l (ter, o) 
+
+
+{-|
+
+
+-}
 
 
 randomIntsL :: Int -> Int -> [Int]

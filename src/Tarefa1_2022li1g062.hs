@@ -8,25 +8,20 @@ Copyright   : Tomas Henrique Alves Melo <a104529@alunos.uminho.pt>
 Módulo para a realização da Tarefa 1 do projeto de LI1 em 2022/2023.
 -}
 module Tarefa1_2022li1g062 where
-
 import LI12223
 
 -- Tarefa 1
 
---mapaValido :: Mapa -> Bool 
---mapaValido (Mapa l []) = True 
---mapaValido m = if mapaValido1 m == True && mapaValido2 m == True && mapaValido3 m == True && mapaValido4 m == True && mapaValido5 m == True && mapaValido6 m == True && mapaValido7 m == True 
---               then True 
---               else False
 
--- N ̃ao existem obst ́aculos em terrenos impr ́oprios, e.g. troncos em estradas ou relvas,  ́arvores em rios ou estradas, etc.
+{-|
+Funçao 'mapaValido'. Valida que os obstaculos estejam de acordo com o terreno que recebem. Rios contiguos possuem direçoes opostas. Troncos tem no maximo 5 unidades de comprimento. Carros tem no maximo 3 unidades de comprimento. Nenhum pertence a lista de obstaculos para qualquer terreno em qualquer que seja a linha. Largura e igual ao comprimento da lista de obstaculos. Nao devem existir mais do que 4 Rio seguidos. Nao devem existir mais do que 5 Estrada seguidas. Nao devem existir mais de 5 Relva seguidas.
 
---mapaValido :: Mapa -> Bool
---mapaValido (Mapa l []) = True 
---mapaValido m = if mapaValido1 m == True && mapaValido2 m == True && (mapaValido3 a o) == True && (mapaValido4 a o) == True && mapaValido5 m == True && mapaValido6 == True && mapaValido7 == True 
---   then True
---   else False 
+-}
 
+
+mapaValido :: Mapa -> Bool 
+mapaValido (Mapa l []) = True 
+mapaValido m = if mapaValido1 m == True && mapaValido2 m == True && mapaValido3 m == True && mapaValido4 m== True && mapaValido5 m== True && mapaValido6 m== True && mapaValido7 m== True then True else False 
 
 {- |
 A função ’mapaValido1' tem como objetivo delimitar os obstaculos nos devidos terrenos.
@@ -47,6 +42,7 @@ False
 @
 
 -}
+
 
 -- Exercicio 1 
 
@@ -117,6 +113,14 @@ mapaValido3 (Mapa l ((Rio v, o):t))
   | (mapaValido3_1 0 o) == False = False
   | otherwise = True
 
+
+{-|
+
+Funçao auxiliar para 'mapaValido3' 
+
+-}
+
+
 mapaValido3_1 :: Int -> [Obstaculo] -> Bool 
 mapaValido3_1 5 _ = False
 mapaValido3_1 n [] = True 
@@ -149,6 +153,14 @@ mapaValido4 (Mapa l ((Estrada v, o):t))
   | (mapaValido4_1 0 o) == True = (mapaValido4 (Mapa l t))
   | (mapaValido4_1 0 o) == False = False
   | otherwise = True
+
+{-|
+
+Funçao auxiliar para 'mapaValido4'
+
+-}
+
+
 
 mapaValido4_1 :: Int -> [Obstaculo] -> Bool 
 mapaValido4_1 3 _ = False

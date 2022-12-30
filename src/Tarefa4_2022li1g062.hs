@@ -74,7 +74,7 @@ jogoTerminou1 (Jogo (Jogador (x,y)) (Mapa l (h:t)))  = if x < 0 || y < 0 || x > 
 
 
 {- | A função "jogoTerminou2" testa se o jogador, quando está numa linha em que o terreno é rio, está numa coordenada "Nenhum", ou seja, está afogado e então perde o jogo.
-Clicando em /Mapa/ e /Jogador/ é possivel obter mais informações relativamente a estas funções.
+
 
 @
 >>> jogoTerminou2 (Mapa 5 [(Rio (-2), [Nenhum, Tronco, Tronco, Nenhum, Nenhum]),(Relva, [Arvore, Arvore, Nenhum, Nenhum, Arvore])])(Jogador (3,0))
@@ -102,7 +102,7 @@ jogoTerminou2_aux (Rio v, obstaculos) x
 
 
 {- | A função "jogoTerminou3" testa se o jogador, quando está numa linha em que o terreno é Estrada, está numa coordenada "Carro", ou seja, está atropelado e então perde o jogo.
-Clicando em /Mapa/ e /Jogador/ é possivel obter mais informações relativamente a estas funções.
+
 
 @
 >>> jogoTerminou3 (Mapa 5 [(Estrada 3, [Nenhum, Nenhum, Carro, Carro, Carro]),(Relva, [Arvore, Nenhum, Nenhum, Nenhum, Arvore])])(Jogador (3,0))
