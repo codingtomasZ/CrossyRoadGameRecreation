@@ -12,14 +12,10 @@ import LI12223
 
 
 
-animaJogo :: Jogo -> Jogada -> Jogo 
-animaJogo (Jogo (Jogador (x,y)) ((Mapa l linhas))) jogada = (validoMovimento (Jogo ((Jogador (x,y)) ) (Mapa l linhas) ) jogada)
-    where linhas = moveObs l linhas_atrop   
-          linhas_atrop = (atropelamento (Jogo (Jogador (x,y)) ((Mapa l linhas))) jogada)
-
-
-
-
+animaJogoTempo :: Jogo -> Jogo
+animaJogoTempo (Jogo (Jogador (x,y)) (Mapa l linhas)) = ((Jogo (Jogador (coordenadas_novas)) (Mapa l (linhas_novas))))
+            where coordenadas_novas = move_tronco (x,y) (Mapa l linhas)
+                  linhas_novas = moveObs l linhas
 
 {- | A função "moveJogador" pretende animar o jogador, mediante a jogada escolhida ser fazer o jogador andar para cima, para baixo, para esquerda ou para a direita.
 Clicando em /Direcao/ e /Jogador/ é possivel obter mais informações relativamente a estas funções.
@@ -66,7 +62,6 @@ movernotronco (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t) ) ) jogada
   | otherwise = (Jogo (Jogador (x , y) ) (Mapa l t ) ) 
 
 
-
 {- | A função "validoMovimento" pretende limitar os coordenadas possíveis do jogador, ao limite do mapa, não permitindo que ele saia para fora deste.
 Clicando em /Jogo/ e /Jogada/ é possivel obter mais informações relativamente a estas funções.
 
@@ -97,24 +92,18 @@ validoMovimento jogo jogada
 validoMovimento1 :: Jogo -> Jogo  -- esquerda 
 validoMovimento1 (Jogo (Jogador (x,y)) (Mapa l (h:t)))
    | (x-1) `elem` (posicao_arvore (snd linha_actual)) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
-   | (!!) (snd linha_actual) x == Tronco = Jogo (move_tronco_e linha_actual (Jogador (x,y))) (Mapa l (h:t))
    | (x == 0 && (y < length (h:t)) && y>= 0 ) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
    | otherwise = (Jogo (Jogador (x-1,y)) (Mapa l (h:t)))
       where linha_actual = linha_jogador (h:t) y 
 
-move_tronco_e :: (Terreno, [Obstaculo]) -> Jogador -> Jogador 
-move_tronco_e (Rio v, obs) (Jogador (x,y)) = Jogador ((x-1) + v ,y)
 
 validoMovimento2 :: Jogo ->  Jogo  -- direita 
 validoMovimento2 (Jogo (Jogador (x,y)) (Mapa l (h:t))) 
    | (x+1) `elem` (posicao_arvore (snd linha_actual)) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
-   | (!!) (snd linha_actual) x == Tronco = Jogo (move_tronco_d linha_actual (Jogador (x,y))) (Mapa l (h:t))
    | (x == (l -1) && y < length (h:t)) &&y >= 0 =  (Jogo (Jogador (x,y)) (Mapa l (h:t)))
    | otherwise = (Jogo (Jogador (x+1,y)) (Mapa l (h:t)))
       where linha_actual = linha_jogador (h:t) y
 
-move_tronco_d :: (Terreno, [Obstaculo]) -> Jogador -> Jogador 
-move_tronco_d (Rio v, obs) (Jogador (x,y)) = Jogador ((x+1) + v, y)
 
 validoMovimento3 :: Jogo -> Jogo  -- baixo
 validoMovimento3 (Jogo (Jogador (x,y)) (Mapa l (h:t))) 
@@ -123,7 +112,6 @@ validoMovimento3 (Jogo (Jogador (x,y)) (Mapa l (h:t)))
   | otherwise= (Jogo (Jogador (x,y-1)) (Mapa l (h:t))) 
         where linha_abaixo = linha_jogador (h:t) (y-1)
               obstaculos = obstaculos_da_linha linha_abaixo 
-
 
 
 validoMovimento4 :: Jogo -> Jogo  -- cima
@@ -136,13 +124,17 @@ validoMovimento4 (Jogo (Jogador (x,y)) (Mapa l (h:t)))
 
 
 validoMovimentoP :: Jogo -> Jogo
-validoMovimentoP (Jogo (Jogador (x,y)) (Mapa l (h:t)))
-   | (!!) (snd linha_actual) x == Tronco = Jogo (move_tronco_p linha_actual (Jogador (x,y))) (Mapa l (h:t))
-   | otherwise = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
-        where linha_actual = linha_jogador (h:t) y
+validoMovimentoP (Jogo (Jogador (x,y)) (Mapa l (h:t))) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
 
-move_tronco_p :: (Terreno, [Obstaculo]) -> Jogador -> Jogador 
-move_tronco_p (Rio v, obs) (Jogador (x,y)) = Jogador (x+ v, y)
+
+move_tronco :: Coordenadas -> Mapa -> Coordenadas 
+move_tronco (x,y) (Mapa l linhas) = if  linha_actual == (Rio v, obstaculos)
+                                    then (x+v, y)
+                                    else (x,y)
+        where linha_actual = linha_jogador linhas y 
+              v = velocidade_da_linha linha_actual
+              obstaculos = obstaculos_da_linha linha_actual
+
 
 linha_jogador :: [(Terreno, [Obstaculo])] -> Int -> (Terreno, [Obstaculo])
 linha_jogador linhas y = (!!) (reverse linhas) y
@@ -171,7 +163,8 @@ atropelamento (Jogo (Jogador (x,y)) (Mapa l (h:t))) jogada = if linha_jogador (h
                                                            else ((h:t))
     where linha_actual = linha_jogador (h:t) y 
           linha_atualizada = atropelamento_aux linha_actual l x jogada
-          mapa_actualizado = (take (y-1) (h:t)) ++ [linha_atualizada] ++ (drop y (h:t))
+          mapa_actualizado = (take (comprimento-y) (h:t)) ++ [linha_atualizada] ++ (drop (comprimento+1-y) (h:t))
+          comprimento = length (h:t)-1
           v = velocidade_da_linha linha_actual
           obstaculos = obstaculos_da_linha linha_actual
 
