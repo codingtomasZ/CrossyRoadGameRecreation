@@ -27,11 +27,16 @@ main = do relva <- loadBMP "Relva.bmp"
           tronco <- loadBMP "tronco.bmp"
           rio <- loadBMP "rio.bmp"
           estrada <- loadBMP "estrada.bmp" 
-          pictures <- [relva, tronco, rio, estrada]
+          carro <- loadBMP "carro.bmp"
+          arvore <- loadBMP "arvore.bmp"
+          chicken <- loadBMP "chicken.bmp"
+          pig <- loadBMP "pig.bmp"
+          cow <- loadBMP "cow.bmp"
           play 
             displayMode 
-            black 1 
-            (desenha pictures)
+            black 
+            1 
+            (desenha [relva, tronco, rio, estrada, carro, arvore, chicken, pig, cow])
             menu_choice 
             eventChange 
             timeChange
@@ -46,8 +51,8 @@ desenha pic = (pic, estado_teste)
 type GameState  = ([Picture],(Integer, Integer, Integer, [Integer], Jogo))
 --menu/game/end  ; characterchoice ; win/lose/pause ; pontos ; Game
 
-estado_teste = (2 , 2 , 0 , [0,0] , jogo_inicial)
-jogo_inicial = (Jogo (Jogador (4,1)) (Mapa 10 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore, Nenhum, Nenhum, Nenhum, Arvore, Arvore]), (Estrada (2), [Nenhum, Nenhum, Carro, Carro, Carro, Nenhum, Nenhum, Nenhum, Carro, Carro]), (Estrada (-1), [Carro, Carro, Nenhum, Nenhum, Nenhum, Carro, Carro, Nenhum, Nenhum, Nenhum]), (Relva,[Arvore, Nenhum, Nenhum, Nenhum, Arvore, Arvore, Nenhum, Nenhum, Arvore, Arvore]), (Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco, Tronco, Nenhum, Nenhum, Nenhum, Tronco]), (Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco, Nenhum, Nenhum, Tronco, Tronco, Nenhum]), (Relva, [Arvore, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Arvore]), (Relva, [Arvore, Arvore, Arvore, Nenhum, Nenhum, Nenhum, Arvore, Nenhum, Nenhum, Arvore]), (Relva,[Arvore, Arvore, Arvore, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Arvore, Arvore])]))
+estado_teste = (0 , 0 , 0 , [0] , jogo_inicial)
+jogo_inicial = (Jogo (Jogador (4,1)) (Mapa 10 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore, Nenhum, Nenhum, Nenhum, Arvore, Arvore]), (Estrada (2), [Nenhum, Nenhum, Carro, Carro, Carro, Nenhum, Nenhum, Nenhum, Carro, Carro]), (Estrada (-1), [Carro, Carro, Nenhum, Nenhum, Nenhum, Carro, Carro, Nenhum, Nenhum, Nenhum]), (Relva,[Arvore, Nenhum, Nenhum, Nenhum, Arvore, Arvore, Nenhum, Nenhum, Arvore, Arvore]), (Rio (-1),[Tronco, Nenhum, Nenhum, Tronco, Tronco, Tronco, Nenhum, Nenhum, Nenhum, Tronco]), (Rio (2), [Tronco, Tronco, Nenhum, Tronco, Tronco, Nenhum, Nenhum, Tronco, Tronco, Nenhum]), (Relva, [Arvore, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Arvore]), (Relva, [Arvore, Arvore, Arvore, Nenhum, Nenhum, Nenhum, Arvore, Nenhum, Nenhum, Arvore]), (Relva,[Arvore, Arvore, Arvore, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Arvore, Arvore])]))
 
 -- D I S P L A Y  &  P L A Y --
 
@@ -60,13 +65,13 @@ displayMode = FullScreen
 
 menu_choice :: GameState -> Picture
 menu_choice (pic,( 0, 0 , 0 , p , jogo_inicial )) = menu_inicial -- começo do jogo [primeiro Int]
-menu_choice (pic,( 1, 0 , 0 , p , jogo_inicial )) = menu_character -- escolha do personagem [prrimeiro Int], nenhum personagem selecionado [segundo Int] 
+menu_choice ([relva, tronco, rio, estrada, carro, arvore, chicken, pig, cow],( 1, 0 , 0 , p , jogo_inicial )) = menu_character [chicken, pig, cow]-- escolha do personagem [prrimeiro Int], nenhum personagem selecionado [segundo Int] 
 menu_choice (pic,( 2, c , 0 , p , jogo_inicial )) = start_game (pic,(2, c , 0 , p, jogo_inicial)) -- jogar jogo [segundo Int], o personagem selecionado [segundo Int], está vivo (win) [terceiro Int], o mapa a ser jogado 
 menu_choice (pic,( 2, c , 1 , p , game )) = menu_lost p -- jogar jogo , personagem escolhido, estado de derrota, mapa não ativo
 
 start_game :: GameState -> Picture
-start_game (pic,(2, c , 0 , p , (Jogo (Jogador (x,y)) (Mapa l ((terreno, o):t))))) = pictures ( map_picList ++ [(translate (-750) 250 (pontos p))] ) 
-          where map_picList = [(picture_mapa (Mapa l (reverse((terreno, o):t))) (pontox_inicial, pontoy_inicial)),(drawCharacter c (pontox_inicial+100*(fromIntegral x), pontoy_inicial+100*(fromIntegral y)))]
+start_game ([relva, tronco, rio, estrada, carro, arvore, chicken, pig, cow],(2, c , 0 , p , (Jogo (Jogador (x,y)) (Mapa l ((terreno, o):t))))) = pictures ( map_picList ++ [(translate (-750) 250 (pontos p))] ) 
+          where map_picList = [(picture_mapa [relva, tronco, rio, estrada, carro, arvore] (Mapa l (reverse((terreno, o):t))) (pontox_inicial, pontoy_inicial)),(drawCharacter [chicken, pig, cow] c (pontox_inicial+100*(fromIntegral x), pontoy_inicial+100*(fromIntegral y)))]
                 largura = (fromIntegral l)*100 
                 altura  = fromIntegral (length ((terreno, o):t))*100
                 pontox_inicial = -(((fromIntegral l)*100)/2) 
@@ -97,17 +102,17 @@ start = scale 0.3 0.2 (Color blue (Text "Press Space to Start") )
 
         --  C H A R A C T E R -- 
 
-menu_character :: Picture
-menu_character = pictures ([translate (-700) (-100) char_chicken] ++ [translate (-100) (-100) char_pig] ++ [translate 500 (-100) char_cow])
+menu_character ::  [Picture] -> Picture
+menu_character [chicken, pig, cow] = pictures ([translate (-700) (-100) (char_chicken [chicken, pig, cow])] ++ [translate (-100) (-100) (char_pig [chicken, pig, cow])] ++ [translate 500 (-100) (char_cow [chicken, pig, cow])])
 
-char_chicken :: Picture
-char_chicken = scale 2 2 chicken
+char_chicken ::  [Picture] -> Picture
+char_chicken [chicken, pig, cow] = scale 2 2 (chickenP [chicken, pig, cow])
 
-char_pig :: Picture
-char_pig = scale 2 2 pig
+char_pig ::  [Picture] -> Picture
+char_pig [chicken, pig, cow] = scale 2 2 (pigP [chicken, pig, cow])
 
-char_cow :: Picture
-char_cow = scale 2 2 cow
+char_cow ::  [Picture] -> Picture
+char_cow [chicken, pig, cow] = scale 2 2 (cowP [chicken, pig, cow])
 
 
         -- L O S T --
@@ -160,102 +165,101 @@ melhor_pontuacao (h:t)
 -- P E R S O N A G E N S --
 
 
-drawCharacter :: Integer -> (Float,Float) -> Picture
-drawCharacter 1 (x,y) = translate x y chicken
-drawCharacter 2 (x,y) = translate x y pig
-drawCharacter 3 (x,y) = translate x y cow
+drawCharacter :: [Picture] -> Integer -> (Float,Float) -> Picture
+drawCharacter [chicken, pig, cow] 1 (x,y) = translate x y (chickenP [chicken, pig, cow])
+drawCharacter [chicken, pig, cow] 2 (x,y) = translate x y (pigP [chicken, pig, cow])
+drawCharacter [chicken, pig, cow] 3 (x,y) = translate x y (cowP [chicken, pig, cow])
 
 
-chicken :: Picture
-chicken = color white (Polygon [(0,0),(100,0),(100,100),(0,100)])
+chickenP :: [Picture] -> Picture
+chickenP [chicken, pig, cow] = translate 50 50 (scale 0.28 0.28 chicken)
 
-pig :: Picture
-pig = color pink (Polygon [(0,0),(100,0),(100,100),(0,100)])
-    where pink = makeColor 1 0 0.9 0.9 
+pigP :: [Picture] -> Picture
+pigP [chicken, pig, cow] = translate 50 50 (scale 0.3 0.3 pig)
     
-cow :: Picture
-cow = color (greyN 0.5) (Polygon [(0,0),(100,0),(100,100),(0,100)])
+cowP :: [Picture] -> Picture
+cowP [chicken, pig, cow] = translate 50 50 (scale 0.22 0.22 cow)
 
 
 -- M A P A -- 
 
 
-picture_mapa :: Mapa -> (Float,Float) -> Picture
-picture_mapa (Mapa l ((terreno, obs):t)) (x,y) = pictures (desenha_mapa (Mapa l ((terreno, obs):t)) (x,y))
+picture_mapa :: [Picture] -> Mapa -> (Float,Float) -> Picture
+picture_mapa [relva, tronco, rio, estrada, carro, arvore] (Mapa l ((terreno, obs):t)) (x,y) = pictures (desenha_mapa [relva, tronco, rio, estrada, carro, arvore] (Mapa l ((terreno, obs):t)) (x,y))
 
-desenha_mapa :: Mapa -> (Float,Float) -> [Picture]
-desenha_mapa (Mapa l ((terreno, (h:t')):t)) (x,y) = (desenha_mapa_terrenos (Mapa l ((terreno, (h:t')):t)) (x,y)) ++ (desenha_mapa_obstaculos (Mapa l ((terreno, (h:t')):t)) (x,y))
+desenha_mapa :: [Picture] -> Mapa -> (Float,Float) -> [Picture]
+desenha_mapa [relva, tronco, rio, estrada, carro, arvore] (Mapa l ((terreno, (h:t')):t)) (x,y) = (desenha_mapa_terrenos [relva, rio, estrada] (Mapa l ((terreno, (h:t')):t)) (x,y)) ++ (desenha_mapa_obstaculos [tronco, carro, arvore] (Mapa l ((terreno, (h:t')):t)) (x,y))
 
-desenha_mapa_obstaculos :: Mapa -> (Float,Float) -> [Picture]
-desenha_mapa_obstaculos (Mapa l []) (x,y) = []
-desenha_mapa_obstaculos (Mapa l ((terreno, (h:t')):t)) (x,y) = ((picture_linha_obstaculos (h:t') (x,y)):(desenha_mapa_obstaculos (Mapa l t ) (x,y+100)))
+desenha_mapa_obstaculos :: [Picture] -> Mapa -> (Float,Float) -> [Picture]
+desenha_mapa_obstaculos [tronco, carro, arvore] (Mapa l []) (x,y) = []
+desenha_mapa_obstaculos [tronco, carro, arvore] (Mapa l ((terreno, (h:t')):t)) (x,y) = ((picture_linha_obstaculos [tronco, carro, arvore] v (h:t') (x,y)):(desenha_mapa_obstaculos [tronco, carro, arvore] (Mapa l t ) (x,y+100)))
+        where v = velocidade_da_linha (terreno, (h:t'))
 
-desenha_mapa_terrenos :: Mapa -> (Float,Float) -> [Picture]
-desenha_mapa_terrenos (Mapa l []) (x,y) = []
-desenha_mapa_terrenos (Mapa l ((terreno, obs):t)) (x,y) = ((picture_linha_terrenos terreno (x,y) l):(desenha_mapa_terrenos (Mapa l t ) (x,y+100)))
+desenha_mapa_terrenos :: [Picture] -> Mapa -> (Float,Float) -> [Picture]
+desenha_mapa_terrenos [relva, rio, estrada] (Mapa l []) (x,y) = []
+desenha_mapa_terrenos [relva, rio, estrada] (Mapa l ((terreno, obs):t)) (x,y) = ((picture_linha_terrenos [relva, rio, estrada] terreno (x,y) l):(desenha_mapa_terrenos [relva, rio, estrada] (Mapa l t) (x,y+100)))
  
 
         -- L I N H A  T E R R E N O  --
 
 
-picture_linha_terrenos :: Terreno -> (Float,Float) -> Int -> Picture
-picture_linha_terrenos terreno (x,y) l = pictures (desenha_linha_terrenos terreno (x,y) l)
+picture_linha_terrenos :: [Picture] -> Terreno -> (Float,Float) -> Int -> Picture
+picture_linha_terrenos [relva, rio, estrada] terreno (x,y) l = pictures (desenha_linha_terrenos [relva, rio, estrada] terreno (x,y) l)
 
 
-desenha_linha_terrenos :: Terreno -> (Float,Float) -> Int -> [Picture]
-desenha_linha_terrenos _ _ 0 = []
-desenha_linha_terrenos terreno (x,y) l = (desenha_ter terreno (x,y)):(desenha_linha_terrenos terreno ((x+100),y) (l-1) )
+desenha_linha_terrenos :: [Picture] -> Terreno -> (Float,Float) -> Int -> [Picture]
+desenha_linha_terrenos [relva, rio, estrada] _ _ 0 = []
+desenha_linha_terrenos [relva, rio, estrada] terreno (x,y) l = (desenha_ter [relva, rio, estrada] terreno (x,y)):(desenha_linha_terrenos [relva, rio, estrada] terreno ((x+100),y) (l-1) )
 
 
             -- T E R R E N O S--
 
 
-desenha_ter :: Terreno -> (Float,Float) -> Picture 
-desenha_ter (Rio v) (x,y) = (translate x y rioP)
-desenha_ter (Estrada v) (x,y)= (translate x y estradaP)
-desenha_ter Relva (x,y)= (translate x y relva)
+desenha_ter :: [Picture] -> Terreno -> (Float,Float) -> Picture 
+desenha_ter [relva, rio, estrada] (Rio v) (x,y) = (translate x y (rioP [relva, rio, estrada]))
+desenha_ter [relva, rio, estrada] (Estrada v) (x,y)= (translate x y (estradaP [relva, rio, estrada]))
+desenha_ter [relva, rio, estrada] Relva (x,y)= (translate x y (relvaP [relva, rio, estrada]))
 
-rioP :: Picture
-rioP = color blue (Polygon [(0,0),(100,0),(100,100),(0,100)])
+rioP :: [Picture] -> Picture
+rioP [relva, rio, estrada] = translate 50 50 (scale 0.555555555 0.555555555 rio)
 
-estradaP :: Picture
-estradaP = color (greyN 0.3) (Polygon [(0,0),(100,0),(100,100),(0,100)])
+estradaP :: [Picture] -> Picture
+estradaP [relva, rio, estrada] = translate 50 50 (rotate 90 (scale 0.555555555 0.555555555 estrada))
 
-relvaP :: Picture
-relvaP = color blue (Polygon [(0,0),(100,0),(100,100),(0,100)])
+relvaP :: [Picture] -> Picture
+relvaP [relva, rio, estrada] = translate 50 50 (scale 0.555555555 0.555555555 relva)
 
 
         -- L I N H A  O B S T A C U L O -- 
 
 
-picture_linha_obstaculos :: [Obstaculo] -> (Float,Float) -> Picture
-picture_linha_obstaculos (h:t) (x,y) = pictures (desenha_linha_obstaculos (h:t) (x,y))
+picture_linha_obstaculos :: [Picture] -> Velocidade -> [Obstaculo] -> (Float,Float) -> Picture
+picture_linha_obstaculos [tronco, carro, arvore] v (h:t) (x,y) = pictures (desenha_linha_obstaculos [tronco, carro, arvore] v (h:t) (x,y))
 
 
-desenha_linha_obstaculos :: [Obstaculo] -> (Float,Float) -> [Picture]
-desenha_linha_obstaculos [] _ = []
-desenha_linha_obstaculos (h:t) (x,y) = (desenha_obs h (x,y)):(desenha_linha_obstaculos t ((x+100),y))
+desenha_linha_obstaculos :: [Picture] -> Velocidade -> [Obstaculo] -> (Float,Float) -> [Picture]
+desenha_linha_obstaculos [tronco, carro, arvore] _ [] _ = []
+desenha_linha_obstaculos [tronco, carro, arvore] v (h:t) (x,y) = (desenha_obs [tronco, carro, arvore] v h (x,y)):(desenha_linha_obstaculos [tronco, carro, arvore] v t ((x+100),y))
 
 
             -- O B S T Á C U L O S --
 
 
-desenha_obs :: Obstaculo -> (Float,Float) -> Picture 
-desenha_obs Tronco (x,y) = (translate x y troncoP)
-desenha_obs Carro (x,y) = (translate x y carroP)
-desenha_obs Arvore (x,y) = (translate x y arvoreP)
-desenha_obs Nenhum (x,y) = (translate x y nenhumP)
+desenha_obs :: [Picture] -> Velocidade -> Obstaculo -> (Float,Float) -> Picture 
+desenha_obs [tronco, carro, arvore] v Tronco (x,y) = (translate x y (troncoP [tronco, carro, arvore]))
+desenha_obs [tronco, carro, arvore] v Carro (x,y) = (translate x y (carroP [tronco, carro, arvore] v))
+desenha_obs [tronco, carro, arvore] v Arvore (x,y) = (translate (x+50) (y+50) (arvoreP [tronco, carro, arvore]))
+desenha_obs [tronco, carro, arvore] v Nenhum (x,y) = (translate x y nenhumP)
 
-troncoP :: Picture
-troncoP = color brown (Polygon [(0,0),(100,0),(100,100),(0,100)])
-    where brown = makeColor 0.5 0.5 0 1
+troncoP :: [Picture] -> Picture
+troncoP [tronco, carro, arvore] = translate 50 50 (rotate 90 (scale 0.40 0.555555555 tronco))
 
-carroP :: Picture
-carroP = color red (Polygon [(0,0),(100,0),(100,100),(0,100)])
+carroP :: [Picture] -> Velocidade -> Picture
+carroP [tronco, carro, arvore] v = translate 50 50 (rotate r (scale 0.20 0.20 carro))
+        where r = if v > 0 then 270 else 90
 
-arvoreP :: Picture
-arvoreP = color darkgreen (Polygon [(0,0),(100,0),(100,100),(0,100)])
-    where darkgreen = makeColor 0 0.5 0.4 1
+arvoreP :: [Picture] -> Picture
+arvoreP [tronco, carro, arvore] = (scale 0.20 0.20 arvore)
 
 nenhumP :: Picture
 nenhumP = Blank 
@@ -302,8 +306,8 @@ wl_game event (pic,(2, c , 0 , p , game)) = if jogoTerminou game == True
 
 
 playChange :: Jogada -> GameState -> GameState
-playChange jogada (pic,(2 , c , 0 , [0] , Jogo (Jogador (x,y)) (Mapa l linhas))) = (pic, (2 , c , 0 , (contagem_pontos [0] jogada) , (validoMovimento(Jogo (Jogador (x,y)) ( Mapa l (atropelamento (Jogo (Jogador (x,y)) (Mapa l linhas)) jogada))) jogada)))
-playChange jogada (pic,(2 , c , 0 , p , Jogo (Jogador (x,y)) (Mapa l linhas))) = (pic, (2 , c , 0 , p_n , (validoMovimento (Jogo (Jogador (x,y)) ( Mapa l (atropelamento (Jogo (Jogador (x,y)) (Mapa l linhas)) jogada))) jogada)))
+playChange jogada (pic,(2 , c , 0 , [0] , Jogo (Jogador (x,y)) (Mapa l linhas))) = (pic, (2 , c , 0 , (contagem_pontos [0] jogada) , (validoMovimento (Jogo (Jogador (x,y)) ( Mapa l linhas)) jogada)))
+playChange jogada (pic,(2 , c , 0 , p , Jogo (Jogador (x,y)) (Mapa l linhas))) =   (pic, (2 , c , 0 ,            p_n               , (validoMovimento (Jogo (Jogador (x,y)) ( Mapa l linhas)) jogada)))
     where p_n = contagem_pontos p jogada
 
 
@@ -336,9 +340,15 @@ menu_lostChange _ s = s
             -- T E M P O --
 
 timeChange :: Float -> GameState -> GameState
-timeChange f (pic,(m, c , wl , p ,(Jogo (Jogador (x,y)) (Mapa l linhas)))) = if jogoTerminou (Jogo (Jogador (x,y)) (Mapa l linhas)) == True 
+
+timeChange f (pic,(2, c , 0 , p ,(Jogo (Jogador (x,y)) (Mapa l linhas)))) = if jogoTerminou (Jogo (Jogador (x,y)) (Mapa l linhas)) == True 
                                                                     then (pic,(2, c , 1 , p , (Jogo (Jogador (x,y)) (Mapa l linhas)))) 
-                                                                    else timeChange_aux f (pic,(m, c , wl , p ,(Jogo (Jogador (x,y)) (Mapa l linhas))))  
+                                                                    else timeChange_aux f (pic,(2, c , 0 , p ,(Jogo (Jogador (x,y)) (Mapa l linhas))))
+
+timeChange f (pic,(m, c , wl , p ,(Jogo (Jogador (x,y)) (Mapa l linhas)))) = (pic,(m, c , wl , p , (Jogo (Jogador (x,y)) (Mapa l linhas)))) 
+
+
 
 timeChange_aux :: Float -> GameState -> GameState
-timeChange_aux f (pic,(m, c , wl , p , (Jogo (Jogador (x,y)) (Mapa l linhas)))) = (pic,(m, c , wl , p , (animaJogoTempo (Jogo (Jogador (x,y)) (Mapa l linhas)))))
+timeChange_aux f (pic,(m, c , wl , p , (Jogo (Jogador (x,y)) (Mapa l linhas)))) = (pic,(m, c , wl ,  p , deslizaJogo (animated_map)))
+            where animated_map = animaJogoTempo (Jogo (Jogador (x,y)) (Mapa l linhas))

@@ -10,17 +10,13 @@ Módulo para a realização da Tarefa 3 do projeto de LI1 em 2022/23.
 module Tarefa3_2022li1g062 where
 import LI12223
 
-{-|
-
-
-
-
--}
 
 animaJogoTempo :: Jogo -> Jogo
-animaJogoTempo (Jogo (Jogador (x,y)) (Mapa l linhas)) = ((Jogo (Jogador (coordenadas_novas)) (Mapa l (linhas_novas))))
+animaJogoTempo (Jogo (Jogador (x,y)) (Mapa l linhas)) = (((Jogo (Jogador (coordenadas_novas)) (Mapa l (linhas_novas)))))
             where coordenadas_novas = move_tronco (x,y) (Mapa l linhas)
-                  linhas_novas = moveObs l linhas
+                  linhas_novas = moveObs l linhas_pos_atrop
+                  linhas_pos_atrop = atropelamento (Jogo (Jogador (x,y)) (Mapa l linhas))
+
 
 {- | A função "moveJogador" pretende animar o jogador, mediante a jogada escolhida ser fazer o jogador andar para cima, para baixo, para esquerda ou para a direita.
 Clicando em /Direcao/ e /Jogador/ é possivel obter mais informações relativamente a estas funções.
@@ -308,7 +304,8 @@ atropelamento (Jogo (Jogador (x,y)) (Mapa l (h:t)))  = if linha_jogador (h:t) y 
                                                            else ((h:t))
     where linha_atual = linha_jogador (h:t) y 
           linha_atualizada = atropelamento_aux linha_atual l x 
-          mapa_atualizado = (take (y-1) (h:t)) ++ [linha_atualizada] ++ (drop y (h:t))
+          mapa_atualizado = (take (comprimento-y-1) (h:t)) ++ [linha_atualizada] ++ (drop (comprimento-y) ((h:t)))
+          comprimento = length (h:t)
           v = velocidade_da_linha linha_atual
           obstaculos = obstaculos_da_linha linha_atual
 
@@ -357,7 +354,7 @@ Funçao 'atropelamento_aux_e'. De acordo com a jogada feita pelo jogador (Move E
 
 atropelamento_aux_e :: (Terreno, [Obstaculo]) -> Int -> Int -> (Terreno, [Obstaculo])
 atropelamento_aux_e (Estrada v, (h:t)) l x
-  | ( v >= distancia_e ) = (Estrada v, (drop ( l - distancia_e ) (h:t)) ++ (take (l - distancia_e) (h:t)) )
+  | ( v >= distancia_e ) = (Estrada v, (drop ( l - distancia_e ) (h:t)) ++ (take ( l - distancia_e ) (h:t)) )
   | otherwise = (Estrada v, (h:t))
          where lista_pos = posicao_carro (h:t)
                poscarro = posicao_carro_prox_e lista_pos x 
