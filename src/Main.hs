@@ -48,10 +48,10 @@ desenha pic = (pic, estado_teste)
 -- D A D O S --
 
 
-type GameState  = ([Picture],(Integer, Integer, Integer, [Integer], Jogo))
+type GameState  = ([Picture],(Integer, Float, Integer, [Integer], Jogo))
 --menu/game/end  ; characterchoice ; win/lose/pause ; pontos ; Game
 
-estado_teste = (0 , 0 , 0 , [0] , jogo_inicial)
+estado_teste = (2 , 1, 3 , [0] , jogo_inicial)
 jogo_inicial = (Jogo (Jogador (4,1)) (Mapa 10 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore, Nenhum, Nenhum, Nenhum, Arvore, Arvore]), (Estrada (2), [Nenhum, Nenhum, Carro, Carro, Carro, Nenhum, Nenhum, Nenhum, Carro, Carro]), (Estrada (-1), [Carro, Carro, Nenhum, Nenhum, Nenhum, Carro, Carro, Nenhum, Nenhum, Nenhum]), (Relva,[Arvore, Nenhum, Nenhum, Nenhum, Arvore, Arvore, Nenhum, Nenhum, Arvore, Arvore]), (Rio (-1),[Tronco, Nenhum, Nenhum, Tronco, Tronco, Tronco, Nenhum, Nenhum, Nenhum, Tronco]), (Rio (2), [Tronco, Tronco, Nenhum, Tronco, Tronco, Nenhum, Nenhum, Tronco, Tronco, Nenhum]), (Relva, [Arvore, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Arvore]), (Relva, [Arvore, Arvore, Arvore, Nenhum, Nenhum, Nenhum, Arvore, Nenhum, Nenhum, Arvore]), (Relva,[Arvore, Arvore, Arvore, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Arvore, Arvore])]))
 
 -- D I S P L A Y  &  P L A Y --
@@ -65,9 +65,14 @@ displayMode = FullScreen
 
 menu_choice :: GameState -> Picture
 menu_choice (pic,( 0, 0 , 0 , p , jogo_inicial )) = menu_inicial -- começo do jogo [primeiro Int]
-menu_choice ([relva, tronco, rio, estrada, carro, arvore, chicken, pig, cow],( 1, 0 , 0 , p , jogo_inicial )) = menu_character [chicken, pig, cow]-- escolha do personagem [prrimeiro Int], nenhum personagem selecionado [segundo Int] 
+menu_choice ([relva, tronco, rio, estrada, carro, arvore, chicken, pig, cow],( 1, 0 , 0 , p , jogo_inicial )) = menu_character [chicken, pig, cow] 0 -- escolha do personagem [prrimeiro Int], nenhum personagem selecionado [segundo Int] 
+menu_choice ([relva, tronco, rio, estrada, carro, arvore, chicken, pig, cow],( 1, 0.1 , 0 , p , jogo_inicial )) = menu_character [chicken, pig, cow] 0.1 
+menu_choice ([relva, tronco, rio, estrada, carro, arvore, chicken, pig, cow],( 1, 0.2 , 0 , p , jogo_inicial )) = menu_character [chicken, pig, cow] 0.2 
+menu_choice ([relva, tronco, rio, estrada, carro, arvore, chicken, pig, cow],( 1, 0.3 , 0 , p , jogo_inicial )) = menu_character [chicken, pig, cow] 0.3 
 menu_choice (pic,( 2, c , 0 , p , jogo_inicial )) = start_game (pic,(2, c , 0 , p, jogo_inicial)) -- jogar jogo [segundo Int], o personagem selecionado [segundo Int], está vivo (win) [terceiro Int], o mapa a ser jogado 
+menu_choice (pic,( 2, c , 3 , p , game )) = pictures ( [ start_game (pic,( 2, c , 0 , p , game )) ] ++ [menu_pause] ++ [(translate (-750) 250 (pontos p))]) 
 menu_choice (pic,( 2, c , 1 , p , game )) = menu_lost p -- jogar jogo , personagem escolhido, estado de derrota, mapa não ativo
+
 
 start_game :: GameState -> Picture
 start_game ([relva, tronco, rio, estrada, carro, arvore, chicken, pig, cow],(2, c , 0 , p , (Jogo (Jogador (x,y)) (Mapa l ((terreno, o):t))))) = pictures ( map_picList ++ [(translate (-750) 250 (pontos p))] ) 
@@ -81,9 +86,8 @@ start_game ([relva, tronco, rio, estrada, carro, arvore, chicken, pig, cow],(2, 
             -- P O N T O S   N O   J O G O --
 
 pontos :: [Integer] -> Picture
-pontos p = pictures ( [Color points_color (Polygon [(0,0),(0,200),(200,200),(200,0)])] ++ [translate x 50(Text (show (last p)))])
-    where points_color = makeColor 1 0 0.9 0.9
-          x = if ((last p) > 9) == False then 65 else 27
+pontos p = pictures ( [Color blue (Polygon [(0,0),(0,200),(200,200),(200,0)])] ++ [translate 10 10 (Color azure (Polygon [(0,0),(0,180),(180,180),(180,0)]))] ++ [translate x 55 (Text (show (last p)))] ++ [translate 68 20 (scale 0.2 0.1 (Text "points") )])
+          where x = if ((last p) > 9) == False then 65 else 27
 
 
 
@@ -102,18 +106,43 @@ start = scale 0.3 0.2 (Color blue (Text "Press Space to Start") )
 
         --  C H A R A C T E R -- 
 
-menu_character ::  [Picture] -> Picture
-menu_character [chicken, pig, cow] = pictures ([translate (-700) (-100) (char_chicken [chicken, pig, cow])] ++ [translate (-100) (-100) (char_pig [chicken, pig, cow])] ++ [translate 500 (-100) (char_cow [chicken, pig, cow])])
+menu_character ::  [Picture] -> Float -> Picture
+menu_character [chicken, pig, cow] 0 = pictures   ([translate (-900) (300) char_txtL] ++ [translate (-550) (200) char_txtS] ++ [translate (-700) (-250) (char_chicken [chicken, pig, cow])]     ++ [translate (-100) (-250) (char_pig [chicken, pig, cow])]     ++ [translate 500 (-250) (char_cow [chicken, pig, cow])])
+menu_character [chicken, pig, cow] 0.1 = pictures ([translate (-900) (300) char_txtL] ++ [translate (-550) (200) char_txtS] ++ [translate (-700) (-250) (sel_char_chicken [chicken, pig, cow])] ++ [translate (-100) (-250) (char_pig [chicken, pig, cow])]     ++ [translate 500 (-250) (char_cow [chicken, pig, cow])])
+menu_character [chicken, pig, cow] 0.2 = pictures ([translate (-900) (300) char_txtL] ++ [translate (-550) (200) char_txtS] ++ [translate (-700) (-250) (char_chicken [chicken, pig, cow])]     ++ [translate (-100) (-250) (sel_char_pig [chicken, pig, cow])] ++ [translate 500 (-250) (char_cow [chicken, pig, cow])])
+menu_character [chicken, pig, cow] 0.3 = pictures ([translate (-900) (300) char_txtL] ++ [translate (-550) (200) char_txtS] ++ [translate (-700) (-250) (char_chicken [chicken, pig, cow])]     ++ [translate (-100) (-250) (char_pig [chicken, pig, cow])]     ++ [translate 500 (-250) (sel_char_cow [chicken, pig, cow])])
+
 
 char_chicken ::  [Picture] -> Picture
-char_chicken [chicken, pig, cow] = scale 2 2 (chickenP [chicken, pig, cow])
-
+char_chicken [chicken, pig, cow] = pictures ([scale 2 2 (chickenP [chicken, pig, cow])] ++ [translate 100 100 char_circle])
 char_pig ::  [Picture] -> Picture
-char_pig [chicken, pig, cow] = scale 2 2 (pigP [chicken, pig, cow])
-
+char_pig [chicken, pig, cow] =  pictures ([scale 2 2 (pigP [chicken, pig, cow])] ++ [translate 100 100 char_circle])
 char_cow ::  [Picture] -> Picture
-char_cow [chicken, pig, cow] = scale 2 2 (cowP [chicken, pig, cow])
+char_cow [chicken, pig, cow] = pictures ([scale 2 2 (cowP [chicken, pig, cow])] ++ [translate 100 100 char_circle])
 
+sel_char_chicken ::  [Picture] -> Picture
+sel_char_chicken [chicken, pig, cow] = pictures ([scale 2 2 (chickenP [chicken, pig, cow])] ++ [translate 100 100 char_circleSelected])
+sel_char_pig ::  [Picture] -> Picture
+sel_char_pig [chicken, pig, cow] =  pictures ([scale 2 2 (pigP [chicken, pig, cow])] ++ [translate 100 100 char_circleSelected])
+sel_char_cow ::  [Picture] -> Picture
+sel_char_cow [chicken, pig, cow] = pictures ([scale 2 2 (cowP [chicken, pig, cow])] ++ [translate 100 100 char_circleSelected])
+
+
+char_circle :: Picture
+char_circle = color blue (ThickCircle 200 30)
+char_circleSelected :: Picture
+char_circleSelected = color yellow (ThickCircle 200 30)
+
+char_txtL :: Picture
+char_txtL = color yellow(scale 1 0.8 (Text ("CHOOSE YOUR CHARACTER")))
+
+char_txtS :: Picture
+char_txtS = color white(scale 0.4 0.3 (Text ("[<- ->] to change and [space] to select")))
+
+        -- P A U S E --
+
+menu_pause :: Picture
+menu_pause = pictures ([ color (withAlpha 0.90 white) (Polygon [(-1000,-2000),(1000,-2000),(1000,2000),(-1000,2000)]) ] ++ [translate (-540) (-50) (scale 3 2.8 (Text "Pause"))]  ++ [translate (-290) (-150) (scale 0.5 0.3 (Text "Space to Continue"))])
 
         -- L O S T --
 
@@ -133,7 +162,7 @@ restart1 :: Picture
 restart1 = scale 0.3 0.2  (Color white (Text ("Press Enter to go to Main menu")) )
 
 restart2 :: Picture
-restart2 = scale 0.3 0.2  (Color white (Text ("Press Backspace to choose a new character")) )
+restart2 = scale 0.3 0.2  (Color white (Text ("Press Right Button to choose a new character")) )
 
 restart3 :: Picture
 restart3 = scale 0.3 0.2  (Color white (Text ("Press Space to Restart" )) )
@@ -144,14 +173,14 @@ restart3 = scale 0.3 0.2  (Color white (Text ("Press Space to Restart" )) )
 
                 -- N O V O   R E C O R D E --
 new_record :: [Integer] -> Picture
-new_record p = scale 0.6 0.4 (Color yellow (Text ("Novo recorde de " ++ (show p_r) ++ " pontos!" )))
+new_record p = scale 0.6 0.4 (Color yellow (Text ("New record of " ++ (show p_r) ++ " points!" )))
      where p_r = last p 
 
 
                 -- R E C O R D E (A N T E R I O R) -- 
 
 record :: [Integer] -> Picture
-record p = scale 0.5 0.3 (Color white (Text ("Recorde: "++( show record_p))))
+record p = scale 0.5 0.3 (Color white (Text ("Record: "++( show record_p))))
     where record_p = melhor_pontuacao p 
 
 melhor_pontuacao :: [Integer] -> Integer
@@ -165,7 +194,7 @@ melhor_pontuacao (h:t)
 -- P E R S O N A G E N S --
 
 
-drawCharacter :: [Picture] -> Integer -> (Float,Float) -> Picture
+drawCharacter :: [Picture] -> Float -> (Float,Float) -> Picture
 drawCharacter [chicken, pig, cow] 1 (x,y) = translate x y (chickenP [chicken, pig, cow])
 drawCharacter [chicken, pig, cow] 2 (x,y) = translate x y (pigP [chicken, pig, cow])
 drawCharacter [chicken, pig, cow] 3 (x,y) = translate x y (cowP [chicken, pig, cow])
@@ -179,6 +208,7 @@ pigP [chicken, pig, cow] = translate 50 50 (scale 0.3 0.3 pig)
     
 cowP :: [Picture] -> Picture
 cowP [chicken, pig, cow] = translate 50 50 (scale 0.22 0.22 cow)
+
 
 
 -- M A P A -- 
@@ -270,11 +300,11 @@ nenhumP = Blank
 
 eventChange :: Event -> GameState -> GameState
 eventChange event (pic,( 0 , 0 , 0 , p , game)) = menu_inicialChange event (pic,(0, 0 , 0 , p , game))
-eventChange event (pic,( 1 , 0 , 0 , p , game)) = menu_characterChange event (pic,(1 , 0 , 0 , p , game))
+eventChange event (pic,( 1 , c , 0 , p , game)) = menu_characterChange event (pic,(1 , c , 0 , p , game))
 eventChange event (pic,( 2 , c , 0 , [0] , game)) = wl_game event (pic,(2, c , 0 , [0] , game)) 
 eventChange event (pic,( 2 , c , 0 , p , game)) = wl_game event (pic,(2, c , 0 , p , game))
 eventChange event (pic,( 2 , c , 1 , p , game)) = menu_lostChange event (pic,( 2 , c , 1 , p , game)) 
-
+eventChange event (pic,( 2 , c , 3 , p , game)) = menu_pauseChange event (pic,( 2 , c , 3 , p , game))
 
             -- M O V I M E N T O S   N O   M E N U   I N I C I A L --
 
@@ -289,16 +319,26 @@ menu_inicialChange _ state = state
             -- M O V I M E N T O S   N O   M E N U   P E R S O N A G E M --
 
 
+
 menu_characterChange :: Event -> GameState -> GameState
-menu_characterChange (EventKey (Char '1') Down _ _ ) (pic,(1, 0 , 0 , p , game)) =  (pic,(2, 1 , 0 , p ,game))
-menu_characterChange (EventKey (Char '2') Down _ _ ) (pic,(1, 0 , 0 , p , game)) =  (pic,(2, 2 , 0 , p , game))
-menu_characterChange (EventKey (Char '3') Down _ _ ) (pic,(1, 0 , 0 , p , game)) =  (pic,(2, 3 , 0 , p , game))
-menu_characterChange (EventKey (SpecialKey KeyBackspace) Down _ _ ) (pic,(1, 0 , 0 , p , game)) = (pic,(0, 0 , 0 , p , game)) 
+menu_characterChange (EventKey (SpecialKey KeyRight) Down _ _ ) (pic, (1, 0 , 0 , p , game)) = (pic,(1, (0.1) , 0 , p ,game))
+menu_characterChange (EventKey (SpecialKey KeyLeft) Down _ _ ) (pic, (1 , 0 , 0 , p , game)) = (pic,(1, (0.3) , 0 , p ,game))
+menu_characterChange (EventKey (SpecialKey KeyRight) Down _ _ ) (pic, (1 , 0.3 , 0 , p , game)) = (pic,(1, (0.1) , 0 , p ,game))
+menu_characterChange (EventKey (SpecialKey KeyLeft) Down _ _ ) (pic, (1 , 0.1 , 0 , p , game)) = (pic,(1, (0.3) , 0 , p ,game))
+menu_characterChange (EventKey (SpecialKey KeyRight) Down _ _ ) (pic, (1, c , 0 , p , game)) = (pic,(1, (c+0.1) , 0 , p ,game))
+menu_characterChange (EventKey (SpecialKey KeyLeft) Down _ _ ) (pic, (1 , 0.3 , 0 , p , game)) = (pic,(1, (0.2) , 0 , p ,game))
+menu_characterChange (EventKey (SpecialKey KeyLeft) Down _ _ ) (pic, (1 , c , 0 , p , game)) = (pic,(1, (c-0.1) , 0 , p ,game))
+menu_characterChange (EventKey (SpecialKey KeySpace) Down _ _ ) (pic, (1 , 0.1 , 0 , p , game)) = (pic, (2, 1 , 0 , p ,game))
+menu_characterChange (EventKey (SpecialKey KeySpace) Down _ _ ) (pic, (1 , 0.2 , 0 , p , game)) = (pic, (2, 2 , 0 , p ,game))
+menu_characterChange (EventKey (SpecialKey KeySpace) Down _ _ ) (pic, (1 , 0.3 , 0 , p , game)) = (pic, (2, 3 , 0 , p ,game))
+menu_characterChange (EventKey (MouseButton RightButton) Down _ _ ) (pic,(1 , _ , 0 , p , game)) = (pic,(0, 0 , 0 , p , game)) 
 menu_characterChange _ s = s
+
 
             -- M O V I M E N T O S   N O   M A P A --
 
 wl_game :: Event -> GameState -> GameState 
+wl_game (EventKey (SpecialKey KeySpace) Down _ _ ) (pic,(2, c , 0 , p , game)) = (pic,(2, c , 3 , p , game))
 wl_game event (pic,(2, c , 0 , p , game)) = if jogoTerminou game == True
                                 then (pic,(2, c , 1 , p , game))
                                 else playChange jogada (pic,(2, c , 0 , p , game))
@@ -333,18 +373,25 @@ associa_dir _ = Parado
 
 menu_lostChange :: Event -> GameState -> GameState
 menu_lostChange (EventKey (SpecialKey KeySpace) Down _ _ ) (pic,( 2 , c , 1 , p , game)) = (pic,( 2 , c , 0 , p++[0] , jogo_inicial))
-menu_lostChange (EventKey (SpecialKey KeyBackspace) Down _ _ ) (pic,( 2 , c , 1 , p , game)) = (pic,( 1 , 0 , 0 , p++[0] , jogo_inicial))
+menu_lostChange (EventKey (MouseButton RightButton) Down _ _ ) (pic,( 2 , c , 1 , p , game)) = (pic,( 1 , 0 , 0 , p++[0] , jogo_inicial))
 menu_lostChange (EventKey (SpecialKey KeyEnter) Down _ _ ) (pic,( 2 , c , 1 , p , game)) = (pic,(0, 0 , 0 , p++[0] , jogo_inicial))
 menu_lostChange _ s = s
 
+            -- M O V I M E N T O S   N O   M E N U   P A U S E --
+
+menu_pauseChange :: Event -> GameState -> GameState
+menu_pauseChange (EventKey (SpecialKey KeySpace) Down _ _ ) (pic,( 2 , c , 3 , p , game)) = (pic,( 2 , c , 0 , p , game))
+menu_pauseChange (EventKey (MouseButton RightButton) Down _ _ ) (pic,( 2 , c , 3 , p , game)) = (pic,( 0 , 0 , 0 , p , game))
+menu_pauseChange _ s = s
+
+
             -- T E M P O --
 
-timeChange :: Float -> GameState -> GameState
 
+timeChange :: Float -> GameState -> GameState
 timeChange f (pic,(2, c , 0 , p ,(Jogo (Jogador (x,y)) (Mapa l linhas)))) = if jogoTerminou (Jogo (Jogador (x,y)) (Mapa l linhas)) == True 
                                                                     then (pic,(2, c , 1 , p , (Jogo (Jogador (x,y)) (Mapa l linhas)))) 
                                                                     else timeChange_aux f (pic,(2, c , 0 , p ,(Jogo (Jogador (x,y)) (Mapa l linhas))))
-
 timeChange f (pic,(m, c , wl , p ,(Jogo (Jogador (x,y)) (Mapa l linhas)))) = (pic,(m, c , wl , p , (Jogo (Jogador (x,y)) (Mapa l linhas)))) 
 
 

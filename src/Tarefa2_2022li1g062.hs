@@ -35,9 +35,15 @@ Na funçao 'estendeMapa', usamos random com recurso a funçao mod de modo a gera
 estendeMapa :: Mapa -> Int -> Mapa 
 estendeMapa (Mapa l m) n = ( Mapa l ((terreno_selecionado, (listaObstaculos l n (terreno_selecionado, []))):m ))
     where terreno_selecionado = terrenos_validos !! mod n (length terrenos_validos)
-          terrenos_validos = (proximosTerrenosValidos d (Mapa l m))
+          terrenos_validos = if velocidade_positiva (head m) == True then (proximosTerrenosValidos (-d) (Mapa l m)) else (proximosTerrenosValidos d (Mapa l m))
           d = escolha_velocidade n
-          
+
+
+velocidade_positiva :: (Terreno, [Obstaculo]) -> Bool
+velocidade_positiva (Relva, obs) = False
+velocidade_positiva (Estrada v, obs) = if v > 0 then True else False
+velocidade_positiva (Rio v, obs) = if v > 0 then True else False  
+
 
 {-|
 
