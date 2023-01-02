@@ -4,6 +4,8 @@ import LI12223
 import Tarefa4_2022li1g062
 import Test.HUnit
 
+
+{-
 testsT4 :: Test
 testsT4 = TestLabel "Testes Tarefa 4" $ test ["Teste 1" ~: 1 ~=? 1]
 
@@ -63,4 +65,52 @@ teste3_8 = TestCase (assertEqual "O jogo termina porque o jogador é atropelado"
 
 teste3_9 = TestCase (assertEqual "O jogo termina porque o jogador é atropelado" True (jogoTerminou3 (Mapa 5 [(Relva, [Arvore, Nenhum, Nenhum, Nenhum, Arvore]),(Estrada 3, [Nenhum, Nenhum, Carro, Carro, Carro])])(Jogador (3,1))))
 
-teste3_10 = TestCase (assertEqual "O jogo termina porque o jogador é atropelado" True (jogoTerminou3 (Mapa 5 [(Relva, [Arvore, Nenhum, Nenhum, Nenhum, Arvore]),(Estrada 1, [Carro, Nenhum, Carro, Nenhum, Carro])])(Jogador (4,1))))
+teste3_10 = TestCase (assertEqual "O jogo termina porque o jogador é atropelado" True (jogoTerminou3 (Mapa 5 [(Relva, [Arvore, Nenhum, Nenhum, Nenhum, Arvore]),(Estrada 1, [Carro, Nenhum, Carro, Nenhum, Carro])])(Jogador (4,1)))) -}
+
+
+testsT1 :: Test
+testsT1 = TestLabel "Teste limites" $ test ["Fora dos limites do mapa" ~: True ~=? jogoTerminou (Jogo (Jogador ( 1, 5) ) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])]) ) ]
+
+testsT2 :: Test
+testsT2 = TestLabel "Teste limites" $ test ["Fora dos limites do mapa" ~: True ~=? jogoTerminou (Jogo (Jogador ( 5, 4) ) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])]) ) ]
+
+testsT3 :: Test
+testsT3 = TestLabel "Teste limites" $ test ["Fora dos limites do mapa" ~: True ~=? jogoTerminou (Jogo (Jogador ( -1, 4) ) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])]) ) ]
+
+testsT4 :: Test
+testsT4 = TestLabel "Teste limites" $ test ["Fora dos limites do mapa" ~: True ~=? jogoTerminou (Jogo (Jogador ( 1,- 3) ) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])]) ) ]
+
+testsT5 :: Test
+testsT5 = TestLabel "Teste limites" $ test ["Dentro dos limites do mapa" ~: False ~=? jogoTerminou (Jogo (Jogador ( 1,3) ) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])]) ) ]
+
+testsT6 :: Test
+testsT6 = TestLabel "Teste Rio" $ test ["Jogador encontra-se na agua" ~: True ~=? jogoTerminou2 (Jogo (Jogador ( 2,1) ) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])]) )   ]
+
+testsT7 :: Test
+testsT7 = TestLabel "Teste Rio" $ test ["Jogador encontra-se no Tronco" ~: False ~=? jogoTerminou2 (Jogo (Jogador ( 2,0) ) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])]) )  ]
+
+testsT8 :: Test
+testsT8 = TestLabel "Teste Estrada" $ test ["Jogador encontra-se na estrada" ~: False ~=? jogoTerminou3 (Jogo (Jogador ( 2,3) ) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])]) )   ]
+
+testsT9 :: Test
+testsT9 = TestLabel "Teste Estrada" $ test ["Jogador encontra-se na mesma posiçao de Carro" ~: True ~=?  jogoTerminou3 (Jogo (Jogador ( 0,3) ) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])]) ) ]  
+
+testsT10 :: Test
+testsT10 = TestLabel "Teste Termina" $ test ["Testa todo o conjunto das funçoes auxiliares" ~: True ~=?  jogoTerminou (Jogo (Jogador ( 4,3) ) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])]) )    ]
+
+testsT11 :: Test
+testsT11 = TestLabel "Teste Termina" $ test ["Testa todo o conjunto das funçoes auxiliares" ~: False ~=? jogoTerminou (Jogo (Jogador ( 4,0) ) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])]) )   ]
+  
+testsT12 :: Test
+testsT12 = TestLabel "Teste Termina" $ test ["Testa todo o conjunto das funçoes auxiliares" ~:  True ~=? jogoTerminou (Jogo (Jogador ( 0,5) ) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])]) )  ]
+
+testsT13 :: Test
+testsT13 = TestLabel "Teste Termina" $ test ["Testa todo o conjunto das funçoes auxiliares" ~: True ~=? jogoTerminou (Jogo (Jogador ( 0,0) ) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])]) )  ]
+
+testsT14 :: Test
+testsT14 = TestLabel "Teste Termina" $ test ["Testa todo o conjunto das funçoes auxiliares" ~:  False ~=? jogoTerminou (Jogo (Jogador ( 2,0) ) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])]) )  ]
+
+todos4 = runTestTT (TestList [testsT1, testsT2, testsT3, testsT4 , testsT5, testsT6 , testsT7 , testsT8 , testsT9 , testsT10 , testsT11 , testsT12 , testsT13 , testsT14  ])
+
+
+

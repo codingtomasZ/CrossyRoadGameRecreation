@@ -6,7 +6,7 @@ import Test.HUnit
 
 
 testsT1 :: Test
-testsT1 = TestLabel "Teste direçao" $ test ["Teste Cima " ~: Jogador (3,5) ~=? moveJogador (Move Cima) (Jogador (3 ,4 ) ) ]
+testsT1 = TestLabel "Teste direçao" $ test ["Teste Cima" ~: Jogador (3,5) ~=? moveJogador (Move Cima) (Jogador (3 ,4 ) ) ]
 
 testsT2 :: Test 
 testsT2 = TestLabel "Teste direçao" $ test ["Teste Baixo" ~: Jogador (2,3) ~=?  moveJogador (Move Baixo) (Jogador (2 ,4 ) ) ]
