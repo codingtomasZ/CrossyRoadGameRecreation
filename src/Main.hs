@@ -51,11 +51,11 @@ desenha pic = (pic, estado_teste)
 
 -- D A D O S --
 
-
+-- | O estado do jogo composoto por : A lista de pictures que vão ser usadas na representação; Um inteiro que indica o menu atual (0 para menu inicial, 1 para menu de escolha de personagem, 3 para menu do jogo em si); Um Float que indica o personagem escolhido ou a ser escolhido (em fase de escolha: 0.0- nenhum personagem a ser selecionado, 0.1- pode ser selecionado o primeiro personagem, 0.2- pode ser selecionado o segundo personagem, 0.3- pode ser selecionado o terceiro personagem; personagem já escolhido: 1- primeiro personagem escolhido, 2- segundo personagem escolhido, 3- terceiro personagem escolhido); Um inteiro que dita se o jogador perdeu, colocou o jogo em pausa ou está vivo (0- está vivo, 1- perdeu, 3- pausa); Uma lista de inteiros que funciona como histórico de todos os pontos obtidos em todas as jogadas feitas; E uma variável do tipo "Jogo";
 type GameState  = ([Picture],(Integer,         Float,            Integer,        [Integer], Jogo))
                             --menu/game/end  ; characterchoice ; win/lose/pause ; pontos ;  Game
 
-estado_teste = (2 , 1, 3 , [0] , jogo_inicial)
+estado_teste = (0 , 0, 0 , [0] , jogo_inicial)
 jogo_inicial = (Jogo (Jogador (4,1)) (Mapa 10 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore, Nenhum, Nenhum, Nenhum, Arvore, Arvore]), (Estrada (2), [Nenhum, Nenhum, Carro, Carro, Carro, Nenhum, Nenhum, Nenhum, Carro, Carro]), (Estrada (-1), [Carro, Carro, Nenhum, Nenhum, Nenhum, Carro, Carro, Nenhum, Nenhum, Nenhum]), (Relva,[Arvore, Nenhum, Nenhum, Nenhum, Arvore, Arvore, Nenhum, Nenhum, Arvore, Arvore]), (Rio (-1),[Tronco, Nenhum, Nenhum, Tronco, Tronco, Tronco, Nenhum, Nenhum, Nenhum, Tronco]), (Rio (2), [Tronco, Tronco, Nenhum, Tronco, Tronco, Nenhum, Nenhum, Tronco, Tronco, Nenhum]), (Relva, [Arvore, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Arvore]), (Relva, [Arvore, Arvore, Arvore, Nenhum, Nenhum, Nenhum, Arvore, Nenhum, Nenhum, Arvore]), (Relva,[Arvore, Arvore, Arvore, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Arvore, Arvore])]))
 
 -- D I S P L A Y  &  P L A Y --
@@ -85,7 +85,7 @@ menu_choice (pic,( 2, c , 1 , p , game )) = menu_lost p -- jogar jogo , personag
 -}
 
 start_game :: GameState -> Picture
-start_game ([relva, tronco, rio, estrada, carro, arvore, chicken, pig, cow],(2, c , 0 , p , (Jogo (Jogador (x,y)) (Mapa l ((terreno, o):t))))) = pictures ( map_picList ++ [(translate (-750) 250 (pontos p))] ) 
+start_game ([relva, tronco, rio, estrada, carro, arvore, chicken, pig, cow],(2, c , 0 , p , (Jogo (Jogador (x,y)) (Mapa l ((terreno, o):t))))) = pictures ( map_picList ++ [(translate (-750) 250 (pontos p))] ++ [translate (-230) (-510) (scale 0.3 0.2(color white (Text "[Space] to pause game")))]) 
           where map_picList = [(picture_mapa [relva, tronco, rio, estrada, carro, arvore] (Mapa l (reverse((terreno, o):t))) (pontox_inicial, pontoy_inicial)),(drawCharacter [chicken, pig, cow] c (pontox_inicial+100*(fromIntegral x), pontoy_inicial+100*(fromIntegral y)))]
                 largura = (fromIntegral l)*100 
                 altura  = fromIntegral (length ((terreno, o):t))*100
@@ -207,7 +207,7 @@ char_txtS = color white(scale 0.4 0.3 (Text ("[<- ->] to change and [space] to s
 -}
 
 menu_pause :: Picture
-menu_pause = pictures ([ color (withAlpha 0.90 white) (Polygon [(-1000,-2000),(1000,-2000),(1000,2000),(-1000,2000)]) ] ++ [translate (-540) (-50) (scale 3 2.8 (Text "Pause"))]  ++ [translate (-290) (-150) (scale 0.5 0.3 (Text "Space to Continue"))])
+menu_pause = pictures ([ color (withAlpha 0.90 white) (Polygon [(-1000,-2000),(1000,-2000),(1000,2000),(-1000,2000)]) ] ++ [translate (-540) (-50) (scale 3 2.8 (Text "Pause"))]  ++ [translate (-290) (-150) (scale 0.5 0.3 (Text "Space to Continue"))] ++ [translate (-700) (-220) (scale 0.5 0.3 (Text "Press S to Save Game and Continue later"))] ++ [translate (-430) (-290) (scale 0.5 0.3 (Text "Press Right Button to exit"))])
 
 
         -- L O S T --
@@ -217,8 +217,8 @@ menu_pause = pictures ([ color (withAlpha 0.90 white) (Polygon [(-1000,-2000),(1
 
 menu_lost :: [Integer] -> Picture
 menu_lost p 
-    | (last p < melhor_pontuacao p) = pictures ([(translate (-830) 150 lost)] ++ [translate (-150) (-100) (record p)] ++ [(translate (-260) (-300) restart)])
-    | otherwise = pictures ([(translate (-830) 150 lost)] ++ [translate (-525) (-100) (new_record p)] ++ [(translate (-260) (-300) restart)])
+    | (last p < melhor_pontuacao p) = pictures ([(translate (-830) 150 lost)] ++ [translate (-170) (-100) (record p)] ++ [(translate (-260) (-300) restart)])
+    | otherwise = pictures ([(translate (-830) 150 lost)] ++ [translate (-500) (-100) (new_record p)] ++ [(translate (-260) (-300) restart)])
 
 {-| A picture lost vai desenhar o texto de aviso de fim do jogo.
 -}
@@ -549,7 +549,8 @@ menu_lostChange _ s = s
 
 menu_pauseChange :: Event -> GameState -> GameState
 menu_pauseChange (EventKey (SpecialKey KeySpace) Down _ _ ) (pic,( 2 , c , 3 , p , game)) = (pic,( 2 , c , 0 , p , game))
-menu_pauseChange (EventKey (MouseButton RightButton) Down _ _ ) (pic,( 2 , c , 3 , p , game)) = (pic,( 0 , 0 , 0 , p , game))
+menu_pauseChange (EventKey (Char 's') Down _ _ ) (pic,( 2 , c , 3 , p , game)) = (pic,( 0 , 0 , 0 , p , game))
+menu_pauseChange (EventKey (MouseButton RightButton) Down _ _ ) (pic,( 2 , c , 3 , p , game)) = (pic,( 0 , 0 , 0 , p++[0] , jogo_inicial))
 menu_pauseChange _ s = s
 
 

@@ -11,20 +11,16 @@ module Tarefa3_2022li1g062 where
 import LI12223
 
 {-| A funcao animaJogoTempo vai animar o jogo, alterando a lista de obstaculos e as coordenadas do jogo caso este esteja num tronco.
--}
-
-{-|
-
-Funçao 'animaJogoTempo' 
-
 
 -}
+
 
 animaJogoTempo :: Jogo -> Jogo
 animaJogoTempo (Jogo (Jogador (x,y)) (Mapa l linhas)) = (((Jogo (Jogador (coordenadas_novas)) (Mapa l (linhas_novas)))))
             where coordenadas_novas = move_tronco (x,y) (Mapa l linhas)
                   linhas_novas = moveObs l linhas_pos_atrop
                   linhas_pos_atrop = atropelamento (Jogo (Jogador (x,y)) (Mapa l linhas))
+
 
 {- | A função 'moveJogador' pretende animar o jogador, mediante a jogada escolhida ser fazer o jogador andar para cima, para baixo, para esquerda ou para a direita.
 Clicando em /Direcao/ e /Jogador/ é possivel obter mais informações relativamente a estas funções.
