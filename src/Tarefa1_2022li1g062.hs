@@ -109,6 +109,8 @@ True
 
 mapaValido3 :: Mapa -> Bool
 mapaValido3 (Mapa l []) = True
+mapaValido3 (Mapa l ((Relva, o):t)) = mapaValido3 (Mapa l t)
+mapaValido3 (Mapa l ((Estrada v, o):t)) = mapaValido3 (Mapa l t)
 mapaValido3 (Mapa l ((Rio v, o):t))
   | (mapaValido3_1 0 o) == True = (mapaValido3 (Mapa l t))
   | (mapaValido3_1 0 o) == False = False
@@ -150,6 +152,8 @@ False
 
 mapaValido4 :: Mapa -> Bool
 mapaValido4 (Mapa l []) = True
+mapaValido4 (Mapa l ((Relva, o):t)) = mapaValido4 (Mapa l t)
+mapaValido4 (Mapa l ((Rio v, o):t)) = mapaValido4 (Mapa l t)
 mapaValido4 (Mapa l ((Estrada v, o):t))
   | (mapaValido4_1 0 o) == True = (mapaValido4 (Mapa l t))
   | (mapaValido4_1 0 o) == False = False
@@ -160,8 +164,6 @@ mapaValido4 (Mapa l ((Estrada v, o):t))
 Funçao auxiliar para 'mapaValido4'
 
 -}
-
-
 
 mapaValido4_1 :: Int -> [Obstaculo] -> Bool 
 mapaValido4_1 4 _ = False
@@ -185,8 +187,8 @@ Caso True, a funçao percorre todas as listas e quando chega a ultima lista (lis
 
 mapaValido5 :: Mapa -> Bool 
 mapaValido5 (Mapa l []) = True 
-mapaValido5 (Mapa l ((p , (x:y)):t))
- | elem Nenhum (x:y) == False = False 
+mapaValido5 (Mapa l ((terreno , obstaculos):t))
+ | elem Nenhum obstaculos == False = False 
  | otherwise = mapaValido5 (Mapa l t)
 
 {-| A funçao 'mapaValido6' analisa se a largura do mapa e igual ao comprimento da lista de obstaculos.

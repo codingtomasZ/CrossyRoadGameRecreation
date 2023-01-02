@@ -10,6 +10,8 @@ Módulo para a realização da Tarefa 3 do projeto de LI1 em 2022/23.
 module Tarefa3_2022li1g062 where
 import LI12223
 
+{-| A funcao animaJogoTempo vai animar o jogo, alterando a lista de obstaculos e as coordenadas do jogo caso este esteja num tronco.
+-}
 
 {-|
 
