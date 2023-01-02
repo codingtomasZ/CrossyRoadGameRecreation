@@ -10,6 +10,7 @@ Módulo para a realização da Tarefa 5 do projeto de LI1 em 2022/2023.
 module Tarefa5_2022li1g062 where
 
 import LI12223
+import Tarefa1_2022li1g062
 import Tarefa2_2022li1g062
 import Test.HUnit 
 
@@ -43,7 +44,9 @@ Jogo (Jogador (4,3)) (Mapa 5 [(Rio 2,[Nenhum,Nenhum,Tronco,Tronco,Nenhum]),(Relv
 
 -}
 
-deslizaJogo :: Jogo -> Jogo
-deslizaJogo (Jogo (Jogador (x,y)) (Mapa l (h:t))) = (Jogo (Jogador (x,y-1)) mapa_novo)
-    where mapa_novo = estendeMapa  (Mapa l (init (h:t))) seed  
-          seed =  (((y*x)^3) +y) `div` (5+x)
+deslizaJogo :: Int -> Jogo -> Jogo
+deslizaJogo seed (Jogo (Jogador (x,y)) (Mapa l (h:t))) = (Jogo (Jogador (x,y-1)) mapa_testado)
+    where mapa_testado = if (mapaValido mapa_novo == False) then estendeMapa (Mapa l (init (h:t))) (seed+1) else mapa_novo
+          mapa_novo = estendeMapa  (Mapa l (init (h:t))) seed  
+          
+

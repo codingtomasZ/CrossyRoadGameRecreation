@@ -569,5 +569,6 @@ timeChange f (pic,(m, c , wl , p ,(Jogo (Jogador (x,y)) (Mapa l linhas)))) = (pi
 -}
 
 timeChange_aux :: Float -> GameState -> GameState
-timeChange_aux f (pic,(m, c , wl , p , (Jogo (Jogador (x,y)) (Mapa l linhas)))) = (pic,(m, c , wl ,  p , deslizaJogo (animated_map)))
+timeChange_aux f (pic,(m, c , wl , p , (Jogo (Jogador (x,y)) (Mapa l linhas)))) = (pic,(m, c , wl ,  p , deslizaJogo seed (animated_map) ))
             where animated_map = animaJogoTempo (Jogo (Jogador (x,y)) (Mapa l linhas))
+                  seed =  (((y*x)^3) +y) `div` (5+x)
