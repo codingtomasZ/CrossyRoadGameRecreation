@@ -299,7 +299,7 @@ Funçao 'atropelamento'
 -}
 
 atropelamento :: Jogo ->  [(Terreno, [Obstaculo])] 
-atropelamento (Jogo (Jogador (x,y)) (Mapa l (h:t)))  = if linha_jogador (h:t) y == (Estrada v, obstaculos)
+atropelamento (Jogo (Jogador (x,y)) (Mapa l (h:t)))  = if linha_atual == (Estrada v, obstaculos)
                                                            then ((mapa_atualizado))
                                                            else ((h:t))
     where linha_atual = linha_jogador (h:t) y 

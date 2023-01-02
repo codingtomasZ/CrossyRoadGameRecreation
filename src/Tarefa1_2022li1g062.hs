@@ -122,7 +122,7 @@ Funçao auxiliar para 'mapaValido3'
 
 
 mapaValido3_1 :: Int -> [Obstaculo] -> Bool 
-mapaValido3_1 5 _ = False
+mapaValido3_1 6 _ = False
 mapaValido3_1 n [] = True 
 mapaValido3_1 n (x:t) 
   | x == Tronco = mapaValido3_1 (n+1) t 
@@ -163,7 +163,7 @@ Funçao auxiliar para 'mapaValido4'
 
 
 mapaValido4_1 :: Int -> [Obstaculo] -> Bool 
-mapaValido4_1 3 _ = False
+mapaValido4_1 4 _ = False
 mapaValido4_1 n [] = True 
 mapaValido4_1 n (x:t) 
   | x == Carro = mapaValido4_1 (n+1) t 

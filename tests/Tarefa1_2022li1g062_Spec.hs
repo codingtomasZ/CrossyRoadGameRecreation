@@ -82,4 +82,4 @@ testsT24 = TestLabel "Teste max5 Relva contiguas" $ test ["Relva max5" ~: True ~
 testsT25 :: Test
 testsT25 = TestLabel "Teste max4 Rio contiguos" $ test ["Terreno Relva seguido de 5 rios contiguos" ~: False ~=? mapaValido7 (Mapa 2 [(Relva , [Arvore, Nenhum]) , (Rio 3 , [Nenhum , Tronco]), (Rio 3 , [Nenhum , Tronco]), (Rio 3 , [Nenhum , Tronco]), (Rio 3 , [Nenhum , Tronco]), (Rio 3 , [Nenhum , Tronco]) ])]
 
-todos = runTestTT (TestList [testsT1, testsT2, testsT3, testsT4 , testsT5, testsT6 , testsT7 , testsT8 , testsT9 , testsT10 , testsT11 , testsT12 , testsT13 , testsT14 , testsT15 , testsT16 , testsT17 , testsT18,testsT19,testsT20, testsT21 , testsT22 , testsT23 , testsT24 , testsT25 ])
+todos1 = runTestTT (TestList [testsT1, testsT2, testsT3, testsT4 , testsT5, testsT6 , testsT7 , testsT8 , testsT9 , testsT10 , testsT11 , testsT12 , testsT13 , testsT14 , testsT15 , testsT16 , testsT17 , testsT18,testsT19,testsT20, testsT21 , testsT22 , testsT23 , testsT24 , testsT25 ])
