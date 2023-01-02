@@ -14,19 +14,20 @@ import Test.HUnit
 import System.Random
 import Data.Numbers.Primes
 
-{- | A funcao ’estendeMapa’ tem como finalidade gerar e adicionar uma nova linha valida ao topo de um dado mapa. Esta função irá inicialmente escolher um terreno com uso da função "mod" entre o numero dado e o comprimento da lista de obstáculos. A partir do resultado dessa aplicação o terreno sera escolhido e de seguida, a partir desse terreno, será gerada a lista de obstáculos.
+{- | A funcao ’estendeMapa’ tem como finalidade gerar e adicionar uma nova linha valida ao topo de um dado mapa. Esta função irá inicialmente escolher um terreno com uso da função 'mod' entre o numero dado e o comprimento da lista de obstáculos. A partir do resultado dessa aplicação o terreno sera escolhido e de seguida, a partir desse terreno, será gerada a lista de obstáculos. O valor inteiro deve estar entre [0,100] usado para acrescentar alguma pseudo-aleatoriedade na geracao da proxima nova linha.
 Acima encontram-se mais informaçoes sobre as funçoes /Mapa/. 
 
 == Exemplos de utilização:
 
 @
->>>  estendeMapa (Mapa 3 [(Relva , [])]) 3
-Mapa 3 [(Relva,[]),(Relva,[Arvore,Arvore,Nenhum])]
+>>>  estendeMapa (Mapa 2 [(Estrada 3, [Carro, Nenhum]) , (Estrada 3, [Carro, Nenhum]), (Estrada 3, [Carro, Nenhum]), (Estrada 3, [Carro, Nenhum]), (Estrada 3, [Carro, Nenhum])]) 1
+Mapa 2 [(Relva,[Nenhum,Nenhum]),(Estrada 3,[Carro,Nenhum]),(Estrada 3,[Carro,Nenhum]),(Estrada 3,[Carro,Nenhum]),(Estrada 3,[Carro,Nenhum]),(Estrada 3,[Carro,Nenhum])]
 @
 
-== Sobre...
-
-Na funçao 'estendeMapa', usamos random com recurso a funçao mod de modo a escolher o terreno da nova linha. 
+@
+>>>  estendeMapa (Mapa 2 [(Relva, [Arvore,Nenhum]), (Relva, [Arvore,Nenhum]), (Relva, [Arvore,Nenhum]), (Relva, [Arvore,Nenhum]), (Relva, [Arvore,Nenhum])]) (-2)
+Mapa 2 [(Estrada 2,[Nenhum,Nenhum]),(Relva,[Arvore,Nenhum]),(Relva,[Arvore,Nenhum]),(Relva, [Arvore,Nenhum]),(Relva,[Arvore,Nenhum]),(Relva, [Arvore,Nenhum])]
+@
 
 -}
 
@@ -90,6 +91,8 @@ escolha_velocidade n
 
 {-| A funcao listaObstaculos vai gerar uma nova lista de obstáculos a partir da largura pretendida para a lista, de um inteiro dado e um terreno, associado a uma lista de obstaculos vazia ou não. O inteiro dado irá gerar uma lista de números pseudo-aleatórios. O ultimo elemento dessa lista é analisado em relacão à sua paridado visto que, caso seja impar, o obstaculo escolhido sera o primeiro de uma lista previamente fornecida dos obstaculos que são validos para o terreno escolhido. Caso seja par, sera escolhido o segundo/ultimo elemento dessa mesma lista. 
 
+== Exemplos de utilizaçao: 
+
 @
 >>> listaObstaculos 5 34 (Estrada 2, [])
 [Nenhum,Carro,Carro,Nenhum,Nenhum]
@@ -109,21 +112,18 @@ listaObstaculos l n (ter,o)
 
 {-| A funcao randomIntsL vai receber dois inteiros de modo a criar um lista de numeros pseudo-aleatorios. Esta funcao vai receber um inteiro que dara origem a lista de numeros e um segundo inteiro que está associado a funcao "take", que determinara o comprimento da lista de numeros gerdos.
 
+== Exemplos de utilizaçao:
+
 @
 >>>  randomIntsL 344 1
 [5105422989647308011]
 @
-
 -}
-
 
 randomIntsL :: Int -> Int -> [Int]
 randomIntsL seed l = take l $ randoms (mkStdGen seed)
 
-
-
 {- |A função ’proximosTerrenosValidos’ calcula a lista de terrenos que poderao surgir na nova linha do mapa. Também será atribuida uma velocidade previamente escolhida a estes terrenos.
-Clicando em __Mapa__ e em __Terreno__ acima e possivel obter mais informaçoes relativamente a estas 2 funcoes.
 
 == Exemplos de utilização:
 
@@ -144,7 +144,6 @@ Clicando em __Mapa__ e em __Terreno__ acima e possivel obter mais informaçoes r
 
 -}
 
-
 {- Funçao proximosTerrenosValidos -}
 
 
@@ -159,40 +158,27 @@ proximosTerrenosValidos v (Mapa l (x:[(Relva ,a),(Relva, aa),(Relva , aaa),(Relv
 proximosTerrenosValidos v (Mapa l t) = [Relva, Rio v ,Estrada v]
 
 
-{- | A função ’proximosObauxiliar’ calcula os obstaculos que podem ser gerados para continuar uma dada linha do mapa. O valor inteiro corresponde a largura do mapa. Se o comprimento da lista de obstaculos atinge a largura do mapa entao mais nenhum obstaculo e possivel adicionar. Os obstaculos escolhidos devem ainda estar de acordo com o seu respetivo terreno.
-Clicando em /Terreno/ e /Obstaculo/ é possivel obter mais informaçoes relativamente a estas funcoes. 
+{- | A função ’proximosObstaculosValidos’ calcula os obstaculos que podem ser gerados para continuar uma dada linha do mapa. O valor inteiro corresponde a largura do mapa. Se o comprimento da lista de obstaculos atinge a largura do mapa entao mais nenhum obstaculo e possivel adicionar. Os obstaculos escolhidos devem ainda estar de acordo com o seu respetivo terreno.
 
 == Exemplos de utilização:
 
 @
->>> proximosObauxiliar 10 (Estrada 3 , [Carro,Carro,Carro,Carro])
-[Nenhum]
+>>> proximosObstaculosValidos 5 (Relva, [Arvore, Arvore])
+[Nenhum,Arvore]
 @
 
 @
->>>  proximosObauxiliar 3 (Estrada 3 , [Carro,Carro,Carro,Nenhum])
-[Nenhum] 
+>>>  proximosObstaculosValidos 2 (Rio 2 , [Nenhum , Tronco , Nenhum , Tronco , Tronco ])
+[Nenhum,Tronco]
 @
 
 @
->>>  proximosObauxiliar 6 (Estrada 3 , [Carro,Carro,Carro,Carro])
-[Nenhum]
-@
-
-@
->>>  proximosObauxiliar 6 (Estrada 3 , [])
+>>>  proximosObstaculosValidos 2 (Estrada 2 , [Carro, Nenhum, Carro, Carro])
 [Nenhum,Carro]
 @
-
-@
->>>  proximosObauxiliar 2 (Estrada 3 , [Carro,Carro,Carro,Carro])
-[Nenhum]
-@
-
 -}
 
 {- Funçao proximosObstaculosValidos -}
-
 
 proximosObstaculosValidos  :: Int -> (Terreno,[Obstaculo]) -> [Obstaculo]
 proximosObstaculosValidos n (Relva, []) = [Nenhum,Arvore]

@@ -4,8 +4,6 @@ import LI12223
 import Tarefa3_2022li1g062
 import Test.HUnit
 
---testsT3 :: Test
---testsT3 = TestLabel "Testes Tarefa 3" $ test ["Teste 1" ~: 1 ~=? 1]
 
 testsT1 :: Test
 testsT1 = TestLabel "Teste direçao" $ test ["Teste Cima " ~: Jogador (3,5) ~=? moveJogador (Move Cima) (Jogador (3 ,4 ) ) ]
@@ -85,4 +83,7 @@ testsT25 = TestLabel "Atropelamento" $ test ["Atropelado pela esquerda" ~: [(Rio
 testsT26 :: Test
 testsT26 = TestLabel "Atropelamento" $ test ["Atropelamento pela esquerda" ~: [(Rio 2,[Tronco,Tronco,Nenhum,Nenhum]),(Estrada 2,[Carro,Carro,Carro,Nenhum]),(Estrada (-2),[Carro,Nenhum,Carro,Carro])] ~=? atropelamento (Jogo (Jogador (2,1)) (Mapa 4 [(Rio 2 , [Tronco , Tronco,Nenhum,Nenhum]),(Estrada 2 , [Carro,Carro,Nenhum,Carro]),(Estrada (-2),[Carro, Nenhum , Carro, Carro])]) )   ]
 
-todos3 = runTestTT (TestList [testsT1, testsT2, testsT3, testsT4 , testsT5, testsT6 , testsT7 , testsT8 , testsT9 , testsT10 , testsT11 , testsT12 , testsT13 , testsT14 , testsT15, testsT16 , testsT17, testsT18, testsT19, testsT20, testsT21, testsT22, testsT23 , testsT24, testsT25,testsT26])
+testsT27 :: Test
+testsT27 = TestLabel "Teste movimentoValido" $ test ["Teste movimento Parado" ~: Jogo (Jogador (2,0)) (Mapa 5 [(Relva,[Arvore,Nenhum,Arvore,Nenhum,Arvore]),(Estrada (-1),[Carro,Nenhum,Nenhum,Nenhum,Carro]),(Rio 1,[Tronco,Nenhum,Nenhum,Tronco,Tronco]),(Rio (-2),[Tronco,Tronco,Nenhum,Tronco,Tronco]),(Rio 1,[Nenhum,Nenhum,Tronco,Tronco,Tronco])]) ~=? validoMovimento (Jogo (Jogador (2,0)) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])]) ) (Parado)]
+
+todos3 = runTestTT (TestList [testsT1, testsT2, testsT3, testsT4 , testsT5, testsT6 , testsT7 , testsT8 , testsT9 , testsT10 , testsT11 , testsT12 , testsT13 , testsT14 , testsT15, testsT16 , testsT17, testsT18, testsT19, testsT20, testsT21, testsT22, testsT23 , testsT24, testsT25,testsT26,testsT27])

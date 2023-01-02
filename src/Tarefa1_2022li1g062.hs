@@ -106,12 +106,13 @@ True
 
 -}
 
+
 mapaValido3 :: Mapa -> Bool
 mapaValido3 (Mapa l []) = True
 mapaValido3 (Mapa l ((Rio v, o):t))
   | (mapaValido3_1 0 o) == True = (mapaValido3 (Mapa l t))
   | (mapaValido3_1 0 o) == False = False
-  | otherwise = True
+  | otherwise = mapaValido3 (Mapa l t )
 
 
 {-|
@@ -152,7 +153,7 @@ mapaValido4 (Mapa l []) = True
 mapaValido4 (Mapa l ((Estrada v, o):t))
   | (mapaValido4_1 0 o) == True = (mapaValido4 (Mapa l t))
   | (mapaValido4_1 0 o) == False = False
-  | otherwise = True
+  | otherwise = mapaValido4 (Mapa l t)
 
 {-|
 

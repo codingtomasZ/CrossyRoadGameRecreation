@@ -4,8 +4,6 @@ import LI12223
 import Tarefa1_2022li1g062
 import Test.HUnit
 
---testsT1 :: Test
---testsT1 = TestLabel "Testes Tarefa 1" $ test ["Teste 1" ~: 1 ~=? 1]
 
 testsT1 :: Test
 testsT1 = TestLabel "Teste dos obstaculos" $ test ["Teste Tronco em Estrada" ~: False ~=? mapaValido1 (Mapa 3 [(Estrada 2, [Tronco, Carro, Nenhum])])]
@@ -82,4 +80,13 @@ testsT24 = TestLabel "Teste max5 Relva contiguas" $ test ["Relva max5" ~: True ~
 testsT25 :: Test
 testsT25 = TestLabel "Teste max4 Rio contiguos" $ test ["Terreno Relva seguido de 5 rios contiguos" ~: False ~=? mapaValido7 (Mapa 2 [(Relva , [Arvore, Nenhum]) , (Rio 3 , [Nenhum , Tronco]), (Rio 3 , [Nenhum , Tronco]), (Rio 3 , [Nenhum , Tronco]), (Rio 3 , [Nenhum , Tronco]), (Rio 3 , [Nenhum , Tronco]) ])]
 
-todos1 = runTestTT (TestList [testsT1, testsT2, testsT3, testsT4 , testsT5, testsT6 , testsT7 , testsT8 , testsT9 , testsT10 , testsT11 , testsT12 , testsT13 , testsT14 , testsT15 , testsT16 , testsT17 , testsT18,testsT19,testsT20, testsT21 , testsT22 , testsT23 , testsT24 , testsT25 ])
+{-testsT26 :: Test
+testsT26 = TestLabel
+
+testsT27 :: Test
+testsT27 = TestLabel
+
+testsT28 :: Test
+testsT28 = TestLabel -}
+
+todos1 = runTestTT (TestList [testsT1, testsT2, testsT3, testsT4 , testsT5, testsT6 , testsT7 , testsT8 , testsT9 , testsT10 , testsT11 , testsT12 , testsT13 , testsT14 , testsT15 , testsT16 , testsT17 , testsT18,testsT19,testsT20, testsT21 , testsT22 , testsT23 , testsT24 , testsT25 ]) -- testsT26, testsT27, testsT28

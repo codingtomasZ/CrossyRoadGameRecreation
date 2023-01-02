@@ -4,8 +4,6 @@ import LI12223
 import Tarefa5_2022li1g062
 import Test.HUnit
 
-
-
 testsT1 :: Test
 testsT1 = TestLabel "Teste coordenadas" $ test ["Mesmo mapa. Soma das coordenadas igual" ~: Jogo (Jogador (2,0)) (Mapa 5 [(Estrada 2,[Carro,Carro,Nenhum,Carro,Nenhum]),(Relva,[Arvore,Nenhum,Nenhum,Nenhum,Arvore]),(Estrada (-1),[Carro,Nenhum,Nenhum,Nenhum,Carro]),(Rio 1,[Tronco,Nenhum,Nenhum,Tronco,Tronco]),(Rio (-2),[Tronco,Tronco,Nenhum,Tronco,Tronco]),(Rio 1,[Nenhum,Nenhum,Tronco,Tronco,Tronco])])~=? deslizaJogo (Jogo (Jogador (2,0))  (Mapa 5 [(Relva,[Arvore, Nenhum, Nenhum, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco]),(Relva,[Arvore, Nenhum, Nenhum, Arvore, Arvore])]))]
 
@@ -36,14 +34,14 @@ testsT9 = TestLabel "Teste coordenadas" $ test ["Diferente mapa. Soma das coorde
 testsT10 :: Test
 testsT10 = TestLabel "Teste coordenadas" $ test ["Diferente mapa. Soma das coordenadas igual. Geram a mesma linha de (Terreno,[Obstaculo])" ~: Jogo (Jogador (3,3)) (Mapa 5 [(Relva,[Nenhum,Nenhum,Nenhum,Arvore,Nenhum]),(Rio 2,[Tronco,Tronco,Tronco,Nenhum,Nenhum]),(Estrada 0,[Carro,Carro,Nenhum,Nenhum,Carro]),(Relva,[Arvore,Arvore,Arvore,Nenhum,Nenhum]),(Rio (-2),[Tronco,Tronco,Nenhum,Tronco,Tronco]),(Estrada (-1),[Carro,Carro,Nenhum,Nenhum,Carro])]) ~=? deslizaJogo (Jogo (Jogador (3,3))  (Mapa 5 [(Rio 2 , [Tronco, Tronco , Tronco , Nenhum, Nenhum]),(Estrada 0, [Carro,Carro,Nenhum,Nenhum,Carro]),(Relva, [Arvore , Arvore, Arvore, Nenhum, Nenhum]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Estrada (-1),[Carro, Carro,Nenhum,Nenhum,Carro]),(Estrada 1 , [Carro, Carro,Carro,Nenhum,Nenhum])]))]
 
-{-testsT11 :: Test
-testsT11 = TestLabel "" $ test [""   ~: Jogo (Jogador (1,0)) (Mapa 4 [(Rio 2,[Tronco,Tronco,Tronco,Nenhum]),(Rio 2,[Tronco,Tronco,Nenhum,Nenhum]),(Rio (-2),[Tronco,Tronco,Nenhum,Tronco]),(Rio 3,[Tronco,Nenhum,Nenhum,Nenhum])]) ~=? deslizaJogo (Jogo (Jogador (1,0)) (Mapa 4 [(Rio 2, [Tronco,Tronco,Nenhum,Nenhum]),(Rio (-2),[Tronco,Tronco,Nenhum,Tronco]) ,(Rio 3, [Tronco,Nenhum,Nenhum,Nenhum]), (Rio (-1), [Nenhum,Tronco,Tronco,Nenhum])])    
+--testsT11 :: Test
+--testsT11 = TestLabel "Teste 4 rios contiguos e proximo terreno" $ test ["aba" ~: ~=?         ]
 
-testsT12 :: Test
-testsT12 = TestLabel "" $ test ["" ~:  ~=? deslizaJogo 
+--testsT12 :: Test
+--testsT12 = TestLabel "" $ test ["" ~:  ~=? deslizaJogo 
 
-testsT13 :: Test
-testsT13 = TestLabel "" $ test ["" ~:  ~=? -}
+--testsT13 :: Test
+--testsT13 = TestLabel "" $ test ["" ~:  ~=? 
 
 
-testar = runTestTT (TestList [testsT1, testsT2, testsT3, testsT4 , testsT5, testsT6 , testsT7 , testsT8 , testsT9 , testsT10 ]) -- testsT11 , testsT12 , testsT13
+todos5 = runTestTT (TestList [testsT1, testsT2, testsT3, testsT4 , testsT5, testsT6 , testsT7 , testsT8 , testsT9 , testsT10 ]) -- testsT11 , testsT12 , testsT13
