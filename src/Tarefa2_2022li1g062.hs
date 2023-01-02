@@ -14,7 +14,7 @@ import Test.HUnit
 import System.Random
 import Data.Numbers.Primes
 
-{- | A funcao ’estendeMapa’ tem como finalidade gerar e adicionar uma nova linha valida ao topo de um dado mapa. O valor inteiro deve estar entre [0,100] usado para acrescentar alguma pseudo-aleatoriedade a geracao a proxima nova linha.
+{- | A funcao ’estendeMapa’ tem como finalidade gerar e adicionar uma nova linha valida ao topo de um dado mapa. Esta função irá inicialmente escolher um terreno com uso da função "mod" entre o numero dado e o comprimento da lista de obstáculos. A partir do resultado dessa aplicação o terreno sera escolhido e de seguida, a partir desse terreno, será gerada a lista de obstáculos.
 Acima encontram-se mais informaçoes sobre as funçoes /Mapa/. 
 
 == Exemplos de utilização:
@@ -26,7 +26,7 @@ Mapa 3 [(Relva,[]),(Relva,[Arvore,Arvore,Nenhum])]
 
 == Sobre...
 
-Na funçao 'estendeMapa', usamos random com recurso a funçao mod de modo a gerar novas linhas de terreno no mapa. 
+Na funçao 'estendeMapa', usamos random com recurso a funçao mod de modo a escolher o terreno da nova linha. 
 
 -}
 
@@ -39,14 +39,45 @@ estendeMapa (Mapa l m) n = ( Mapa l ((terreno_selecionado, (listaObstaculos l n 
           d = escolha_velocidade n
 
 
+{-| A função velocidade positiva vai avaliar se a velocidade de uma dada linha é positiva. Esta função auxiliara a função "estendeMapa". Caso a velocidade for positiva, a função retornara o valor "True", caso não seja, o resutado sera "False". No caso do terreno ser Relva, ou seja, sem velocidade, o resultado será também "False".
+
+== Exemplos de utilização:
+
+@
+>>>  velocidade_positiva (Estrada (-2), [Carro, Nenhum, Nenhum])
+False 
+@
+
+@
+>>>  velocidade_positiva (Rio (2), [Nenhum, Nenhum, Tronco, Tronco, Nenhum])
+True 
+@
+-}
+
 velocidade_positiva :: (Terreno, [Obstaculo]) -> Bool
 velocidade_positiva (Relva, obs) = False
 velocidade_positiva (Estrada v, obs) = if v > 0 then True else False
 velocidade_positiva (Rio v, obs) = if v > 0 then True else False  
 
 
-{-|
+{-| A funcao escolha_velocidade vai escolher uma velocidade de forma pseudo-aleatoria. As velocidades que esta funcao pode possivelmente retornar vao de 1 a 4. Esta função vai receber um numero e apartir desse numero vai ser gerada uma lista de um número pseudo-aleatorio gerada a partir do numero inicial. Caso esse tal numero gerado na lista seja par e divisivel por 4, a velocidade escolhida será "1". Caso o numero gerado seja par mas não divisivel por 4, a velocidade escolhida será "3". Caso o número gerado seja impar, a velocidade escolhida será 4 caso esse numero seja primo, ou 2 caso não seja. 
 
+== Exemplos de utilização:
+
+@
+>>> escolha_velocidade 24 
+1
+@
+
+@
+>>> escolha_velocidade 55
+3
+@
+
+@
+>>> escolha_velocidade 2
+2
+@
 
 -}
 
@@ -57,8 +88,12 @@ escolha_velocidade n
              where random_num = randomIntsL n 1 
 
 
-{-|
+{-| A funcao listaObstaculos vai gerar uma nova lista de obstáculos a partir da largura pretendida para a lista, de um inteiro dado e um terreno, associado a uma lista de obstaculos vazia ou não. O inteiro dado irá gerar uma lista de números pseudo-aleatórios. O ultimo elemento dessa lista é analisado em relacão à sua paridado visto que, caso seja impar, o obstaculo escolhido sera o primeiro de uma lista previamente fornecida dos obstaculos que são validos para o terreno escolhido. Caso seja par, sera escolhido o segundo/ultimo elemento dessa mesma lista. 
 
+@
+>>> listaObstaculos 5 34 (Estrada 2, [])
+[Nenhum,Carro,Carro,Nenhum,Nenhum]
+@
 
 -}
 
@@ -72,8 +107,12 @@ listaObstaculos l n (ter,o)
             where obstaculos_validos = proximosObstaculosValidos l (ter, o) 
 
 
-{-|
+{-| A funcao randomIntsL vai receber dois inteiros de modo a criar um lista de numeros pseudo-aleatorios. Esta funcao vai receber um inteiro que dara origem a lista de numeros e um segundo inteiro que está associado a funcao "take", que determinara o comprimento da lista de numeros gerdos.
 
+@
+>>>  randomIntsL 344 1
+[5105422989647308011]
+@
 
 -}
 
@@ -82,33 +121,25 @@ randomIntsL :: Int -> Int -> [Int]
 randomIntsL seed l = take l $ randoms (mkStdGen seed)
 
 
-{-
-listaObstaculos :: Int -> Int -> (Terreno, [Obstaculo]) -> [Obstaculo]
-listaObstaculos l n (ter,o)
- |length o == l = o
- |length o ==(l-1) && (elem Nenhum o == False) = o ++ [Nenhum]
- |otherwise = listaObstaculos l (div ((n+1)^4) 3) (ter,[(obstaculos_validos !! mod n (length obstaculos_validos))] ++ o)
-      where obstaculos_validos = proximosObstaculosValidos l (ter, o) 
--}
 
-{- |A função ’proximosTerrenosValidos’ calcula a lista de terrenos que poderao surgir na nova linha do mapa. Para esta funçao iremos ignorar os parametros relacionados com a velocidade do /terreno Estrada/ e /terreno Rio/.
+{- |A função ’proximosTerrenosValidos’ calcula a lista de terrenos que poderao surgir na nova linha do mapa. Também será atribuida uma velocidade previamente escolhida a estes terrenos.
 Clicando em __Mapa__ e em __Terreno__ acima e possivel obter mais informaçoes relativamente a estas 2 funcoes.
 
 == Exemplos de utilização:
 
 @
->>> proximosTerrenosValidos (Mapa 3 [(Estrada 3,[])])
-[Relva,Rio 0,Estrada 0]
+>>> proximosTerrenosValidos (-3) (Mapa 3 [(Estrada 3,[])])
+[Relva,Rio (-3),Estrada (-3)]
 @
 
 @
->>>  proximosTerrenosValidos (Mapa 3 [(Estrada 3,[Carro,Carro,Nenhum]), (Relva , [Arvore,Arvore,Nenhum])])
-[Relva,Rio 0,Estrada 0]
+>>>  proximosTerrenosValidos 2 (Mapa 3 [(Estrada 3,[Carro,Carro,Nenhum]), (Relva , [Arvore,Arvore,Nenhum])])
+[Relva,Rio 2,Estrada 2]
 @
 
 @
->>> proximosTerrenosValidos (Mapa 2 [(Rio 7, [Tronco,Nenhum]), (Rio 1, [Tronco,Nenhum]),(Rio 2, [Tronco,Nenhum]),(Rio 3, [Tronco,Nenhum])])
-[Estrada 0,Relva]
+>>> proximosTerrenosValidos 1 (Mapa 2 [(Rio 7, [Tronco,Nenhum]), (Rio 1, [Tronco,Nenhum]),(Rio 2, [Tronco,Nenhum]),(Rio 3, [Tronco,Nenhum])])
+[Estrada 1,Relva]
 @
 
 -}
