@@ -44,25 +44,6 @@ moveJogador (Move Direita) (Jogador (x,y)) = (Jogador (x+1,y))
 moveJogador Parado (Jogador (x,y)) = (Jogador (x,y)) 
 
 
-movitron :: Jogo -> Jogada -> Jogo 
-movitron (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t) ) ) jog 
- | ((!!) o x == Tronco) && (jog == Move Cima) = (Jogo (Jogador (x , y+1) ) (Mapa l ((Rio v ,o ):t) ) ) 
- | ((!!) o x == Tronco) && (jog == Move Baixo) = (Jogo (Jogador (x , y-1) ) (Mapa l ((Rio v ,o ):t) ) ) 
- | ((!!) o x == Tronco) && (jog == Move Esquerda) && v < 0 = (Jogo (Jogador (x -1 + v  , y) ) (Mapa l ((Rio v ,o ):t) ) ) 
- | ((!!) o x == Tronco) && (jog == Move Direita) && v> 0 = (Jogo (Jogador (x+1+ v , y) ) (Mapa l ((Rio v ,o ):t) ) ) 
- | otherwise = (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t)))
-
-
-movernotronco :: Jogo -> Jogada -> Jogo 
-movernotronco (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t) ) ) jogada
-  | v == 0 && jogada == Parado && x `elem` posicao_tronco o = (Jogo (Jogador (x , y) ) (Mapa l ((Rio v ,o ):t) ) )
-  | v > 0 && jogada == (Move Direita) &&  ( (x+1) `elem` posicao_tronco o) = (Jogo (Jogador (x+2 , y) ) (Mapa l ((Rio v ,o ):t) ) )
-  | v > 0 && jogada == (Move Esquerda) &&  ( (x-1) `elem` posicao_tronco o) = (Jogo (Jogador (x-2 , y) ) (Mapa l ((Rio v ,o ):t) ) )
-  | v < 0 && jogada == (Move Direita) &&  ( (x+1) `elem` posicao_tronco o) = (Jogo (Jogador (x+2 , y) ) (Mapa l ((Rio v ,o ):t) ) )
-  | v < 0 && jogada == (Move Esquerda ) && ( (x-1) `elem` posicao_tronco o) = (Jogo (Jogador (x-2 , y) ) (Mapa l ((Rio v ,o ):t) ) )
-  | otherwise = (Jogo (Jogador (x , y) ) (Mapa l t ) ) 
-
-
 
 {- | A função 'validoMovimento' pretende limitar os coordenadas possíveis do jogador, ao limite do mapa, não permitindo que ele saia para fora deste. A funçao sera deslocada para as respetivas funçoes auxiliares de acordo com a jogada que o jogador recebe.
 As funçoes auxiliares 'validoMovimento1', 'validoMovimento2', 'validoMovimento3' e 'validoMovimento4' estarao explicadas mais a frente.
@@ -214,6 +195,10 @@ validoMovimentoP :: Jogo -> Jogo
 validoMovimentoP (Jogo (Jogador (x,y)) (Mapa l (h:t))) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
 
 
+{-|
+
+-}
+
 move_tronco :: Coordenadas -> Mapa -> Coordenadas 
 move_tronco (x,y) (Mapa l linhas) = if  linha_actual == (Rio v, obstaculos)
                                     then (x+v, y)
@@ -251,7 +236,7 @@ linha_jogador linhas y = (!!) (reverse linhas) y
 
 {-|
 
-A funçao 'moveObs' vai alternar a lista de obstaculos que constituem as linhas do mapa. Esta alteraçao varia mediante o valor da velocidade e o sinal desta. Caso a velocidade seja positiva, quanto maior for a velocidade mais obstaculos serao retirados do fim da lista e adicionados ao inicio, simulando a movimentaçao dos obstaculos esquerda->direita e o efeito WormHole. Caso a velocidade seja negativa, quanto maior for o valor da velocidade maior sera o numero de obstaculos retirados do inicio da lista e adicionados ao fim, simulando o movimento direita->esquerda e o efeito WormHole.        
+A funçao 'moveObs' vai alterar a lista de obstaculos que constituem as linhas do mapa. Esta alteraçao varia mediante o valor da velocidade e o sinal desta. Caso a velocidade seja positiva, quanto maior for a velocidade mais obstaculos serao retirados do fim da lista e adicionados ao inicio, simulando a movimentaçao dos obstaculos esquerda->direita e o efeito WormHole. Caso a velocidade seja negativa, quanto maior for o valor da velocidade maior sera o numero de obstaculos retirados do inicio da lista e adicionados ao fim, simulando o movimento direita->esquerda e o efeito WormHole.        
 
 
 == Exemplos de utilizaçao: 
@@ -280,21 +265,20 @@ moveObs l ((Estrada v, obstaculos):t)
   | v == 0 = (Estrada v, obstaculos):(moveObs l t)
 
 
--- FUNÇÃO ATROPELAMENTO --
 
 {-|
-Funçao 'atropelamento' 
+A funçao 'atropelamento' vai ser aplicada sempre que o jogador estiver numa linha de terreno "Estrada" e ocorrer um caso em que ele devera ser atropelado sem os obstaculos "Carro" criarem o efeito de que "passaram por cima do jogador" sem o atropelar, visto que se este caso não ocorrer, o mapa retornara igual. Deste modo, a funcao atropelamento irá parar a lista de obstáculos quando ocorrer o primeiro embate do jogador com o carro, parando o movimento da lista para que o jogador esteja na mesma posição que o carro, criando uma situação de atropelamento e fazendo o jogo parar.
 
 == Exemplos de utilizaçao: 
 
 @
->>> atropelamento
-
+>>> atropelamento (Jogo (Jogador (2,0)) (Mapa 10 [(Estrada (-3), [Carro, Nenhum, Nenhum, Nenhum, Carro, Carro, Carro, Nenhum, Nenhum, Carro])]))
+[(Estrada (-3), [Nenhum, Nenhum, Carro, Carro, Carro, Nenhum, Nenhum, Carro, Carro, Nenhum])]
 @
 
 @
->>> atropelamento
-
+>>> atropelamento (Jogo (Jogador (5,7)) (Mapa 10 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore, Nenhum, Nenhum, Nenhum, Arvore, Arvore]), (Estrada (2), [Nenhum, Nenhum, Carro, Carro, Carro, Nenhum, Nenhum, Nenhum, Carro, Carro]), (Estrada (-1), [Carro, Carro, Nenhum, Nenhum, Nenhum, Carro, Carro, Nenhum, Nenhum, Nenhum]), (Relva,[Arvore, Nenhum, Nenhum, Nenhum, Arvore, Arvore, Nenhum, Nenhum, Arvore, Arvore]), (Rio (-1),[Tronco, Nenhum, Nenhum, Tronco, Tronco, Tronco, Nenhum, Nenhum, Nenhum, Tronco]), (Rio (2), [Tronco, Tronco, Nenhum, Tronco, Tronco, Nenhum, Nenhum, Tronco, Tronco, Nenhum]), (Relva, [Arvore, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Arvore]), (Relva, [Arvore, Arvore, Arvore, Nenhum, Nenhum, Nenhum, Arvore, Nenhum, Nenhum, Arvore]), (Relva,[Arvore, Arvore, Arvore, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Arvore, Arvore])]))
+[(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore, Nenhum, Nenhum, Nenhum, Arvore, Arvore]), (Estrada (2), [Carro, Nenhum, Nenhum, Carro, Carro, Carro, Nenhum, Nenhum, Nenhum, Carro]), (Estrada (-1), [Carro, Carro, Nenhum, Nenhum, Nenhum, Carro, Carro, Nenhum, Nenhum, Nenhum]), (Relva,[Arvore, Nenhum, Nenhum, Nenhum, Arvore, Arvore, Nenhum, Nenhum, Arvore, Arvore]), (Rio (-1),[Tronco, Nenhum, Nenhum, Tronco, Tronco, Tronco, Nenhum, Nenhum, Nenhum, Tronco]), (Rio (2), [Tronco, Tronco, Nenhum, Tronco, Tronco, Nenhum, Nenhum, Tronco, Tronco, Nenhum]), (Relva, [Arvore, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Arvore]), (Relva, [Arvore, Arvore, Arvore, Nenhum, Nenhum, Nenhum, Arvore, Nenhum, Nenhum, Arvore]), (Relva,[Arvore, Arvore, Arvore, Nenhum, Nenhum, Nenhum, Nenhum, Nenhum, Arvore, Arvore])]
 @
 -}
 
