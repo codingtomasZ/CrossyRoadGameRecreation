@@ -13,14 +13,20 @@ import LI12223
 {-| A funcao animaJogoTempo vai animar o jogo, alterando a lista de obstaculos e as coordenadas do jogo caso este esteja num tronco.
 -}
 
+{-|
+
+Funçao 'animaJogoTempo' 
+
+
+-}
+
 animaJogoTempo :: Jogo -> Jogo
 animaJogoTempo (Jogo (Jogador (x,y)) (Mapa l linhas)) = (((Jogo (Jogador (coordenadas_novas)) (Mapa l (linhas_novas)))))
             where coordenadas_novas = move_tronco (x,y) (Mapa l linhas)
                   linhas_novas = moveObs l linhas_pos_atrop
                   linhas_pos_atrop = atropelamento (Jogo (Jogador (x,y)) (Mapa l linhas))
 
-
-{- | A função "moveJogador" pretende animar o jogador, mediante a jogada escolhida ser fazer o jogador andar para cima, para baixo, para esquerda ou para a direita.
+{- | A função 'moveJogador' pretende animar o jogador, mediante a jogada escolhida ser fazer o jogador andar para cima, para baixo, para esquerda ou para a direita.
 Clicando em /Direcao/ e /Jogador/ é possivel obter mais informações relativamente a estas funções.
 
 == Exemplos de utilização:
@@ -34,9 +40,7 @@ Jogador (0,1)
 >>> moveJogador Move Esquerda ( Jogador (2,1) )
 Jogador (1,1)
 @
-
 -}
-
 
 moveJogador :: Jogada -> Jogador-> Jogador 
 moveJogador (Move Cima) (Jogador (x,y)) = (Jogador (x,y+1))
@@ -44,8 +48,6 @@ moveJogador (Move Baixo) (Jogador (x,y)) = (Jogador (x,y-1))
 moveJogador (Move Esquerda) (Jogador (x,y)) = (Jogador (x-1,y))
 moveJogador (Move Direita) (Jogador (x,y)) = (Jogador (x+1,y))
 moveJogador Parado (Jogador (x,y)) = (Jogador (x,y)) 
-
-
 
 {- | A função 'validoMovimento' pretende limitar os coordenadas possíveis do jogador, ao limite do mapa, não permitindo que ele saia para fora deste. A funçao sera deslocada para as respetivas funçoes auxiliares de acordo com a jogada que o jogador recebe.
 As funçoes auxiliares 'validoMovimento1', 'validoMovimento2', 'validoMovimento3' e 'validoMovimento4' estarao explicadas mais a frente.
@@ -197,7 +199,14 @@ validoMovimentoP :: Jogo -> Jogo
 validoMovimentoP (Jogo (Jogador (x,y)) (Mapa l (h:t))) = (Jogo (Jogador (x,y)) (Mapa l (h:t)))
 
 
-{-|
+{-| Funçao 'move_tronco'. Indica as coordenadas finais do jogador quando este se encontra em cima de um Tronco com este em movimento.
+
+== Exemplos de utilizaçao: 
+
+@
+>>>  move_tronco (3,1) (Mapa 5 [(Relva,[Arvore, Nenhum, Arvore, Nenhum, Arvore]),(Estrada (-1), [Carro, Nenhum, Nenhum, Nenhum, Carro]),(Rio (1),[Tronco, Nenhum, Nenhum, Tronco, Tronco]),(Rio (-2), [Tronco, Tronco, Nenhum, Tronco, Tronco]), (Rio (1), [Nenhum, Nenhum, Tronco, Tronco, Tronco])])
+(1,1)
+@
 
 -}
 
@@ -285,7 +294,7 @@ A funçao 'atropelamento' vai ser aplicada sempre que o jogador estiver numa lin
 -}
 
 atropelamento :: Jogo ->  [(Terreno, [Obstaculo])] 
-atropelamento (Jogo (Jogador (x,y)) (Mapa l (h:t)))  = if linha_jogador (h:t) y == (Estrada v, obstaculos)
+atropelamento (Jogo (Jogador (x,y)) (Mapa l (h:t)))  = if linha_atual == (Estrada v, obstaculos)
                                                            then ((mapa_atualizado))
                                                            else ((h:t))
     where linha_atual = linha_jogador (h:t) y 

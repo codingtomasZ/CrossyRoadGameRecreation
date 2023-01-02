@@ -106,12 +106,13 @@ True
 
 -}
 
+
 mapaValido3 :: Mapa -> Bool
 mapaValido3 (Mapa l []) = True
 mapaValido3 (Mapa l ((Rio v, o):t))
   | (mapaValido3_1 0 o) == True = (mapaValido3 (Mapa l t))
   | (mapaValido3_1 0 o) == False = False
-  | otherwise = True
+  | otherwise = mapaValido3 (Mapa l t )
 
 
 {-|
@@ -122,7 +123,7 @@ Funçao auxiliar para 'mapaValido3'
 
 
 mapaValido3_1 :: Int -> [Obstaculo] -> Bool 
-mapaValido3_1 5 _ = False
+mapaValido3_1 6 _ = False
 mapaValido3_1 n [] = True 
 mapaValido3_1 n (x:t) 
   | x == Tronco = mapaValido3_1 (n+1) t 
@@ -152,7 +153,7 @@ mapaValido4 (Mapa l []) = True
 mapaValido4 (Mapa l ((Estrada v, o):t))
   | (mapaValido4_1 0 o) == True = (mapaValido4 (Mapa l t))
   | (mapaValido4_1 0 o) == False = False
-  | otherwise = True
+  | otherwise = mapaValido4 (Mapa l t)
 
 {-|
 
@@ -163,7 +164,7 @@ Funçao auxiliar para 'mapaValido4'
 
 
 mapaValido4_1 :: Int -> [Obstaculo] -> Bool 
-mapaValido4_1 3 _ = False
+mapaValido4_1 4 _ = False
 mapaValido4_1 n [] = True 
 mapaValido4_1 n (x:t) 
   | x == Carro = mapaValido4_1 (n+1) t 
