@@ -1,4 +1,5 @@
-# Laboratórios de Informática I -> 13/20 <- 
+# Laboratórios de Informática I -
+## 13/20 🏆
 
 ## Repositório
 
