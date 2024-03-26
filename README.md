@@ -1,5 +1,5 @@
 # Laboratórios de Informática I -
-## 13/20 🏆
+NOTA FINAL: **13/20 🏆** 
 
 ## Repositório
 
