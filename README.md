@@ -80,5 +80,5 @@ $ haddock -h -o doc/html src/*.hs
 
 ## Grupo 62
 
-- **A104529** Tomas Henrique Alves Melo;
+- **A104529** Tomás Henrique Alves Melo;
 - **A104443** José Diogo Azevedo Martins;
